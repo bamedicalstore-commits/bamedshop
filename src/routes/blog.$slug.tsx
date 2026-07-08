@@ -25,7 +25,7 @@ function BlogPost() {
         </Button>
         <Badge variant="soft">Guides</Badge>
         <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-          {slug.replace(/-/g, " ").replace(/^./, (c) => c.toUpperCase())}
+          {slug.replace(/-/g, " ").replace(/^./, (c: string) => c.toUpperCase())}
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">Publié le 12 mars 2025 · 5 min de lecture</p>
         <div className="mt-8 grid aspect-[16/9] place-items-center rounded-xl bg-gradient-to-br from-primary-soft to-info-soft text-primary/40">
