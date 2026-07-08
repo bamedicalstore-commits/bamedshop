@@ -23,9 +23,6 @@ const STATUS_MAP = {
 } as const;
 
 function OrdersPage() {
-  if (ORDERS.length === 0) {
-    return <EmptyState icon={Package} title="Aucune commande" description="Vos commandes apparaîtront ici." />;
-  }
   return (
     <Card className="overflow-hidden p-0">
       <div className="border-b p-6"><h2 className="text-lg font-semibold">Mes commandes</h2></div>

@@ -14,12 +14,12 @@ export const Route = createFileRoute("/account")({
   component: AccountLayout,
 });
 
-const LINKS = [
+const LINKS: ReadonlyArray<{ to: "/account" | "/account/orders" | "/account/subscriptions" | "/account/wishlist"; label: string; icon: typeof User; exact?: boolean }> = [
   { to: "/account", label: "Profil", icon: User, exact: true },
   { to: "/account/orders", label: "Mes commandes", icon: Package },
   { to: "/account/subscriptions", label: "Abonnements", icon: Repeat },
   { to: "/account/wishlist", label: "Wishlist", icon: Heart },
-] as const;
+];
 
 function AccountLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });

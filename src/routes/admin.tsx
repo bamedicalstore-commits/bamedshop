@@ -1,7 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Package, ShoppingBag, Users, Building2, Boxes,
-  BarChart3, HeartPulse, Bell, Search,
+  LayoutDashboard, Building2, HeartPulse, Bell, Search,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -18,15 +17,10 @@ export const Route = createFileRoute("/admin")({
   component: AdminLayout,
 });
 
-const NAV = [
+const NAV: ReadonlyArray<{ to: "/admin" | "/admin/b2b"; label: string; icon: typeof LayoutDashboard; exact?: boolean }> = [
   { to: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-  { to: "/admin/products", label: "Produits", icon: Package },
-  { to: "/admin/orders", label: "Commandes", icon: ShoppingBag },
-  { to: "/admin/customers", label: "Clients", icon: Users },
   { to: "/admin/b2b", label: "Comptes B2B", icon: Building2 },
-  { to: "/admin/inventory", label: "Stock", icon: Boxes },
-  { to: "/admin/analytics", label: "Analytiques", icon: BarChart3 },
-] as const;
+];
 
 function AdminLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
