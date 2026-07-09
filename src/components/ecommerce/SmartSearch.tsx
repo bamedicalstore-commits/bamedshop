@@ -118,8 +118,6 @@ export function SmartSearch() {
     <CommandDialog
       open={open}
       onOpenChange={(o) => (o ? uiActions.openOverlay("search") : uiActions.closeOverlay("search"))}
-      title="Recherche produits"
-      description="Rechercher un produit, une marque ou une catégorie"
     >
       <CommandInput
         placeholder="Tensiomètre, Omron, stéthoscope…"

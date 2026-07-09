@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  */
 export function MegaMenu() {
   return (
-    <NavigationMenu viewport={false} className="max-w-none">
+    <NavigationMenu className="max-w-none">
       <NavigationMenuList className="gap-1">
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
