@@ -109,6 +109,16 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Trust */}
+      <section className="py-14">
+        <TrustSection />
+      </section>
+
+      {/* BA Medical+ */}
+      <section className="container-page py-14">
+        <MedicalPlusCard />
+      </section>
+
       {/* Brands */}
       <section className="border-t border-border bg-surface py-14">
         <div className="container-page">
