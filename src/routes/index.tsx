@@ -1,14 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Truck, HeartHandshake, Sparkles, Search } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, HeartHandshake, Sparkles } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { FeatureCard } from "@/components/common/FeatureCard";
 import { CategoryCard } from "@/components/ecommerce/CategoryCard";
 import { BrandCard } from "@/components/ecommerce/BrandCard";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
+import { SmartSearchTrigger } from "@/components/ecommerce/SmartSearch";
+import { TrustSection } from "@/components/marketing/TrustSection";
+import { MedicalPlusCard } from "@/components/marketing/MedicalPlusCard";
 import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
 
 export const Route = createFileRoute("/")({
@@ -32,27 +34,9 @@ function HomePage() {
               Dispositifs, consommables et mobilier certifiés pour médecins, cliniques, infirmiers,
               kinés et particuliers. Sélection experte, prix pros, service premium.
             </p>
-            <form
-              role="search"
-              onSubmit={(e) => e.preventDefault()}
-              className="flex max-w-lg gap-2"
-            >
-              <label htmlFor="hero-search" className="sr-only">
-                Rechercher un produit
-              </label>
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  id="hero-search"
-                  type="search"
-                  placeholder="Tensiomètre, oxymètre, seringues…"
-                  className="h-12 pl-10"
-                />
-              </div>
-              <Button type="submit" size="lg">
-                Rechercher
-              </Button>
-            </form>
+            <div className="max-w-lg">
+              <SmartSearchTrigger />
+            </div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/catalogue">
@@ -123,6 +107,16 @@ function HomePage() {
             <ProductCard key={p.id} product={p} />
           ))}
         </div>
+      </section>
+
+      {/* Trust */}
+      <section className="py-14">
+        <TrustSection />
+      </section>
+
+      {/* BA Medical+ */}
+      <section className="container-page py-14">
+        <MedicalPlusCard />
       </section>
 
       {/* Brands */}

@@ -1,14 +1,17 @@
 import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { PriceBlock } from "./PriceBlock";
 import { Rating } from "./Rating";
 import { WishlistButton } from "./WishlistButton";
 import { AddToCartButton } from "./AddToCartButton";
 import { AvailabilityBadge } from "./AvailabilityBadge";
+import { CompareToggleButton } from "./CompareDrawer";
 import type { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
-import { Pill } from "lucide-react";
+import { Pill, Eye } from "lucide-react";
+import { uiActions } from "@/hooks/useUiStore";
 
 interface ProductCardProps {
   product: Product;
@@ -40,19 +43,29 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
           {product.isBestSeller && <Badge variant="soft">Best-seller</Badge>}
           {product.compareAtPrice && <Badge variant="destructive">Promo</Badge>}
         </div>
-        <div className="absolute right-3 top-3">
+        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
           <WishlistButton productId={product.id} />
+          <CompareToggleButton product={product} />
+        </div>
+
+        {/* Quick view — appears on hover (desktop), always visible on touch */}
+        <div className="absolute inset-x-3 bottom-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:opacity-0">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            width="full"
+            onClick={() => uiActions.openQuickView(product)}
+            className="bg-background/95 backdrop-blur"
+          >
+            <Eye aria-hidden="true" /> Aperçu rapide
+          </Button>
         </div>
       </div>
 
-      <div
-        className={cn(
-          "flex flex-1 flex-col gap-3 p-4",
-          layout === "list" && "sm:p-5",
-        )}
-      >
+      <div className={cn("flex flex-1 flex-col gap-3 p-4", layout === "list" && "sm:p-5")}>
         <div className="flex items-center justify-between gap-2">
-          <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <span className="truncate text-xs font-medium uppercase tracking-wide text-muted-foreground">
             {product.brand}
           </span>
           <AvailabilityBadge status={product.availability} />
@@ -67,9 +80,7 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
         </Link>
 
         {product.shortDescription && layout === "list" && (
-          <p className="line-clamp-2 text-sm text-muted-foreground">
-            {product.shortDescription}
-          </p>
+          <p className="line-clamp-2 text-sm text-muted-foreground">{product.shortDescription}</p>
         )}
 
         {product.rating !== undefined && (
@@ -77,14 +88,9 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
         )}
 
         <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
-          <PriceBlock
-            price={product.price}
-            compareAtPrice={product.compareAtPrice}
-            size="lg"
-          />
+          <PriceBlock price={product.price} compareAtPrice={product.compareAtPrice} size="lg" />
           <AddToCartButton
-            productId={product.id}
-            productName={product.name}
+            product={product}
             size="sm"
             disabled={outOfStock}
             aria-label={`Ajouter ${product.name} au panier`}

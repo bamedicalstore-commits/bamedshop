@@ -1,13 +1,10 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import {
-  ShieldCheck, Truck, RotateCcw, Pill, Info, FileText, Award,
-} from "lucide-react";
+import { useRef, useState } from "react";
+import { ShieldCheck, Truck, RotateCcw, Pill, Award } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { PriceBlock } from "@/components/ecommerce/PriceBlock";
 import { Rating } from "@/components/ecommerce/Rating";
@@ -15,11 +12,15 @@ import { AvailabilityBadge } from "@/components/ecommerce/AvailabilityBadge";
 import { QuantitySelector } from "@/components/ecommerce/QuantitySelector";
 import { AddToCartButton } from "@/components/ecommerce/AddToCartButton";
 import { WishlistButton } from "@/components/ecommerce/WishlistButton";
+import { CompareToggleButton } from "@/components/ecommerce/CompareDrawer";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
+import { ProductImageGallery } from "@/components/ecommerce/ProductImageGallery";
+import { ProductTabs } from "@/components/ecommerce/ProductTabs";
+import { StickyAddToCart } from "@/components/ecommerce/StickyAddToCart";
+import { MedicalBadges } from "@/components/ecommerce/MedicalBadges";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { MOCK_PRODUCTS } from "@/constants/navigation";
-import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/product/$slug")({
   loader: ({ params }) => {
@@ -49,6 +50,7 @@ function ProductPage() {
   const { slug } = Route.useLoaderData();
   const product = MOCK_PRODUCTS.find((p) => p.slug === slug)!;
   const [qty, setQty] = useState(1);
+  const primaryCtaRef = useRef<HTMLDivElement>(null);
   const related = MOCK_PRODUCTS.filter(
     (p) => p.categorySlug === product.categorySlug && p.id !== product.id,
   ).slice(0, 4);
@@ -74,10 +76,10 @@ function ProductPage() {
       </div>
 
       <article className="container-page grid gap-10 pb-14 lg:grid-cols-[minmax(0,1fr)_440px]">
-        <ProductGallery />
+        <ProductImageGallery images={product.images} alt={product.name} />
 
         <div className="space-y-6">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Badge variant="soft">{product.brand}</Badge>
             {product.isNew && <Badge variant="info">Nouveau</Badge>}
             {product.isBestSeller && <Badge variant="warning">Best-seller</Badge>}
@@ -102,21 +104,24 @@ function ProductPage() {
           />
           <p className="text-xs text-muted-foreground">TVA incluse — Hors frais de livraison</p>
 
-          <AvailabilityBadge status={product.availability} />
+          <div className="flex flex-wrap items-center gap-2">
+            <AvailabilityBadge status={product.availability} />
+            <MedicalBadges kinds={["ce", "iso-13485", "latex-free"]} />
+          </div>
 
           <Separator />
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div ref={primaryCtaRef} className="flex flex-wrap items-center gap-3">
             <QuantitySelector value={qty} onChange={setQty} />
             <AddToCartButton
-              productId={product.id}
-              productName={product.name}
+              product={product}
               quantity={qty}
               size="lg"
               className="flex-1"
               disabled={product.availability === "out_of_stock"}
             />
             <WishlistButton productId={product.id} />
+            <CompareToggleButton product={product} size="md" />
           </div>
 
           {product.shortDescription && (
@@ -133,75 +138,20 @@ function ProductPage() {
       </article>
 
       <section className="container-page pb-14">
-        <Tabs defaultValue="desc">
-          <TabsList>
-            <TabsTrigger value="desc"><Info aria-hidden="true" /> Description</TabsTrigger>
-            <TabsTrigger value="specs">Caractéristiques</TabsTrigger>
-            <TabsTrigger value="docs"><FileText aria-hidden="true" /> Documents</TabsTrigger>
-            <TabsTrigger value="reviews">Avis</TabsTrigger>
-          </TabsList>
-          <TabsContent value="desc" className="prose prose-sm max-w-none py-6 text-foreground">
-            <p className="text-muted-foreground">
-              {product.description ??
-                `${product.name} — un équipement fiable, conçu pour un usage professionnel intensif. Description détaillée à compléter au branchement du catalogue.`}
-            </p>
-          </TabsContent>
-          <TabsContent value="specs" className="py-6">
-            <dl className="grid gap-3 sm:grid-cols-2">
-              <SpecRow label="Marque" value={product.brand} />
-              <SpecRow label="Catégorie" value={product.category} />
-              <SpecRow label="Référence" value={product.reference ?? "—"} />
-              <SpecRow label="SKU" value={product.sku ?? "—"} />
-            </dl>
-          </TabsContent>
-          <TabsContent value="docs" className="py-6">
-            <EmptyState icon={FileText} title="Aucun document" description="Les fiches techniques seront disponibles prochainement." />
-          </TabsContent>
-          <TabsContent value="reviews" className="py-6">
-            <EmptyState icon={Award} title="Aucun avis pour le moment" description="Soyez le premier à laisser un avis." />
-          </TabsContent>
-        </Tabs>
+        <ProductTabs product={product} />
       </section>
 
       {related.length > 0 && (
-        <section className="container-page pb-14">
+        <section className="container-page pb-20">
           <SectionHeader title="Produits similaires" />
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {related.map((p) => (<ProductCard key={p.id} product={p} />))}
           </div>
         </section>
       )}
-    </SiteLayout>
-  );
-}
 
-function ProductGallery() {
-  const [active, setActive] = useState(0);
-  const thumbs = [0, 1, 2, 3];
-  return (
-    <div className="grid gap-3 lg:grid-cols-[80px_1fr]">
-      <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:flex-col">
-        {thumbs.map((i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            aria-label={`Image ${i + 1}`}
-            aria-current={active === i}
-            className={cn(
-              "grid size-20 shrink-0 place-items-center rounded-md border bg-surface-muted text-muted-foreground/40 transition-colors",
-              active === i ? "border-primary" : "border-border hover:border-input",
-            )}
-          >
-            <Pill className="size-6" aria-hidden="true" />
-          </button>
-        ))}
-      </div>
-      <div className="order-1 lg:order-2">
-        <div className="grid aspect-square place-items-center overflow-hidden rounded-xl border border-border bg-surface-muted text-muted-foreground/30">
-          <Pill className="size-32" aria-hidden="true" />
-        </div>
-      </div>
-    </div>
+      <StickyAddToCart product={product} triggerRef={primaryCtaRef} />
+    </SiteLayout>
   );
 }
 
@@ -211,15 +161,6 @@ function FeatureLine({ icon: Icon, children }: { icon: typeof ShieldCheck; child
       <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
       <span className="text-foreground">{children}</span>
     </li>
-  );
-}
-
-function SpecRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex justify-between border-b border-border py-2">
-      <dt className="text-muted-foreground">{label}</dt>
-      <dd className="font-medium text-foreground">{value}</dd>
-    </div>
   );
 }
 

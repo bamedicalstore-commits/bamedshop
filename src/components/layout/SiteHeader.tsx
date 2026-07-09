@@ -1,7 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Menu, Search, ShoppingCart, Heart, User, Phone, HeartPulse } from "lucide-react";
+import { Menu, ShoppingCart, Heart, User, Phone, HeartPulse, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   Sheet,
@@ -12,9 +11,14 @@ import {
 } from "@/components/ui/sheet";
 import { MAIN_NAV, CATEGORIES } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
+import { SmartSearchTrigger, SmartSearchIconTrigger } from "@/components/ecommerce/SmartSearch";
+import { MegaMenu } from "./MegaMenu";
+import { uiActions, useUiStore, selectors } from "@/hooks/useUiStore";
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const cartCount = useUiStore(selectors.cartCount);
+  const compareCount = useUiStore(selectors.compareCount);
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/85 backdrop-blur-md">
@@ -22,12 +26,7 @@ export function SiteHeader() {
         {/* Mobile menu */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              aria-label="Ouvrir le menu"
-            >
+            <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Ouvrir le menu">
               <Menu />
             </Button>
           </SheetTrigger>
@@ -81,49 +80,33 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        {/* Search */}
-        <form
-          role="search"
-          onSubmit={(e) => e.preventDefault()}
-          className="ml-2 hidden max-w-2xl flex-1 items-center md:flex"
-        >
-          <label htmlFor="site-search" className="sr-only">
-            Rechercher un produit
-          </label>
-          <div className="relative w-full">
-            <Search
-              className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-              aria-hidden="true"
-            />
-            <Input
-              id="site-search"
-              type="search"
-              placeholder="Rechercher un produit, une marque, une catégorie…"
-              className="h-11 pl-10 pr-24"
-            />
-            <Button
-              type="submit"
-              size="sm"
-              className="absolute right-1.5 top-1/2 h-8 -translate-y-1/2"
-              aria-label="Lancer la recherche"
-            >
-              Rechercher
-            </Button>
-          </div>
-        </form>
+        {/* Smart search (Ctrl+K) */}
+        <div className="ml-2 hidden max-w-2xl flex-1 md:flex">
+          <SmartSearchTrigger />
+        </div>
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-1">
+          <div className="md:hidden">
+            <SmartSearchIconTrigger />
+          </div>
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
-            aria-label="Rechercher"
-            asChild
+            aria-label={`Comparer${compareCount ? ` (${compareCount})` : ""}`}
+            onClick={() => uiActions.openOverlay("compare")}
+            className="relative hidden sm:inline-flex"
           >
-            <Link to="/search">
-              <Search />
-            </Link>
+            <Scale />
+            {compareCount > 0 && (
+              <Badge
+                size="sm"
+                className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1"
+                aria-hidden="true"
+              >
+                {compareCount}
+              </Badge>
+            )}
           </Button>
           <Button
             variant="ghost"
@@ -141,42 +124,32 @@ export function SiteHeader() {
               <User />
             </Link>
           </Button>
-          <Button variant="ghost" size="icon" aria-label="Panier" className="relative" asChild>
-            <Link to="/cart">
-              <ShoppingCart />
-              <Badge
-                variant="default"
-                size="sm"
-                className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1"
-                aria-hidden="true"
-              >
-                0
-              </Badge>
-            </Link>
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Panier${cartCount ? ` (${cartCount} article${cartCount > 1 ? "s" : ""})` : ""}`}
+            onClick={() => uiActions.openOverlay("miniCart")}
+            className="relative"
+          >
+            <ShoppingCart />
+            <Badge
+              size="sm"
+              className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1"
+              aria-hidden="true"
+            >
+              {cartCount}
+            </Badge>
           </Button>
         </div>
       </div>
 
-      {/* Desktop nav */}
+      {/* Desktop nav — Mega Menu */}
       <nav
         className="hidden border-t border-border bg-surface lg:block"
         aria-label="Navigation principale"
       >
         <div className="container-page flex h-11 items-center gap-1">
-          {MAIN_NAV.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: item.to === "/" }}
-              className={cn(
-                "rounded-md px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground",
-                pathname === item.to && "text-primary",
-              )}
-              activeProps={{ className: "text-primary" }}
-            >
-              {item.label}
-            </Link>
-          ))}
+          <MegaMenu />
           <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <Phone className="size-3.5" aria-hidden="true" />
             +216 71 000 000
