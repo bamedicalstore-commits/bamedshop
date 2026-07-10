@@ -13,12 +13,12 @@ import { QuantitySelector } from "@/components/ecommerce/QuantitySelector";
 import { AddToCartButton } from "@/components/ecommerce/AddToCartButton";
 import { WishlistButton } from "@/components/ecommerce/WishlistButton";
 import { CompareToggleButton } from "@/components/ecommerce/CompareDrawer";
-import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { ProductImageGallery } from "@/components/ecommerce/ProductImageGallery";
 import { ProductTabs } from "@/components/ecommerce/ProductTabs";
 import { StickyAddToCart } from "@/components/ecommerce/StickyAddToCart";
 import { MedicalBadges } from "@/components/ecommerce/MedicalBadges";
-import { SectionHeader } from "@/components/common/SectionHeader";
+import { FrequentlyBoughtTogether } from "@/components/ecommerce/FrequentlyBoughtTogether";
+import { SimilarProducts } from "@/components/ecommerce/SimilarProducts";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { MOCK_PRODUCTS } from "@/constants/navigation";
 
@@ -51,9 +51,6 @@ function ProductPage() {
   const product = MOCK_PRODUCTS.find((p) => p.slug === slug)!;
   const [qty, setQty] = useState(1);
   const primaryCtaRef = useRef<HTMLDivElement>(null);
-  const related = MOCK_PRODUCTS.filter(
-    (p) => p.categorySlug === product.categorySlug && p.id !== product.id,
-  ).slice(0, 4);
 
   return (
     <SiteLayout>
@@ -141,14 +138,13 @@ function ProductPage() {
         <ProductTabs product={product} />
       </section>
 
-      {related.length > 0 && (
-        <section className="container-page pb-20">
-          <SectionHeader title="Produits similaires" />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {related.map((p) => (<ProductCard key={p.id} product={p} />))}
-          </div>
-        </section>
-      )}
+      <section className="container-page pb-14 animate-fade-in">
+        <FrequentlyBoughtTogether product={product} />
+      </section>
+
+      <section className="container-page pb-20">
+        <SimilarProducts product={product} />
+      </section>
 
       <StickyAddToCart product={product} triggerRef={primaryCtaRef} />
     </SiteLayout>

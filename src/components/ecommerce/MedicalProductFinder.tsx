@@ -147,14 +147,7 @@ export function MedicalProductFinder({ className }: { className?: string }) {
                   <ArrowLeft aria-hidden="true" /> Recommencer
                 </Button>
                 <Button asChild size="lg">
-                  <Link
-                    to="/catalogue"
-                    search={
-                      state.categorySlug
-                        ? ({ cat: state.categorySlug, max: state.budget } as never)
-                        : undefined
-                    }
-                  >
+                  <Link to="/catalogue">
                     <Sparkles aria-hidden="true" /> Voir tous les résultats
                   </Link>
                 </Button>
