@@ -1,4 +1,4 @@
-import type { Category, Brand, Product } from "@/types/product";
+import type { Category, Brand, Product, ProfessionalProfile } from "@/types/product";
 
 export const CATEGORIES: Category[] = [
   { id: "1", slug: "diagnostic", name: "Diagnostic", productCount: 128, description: "Tensiomètres, oxymètres, thermomètres" },
@@ -45,7 +45,21 @@ export const FOOTER_LINKS = {
   ],
 };
 
-/** Mock products — remplacés par le catalogue Pharmatec au branchement backend. */
+/** Profils métier utilisés par le Medical Product Finder. */
+export const PROFESSIONAL_PROFILES: {
+  value: ProfessionalProfile;
+  label: string;
+  description: string;
+}[] = [
+  { value: "particulier", label: "Particulier", description: "Usage familial ou personnel" },
+  { value: "infirmier", label: "Infirmier·ère", description: "Soins à domicile, libéral" },
+  { value: "medecin", label: "Médecin", description: "Cabinet ou consultation" },
+  { value: "cabinet", label: "Cabinet médical", description: "Équipement complet" },
+  { value: "clinique", label: "Clinique / Hôpital", description: "Volumes et B2B" },
+  { value: "pharmacie", label: "Pharmacie", description: "Revente et OTC" },
+];
+
+/** Mock products enrichis — remplacés par le catalogue Pharmatec au branchement backend. */
 export const MOCK_PRODUCTS: Product[] = [
   {
     id: "p1",
@@ -63,6 +77,15 @@ export const MOCK_PRODUCTS: Product[] = [
     availability: "in_stock",
     isBestSeller: true,
     shortDescription: "Mesure clinique validée, brassard intelligent",
+    certifications: ["ce", "iso-13485"],
+    usage: "both",
+    professionalProfiles: ["particulier", "infirmier", "medecin", "cabinet"],
+    prescriptionRequired: false,
+    warrantyMonths: 24,
+    subscriptionEligible: false,
+    deliveryEta: "24-48h",
+    compatibleWith: ["gants-nitrile-100"],
+    tags: ["hypertension", "domicile", "clinique"],
   },
   {
     id: "p2",
@@ -78,6 +101,13 @@ export const MOCK_PRODUCTS: Product[] = [
     ratingCount: 87,
     availability: "in_stock",
     isNew: true,
+    certifications: ["ce"],
+    usage: "both",
+    professionalProfiles: ["infirmier", "medecin", "cabinet", "clinique"],
+    warrantyMonths: 12,
+    subscriptionEligible: false,
+    deliveryEta: "24h",
+    tags: ["saturation", "spo2"],
   },
   {
     id: "p3",
@@ -92,6 +122,13 @@ export const MOCK_PRODUCTS: Product[] = [
     rating: 4.9,
     ratingCount: 512,
     availability: "low_stock",
+    certifications: ["ce", "iso-13485", "latex-free"],
+    usage: "professional",
+    professionalProfiles: ["infirmier", "medecin", "cabinet", "clinique"],
+    warrantyMonths: 36,
+    subscriptionEligible: false,
+    deliveryEta: "48h",
+    tags: ["auscultation", "cardio"],
   },
   {
     id: "p4",
@@ -106,6 +143,12 @@ export const MOCK_PRODUCTS: Product[] = [
     rating: 4.6,
     ratingCount: 1204,
     availability: "in_stock",
+    certifications: ["ce", "latex-free", "single-use"],
+    usage: "both",
+    professionalProfiles: ["particulier", "infirmier", "medecin", "cabinet", "clinique", "pharmacie"],
+    subscriptionEligible: true,
+    deliveryEta: "24h",
+    tags: ["protection", "epi"],
   },
   {
     id: "p5",
@@ -121,6 +164,12 @@ export const MOCK_PRODUCTS: Product[] = [
     rating: 4.3,
     ratingCount: 156,
     availability: "in_stock",
+    certifications: ["ce"],
+    usage: "both",
+    professionalProfiles: ["particulier", "infirmier", "medecin"],
+    warrantyMonths: 12,
+    deliveryEta: "24-48h",
+    tags: ["fièvre", "sans contact"],
   },
   {
     id: "p6",
@@ -135,6 +184,12 @@ export const MOCK_PRODUCTS: Product[] = [
     rating: 4.4,
     ratingCount: 32,
     availability: "preorder",
+    certifications: ["ce", "iso-13485", "reusable"],
+    usage: "professional",
+    professionalProfiles: ["cabinet", "clinique"],
+    warrantyMonths: 24,
+    deliveryEta: "5-7 jours",
+    tags: ["mobilier", "b2b"],
   },
   {
     id: "p7",
@@ -150,6 +205,12 @@ export const MOCK_PRODUCTS: Product[] = [
     ratingCount: 98,
     availability: "in_stock",
     isNew: true,
+    certifications: ["ce"],
+    usage: "both",
+    professionalProfiles: ["particulier", "cabinet", "clinique", "pharmacie"],
+    warrantyMonths: 12,
+    deliveryEta: "24h",
+    tags: ["urgence", "kit"],
   },
   {
     id: "p8",
@@ -164,5 +225,11 @@ export const MOCK_PRODUCTS: Product[] = [
     rating: 4.8,
     ratingCount: 340,
     availability: "in_stock",
+    certifications: ["ce", "sterile", "single-use"],
+    usage: "professional",
+    professionalProfiles: ["infirmier", "medecin", "cabinet", "clinique", "pharmacie"],
+    subscriptionEligible: true,
+    deliveryEta: "24h",
+    tags: ["injection", "consommable"],
   },
 ];
