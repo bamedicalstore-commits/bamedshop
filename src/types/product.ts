@@ -1,3 +1,5 @@
+import type { MedicalBadgeKind } from "@/components/ecommerce/MedicalBadges";
+
 export type Currency = "TND" | "EUR" | "USD";
 
 export type Money = {
@@ -6,6 +8,18 @@ export type Money = {
 };
 
 export type Availability = "in_stock" | "low_stock" | "out_of_stock" | "preorder";
+
+/** Cible d'utilisation métier — filtre catalogue. */
+export type UsageProfile = "professional" | "personal" | "both";
+
+/** Profil professionnel — Product Finder. */
+export type ProfessionalProfile =
+  | "particulier"
+  | "infirmier"
+  | "medecin"
+  | "cabinet"
+  | "clinique"
+  | "pharmacie";
 
 export type Product = {
   id: string;
@@ -31,6 +45,26 @@ export type Product = {
   variants?: ProductVariant[];
   attributes?: Record<string, string>;
   documents?: { label: string; url: string }[];
+
+  // -------- Métier médical (v2) --------
+  /** Certifications / propriétés médicales — affichées via <MedicalBadges />. */
+  certifications?: MedicalBadgeKind[];
+  /** Cible d'utilisation. */
+  usage?: UsageProfile;
+  /** Profils professionnels adaptés. */
+  professionalProfiles?: ProfessionalProfile[];
+  /** Requiert une ordonnance médicale. */
+  prescriptionRequired?: boolean;
+  /** Garantie constructeur en mois. */
+  warrantyMonths?: number;
+  /** Éligible à l'abonnement BA Medical+ (livraison récurrente). */
+  subscriptionEligible?: boolean;
+  /** Délai de livraison estimé (ex. "24-48h"). */
+  deliveryEta?: string;
+  /** Références compatibles (accessoires, consommables). */
+  compatibleWith?: string[];
+  /** Tags métier libres (utilisés par les filtres). */
+  tags?: string[];
 };
 
 export type ProductVariant = {
