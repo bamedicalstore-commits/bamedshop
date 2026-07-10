@@ -11,19 +11,33 @@ import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { SmartSearchTrigger } from "@/components/ecommerce/SmartSearch";
 import { TrustSection } from "@/components/marketing/TrustSection";
 import { MedicalPlusCard } from "@/components/marketing/MedicalPlusCard";
+import { B2BBanner } from "@/components/marketing/B2BBanner";
+import { MedicalProductFinder } from "@/components/ecommerce/MedicalProductFinder";
+import { FrequentlyBoughtTogether } from "@/components/ecommerce/FrequentlyBoughtTogether";
 import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "BA Medical Store — Matériel médical certifié en Tunisie" },
+      { name: "description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
+      { property: "og:title", content: "BA Medical Store — Matériel médical premium Tunisie" },
+      { property: "og:description", content: "2500+ références certifiées. Livraison rapide, service pro, prix négociés." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: HomePage,
 });
 
 function HomePage() {
+  const bestSeller = MOCK_PRODUCTS.find((p) => p.isBestSeller) ?? MOCK_PRODUCTS[0];
   return (
     <SiteLayout>
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-primary-soft/60 to-background">
         <div className="container-page grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
-          <div className="space-y-6">
+          <div className="animate-fade-in space-y-6">
             <Badge variant="soft" className="w-fit">
               <Sparkles aria-hidden="true" /> Nouveau · Catalogue Pharmatec en ligne
             </Badge>
@@ -47,6 +61,22 @@ function HomePage() {
                 <Link to="/contact">Devis professionnel</Link>
               </Button>
             </div>
+
+            {/* Micro-preuves sociales */}
+            <dl className="grid max-w-md grid-cols-3 gap-4 pt-2">
+              <div>
+                <dt className="text-xs text-muted-foreground">Références</dt>
+                <dd className="text-lg font-bold">2 500+</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">Notes vérifiées</dt>
+                <dd className="text-lg font-bold">4.8/5</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-muted-foreground">Pros équipés</dt>
+                <dd className="text-lg font-bold">1 400+</dd>
+              </div>
+            </dl>
           </div>
           <div
             className="relative hidden aspect-[4/5] w-full rounded-3xl bg-gradient-to-br from-primary/20 to-info-soft lg:block"
@@ -55,26 +85,31 @@ function HomePage() {
             <div className="absolute inset-4 rounded-2xl border border-border/60 bg-background/60 backdrop-blur-sm" />
             <div className="absolute bottom-6 left-6 right-6 flex gap-3">
               <div className="flex-1 surface-card px-4 py-3">
-                <p className="text-xs text-muted-foreground">Notes vérifiées</p>
-                <p className="text-lg font-bold">4.8/5</p>
+                <p className="text-xs text-muted-foreground">Livraison</p>
+                <p className="text-lg font-bold">24-48h</p>
               </div>
               <div className="flex-1 surface-card px-4 py-3">
-                <p className="text-xs text-muted-foreground">Références</p>
-                <p className="text-lg font-bold">2 500+</p>
+                <p className="text-xs text-muted-foreground">Certifiés CE</p>
+                <p className="text-lg font-bold">100%</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features */}
-      <section className="container-page py-14">
+      {/* Réassurance rapide */}
+      <section className="container-page py-12">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <FeatureCard icon={ShieldCheck} title="Produits certifiés" description="Dispositifs CE et normes internationales, traçabilité complète." />
           <FeatureCard icon={Truck} title="Livraison rapide" description="Expédition sous 24h en Tunisie, offerte dès 200 DT." />
           <FeatureCard icon={HeartHandshake} title="Support pro" description="Conseillers médicaux dédiés B2B pour cabinets et cliniques." />
           <FeatureCard icon={Sparkles} title="Prix professionnels" description="Tarifs dégressifs et abonnement BA Medical+ pour économiser." />
         </div>
+      </section>
+
+      {/* Product Finder — guided experience */}
+      <section className="container-page py-10">
+        <MedicalProductFinder />
       </section>
 
       {/* Categories */}
@@ -109,7 +144,12 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Trust */}
+      {/* Souvent achetés ensemble — teaser depuis un best-seller */}
+      <section className="container-page py-14">
+        <FrequentlyBoughtTogether product={bestSeller} />
+      </section>
+
+      {/* Trust — réassurance longue */}
       <section className="py-14">
         <TrustSection />
       </section>
@@ -117,6 +157,11 @@ function HomePage() {
       {/* BA Medical+ */}
       <section className="container-page py-14">
         <MedicalPlusCard />
+      </section>
+
+      {/* B2B Banner premium */}
+      <section className="container-page py-14">
+        <B2BBanner />
       </section>
 
       {/* Brands */}
@@ -132,30 +177,6 @@ function HomePage() {
             {BRANDS.map((b) => (
               <BrandCard key={b.slug} brand={b} />
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA B2B */}
-      <section className="container-page py-14">
-        <div className="surface-elevated grid gap-6 overflow-hidden rounded-2xl p-8 md:grid-cols-2 md:items-center md:p-12">
-          <div className="space-y-3">
-            <Badge variant="info">Professionnels</Badge>
-            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">
-              Un compte pro pour votre cabinet, votre clinique ou votre entreprise
-            </h2>
-            <p className="text-sm text-muted-foreground sm:text-base">
-              Tarifs négociés, devis instantanés, facturation TVA, commandes récurrentes et
-              interlocuteur dédié.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3 md:justify-end">
-            <Button asChild size="lg">
-              <Link to="/contact">Demander un compte pro</Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to="/faq">En savoir plus</Link>
-            </Button>
           </div>
         </div>
       </section>
