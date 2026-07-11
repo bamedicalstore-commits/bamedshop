@@ -9,11 +9,17 @@ import { CategoryCard } from "@/components/ecommerce/CategoryCard";
 import { BrandCard } from "@/components/ecommerce/BrandCard";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { SmartSearchTrigger } from "@/components/ecommerce/SmartSearch";
+import { MedicalProductFinder } from "@/components/ecommerce/MedicalProductFinder";
 import { TrustSection } from "@/components/marketing/TrustSection";
 import { MedicalPlusCard } from "@/components/marketing/MedicalPlusCard";
 import { B2BBanner } from "@/components/marketing/B2BBanner";
-import { MedicalProductFinder } from "@/components/ecommerce/MedicalProductFinder";
-import { FrequentlyBoughtTogether } from "@/components/ecommerce/FrequentlyBoughtTogether";
+import { BrandStory } from "@/components/marketing/BrandStory";
+import { HowItWorks } from "@/components/marketing/HowItWorks";
+import { HealthPacksGrid } from "@/components/marketing/HealthPacksGrid";
+import { ReviewsSection } from "@/components/marketing/ReviewsSection";
+import { BlogTeaser } from "@/components/marketing/BlogTeaser";
+import { FaqTeaser } from "@/components/marketing/FaqTeaser";
+import { NewsletterSection } from "@/components/marketing/NewsletterSection";
 import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
 
 export const Route = createFileRoute("/")({
@@ -31,7 +37,6 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const bestSeller = MOCK_PRODUCTS.find((p) => p.isBestSeller) ?? MOCK_PRODUCTS[0];
   return (
     <SiteLayout>
       {/* Hero */}
@@ -48,40 +53,22 @@ function HomePage() {
               Dispositifs, consommables et mobilier certifiés pour médecins, cliniques, infirmiers,
               kinés et particuliers. Sélection experte, prix pros, service premium.
             </p>
-            <div className="max-w-lg">
-              <SmartSearchTrigger />
-            </div>
+            <div className="max-w-lg"><SmartSearchTrigger /></div>
             <div className="flex flex-wrap gap-3">
               <Button asChild size="lg">
-                <Link to="/catalogue">
-                  Voir le catalogue <ArrowRight aria-hidden="true" />
-                </Link>
+                <Link to="/catalogue">Voir le catalogue <ArrowRight aria-hidden="true" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline">
                 <Link to="/contact">Devis professionnel</Link>
               </Button>
             </div>
-
-            {/* Micro-preuves sociales */}
             <dl className="grid max-w-md grid-cols-3 gap-4 pt-2">
-              <div>
-                <dt className="text-xs text-muted-foreground">Références</dt>
-                <dd className="text-lg font-bold">2 500+</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">Notes vérifiées</dt>
-                <dd className="text-lg font-bold">4.8/5</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">Pros équipés</dt>
-                <dd className="text-lg font-bold">1 400+</dd>
-              </div>
+              <div><dt className="text-xs text-muted-foreground">Références</dt><dd className="text-lg font-bold">2 500+</dd></div>
+              <div><dt className="text-xs text-muted-foreground">Notes vérifiées</dt><dd className="text-lg font-bold">4.8/5</dd></div>
+              <div><dt className="text-xs text-muted-foreground">Pros équipés</dt><dd className="text-lg font-bold">1 400+</dd></div>
             </dl>
           </div>
-          <div
-            className="relative hidden aspect-[4/5] w-full rounded-3xl bg-gradient-to-br from-primary/20 to-info-soft lg:block"
-            aria-hidden="true"
-          >
+          <div className="relative hidden aspect-[4/5] w-full rounded-3xl bg-gradient-to-br from-primary/20 to-info-soft lg:block" aria-hidden="true">
             <div className="absolute inset-4 rounded-2xl border border-border/60 bg-background/60 backdrop-blur-sm" />
             <div className="absolute bottom-6 left-6 right-6 flex gap-3">
               <div className="flex-1 surface-card px-4 py-3">
@@ -107,79 +94,70 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Product Finder — guided experience */}
+      {/* 1. Pourquoi BA Medical Store — brand story */}
+      <BrandStory />
+
+      {/* 2. Nos marques */}
+      <section className="border-y border-border bg-surface py-14">
+        <div className="container-page">
+          <SectionHeader eyebrow="Nos partenaires" title="Marques référentes" actionLabel="Toutes les marques" actionTo="/brands" />
+          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
+            {BRANDS.map((b) => <BrandCard key={b.slug} brand={b} />)}
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Catégories */}
+      <section className="container-page py-14">
+        <SectionHeader eyebrow="Explorer" title="Nos catégories"
+          description="Une gamme complète pour équiper votre pratique."
+          actionLabel="Toutes les catégories" actionTo="/categories" />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {CATEGORIES.slice(0, 8).map((c) => <CategoryCard key={c.slug} category={c} />)}
+        </div>
+      </section>
+
+      {/* 4. Comment ça fonctionne */}
+      <HowItWorks />
+
+      {/* 5. Medical Product Finder */}
       <section className="container-page py-10">
         <MedicalProductFinder />
       </section>
 
-      {/* Categories */}
+      {/* 6. Produits populaires */}
       <section className="container-page py-14">
-        <SectionHeader
-          eyebrow="Explorer"
-          title="Nos catégories"
-          description="Une gamme complète pour équiper votre pratique."
-          actionLabel="Toutes les catégories"
-          actionTo="/categories"
-        />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.slice(0, 8).map((c) => (
-            <CategoryCard key={c.slug} category={c} />
-          ))}
-        </div>
-      </section>
-
-      {/* Best-sellers */}
-      <section className="container-page py-14">
-        <SectionHeader
-          eyebrow="Populaires"
-          title="Best-sellers"
+        <SectionHeader eyebrow="Populaires" title="Best-sellers"
           description="Les produits préférés des professionnels."
-          actionLabel="Tout le catalogue"
-          actionTo="/catalogue"
-        />
+          actionLabel="Tout le catalogue" actionTo="/catalogue" />
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {MOCK_PRODUCTS.slice(0, 4).map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+          {MOCK_PRODUCTS.slice(0, 4).map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       </section>
 
-      {/* Souvent achetés ensemble — teaser depuis un best-seller */}
-      <section className="container-page py-14">
-        <FrequentlyBoughtTogether product={bestSeller} />
-      </section>
+      {/* 7. Packs santé */}
+      <HealthPacksGrid limit={6} />
 
-      {/* Trust — réassurance longue */}
-      <section className="py-14">
-        <TrustSection />
-      </section>
+      {/* 8. BA Medical+ */}
+      <section className="container-page py-14"><MedicalPlusCard /></section>
 
-      {/* BA Medical+ */}
-      <section className="container-page py-14">
-        <MedicalPlusCard />
-      </section>
+      {/* 9. Avis clients */}
+      <ReviewsSection />
 
-      {/* B2B Banner premium */}
-      <section className="container-page py-14">
-        <B2BBanner />
-      </section>
+      {/* Trust long-form */}
+      <section className="py-14"><TrustSection /></section>
 
-      {/* Brands */}
-      <section className="border-t border-border bg-surface py-14">
-        <div className="container-page">
-          <SectionHeader
-            eyebrow="Nos partenaires"
-            title="Marques référentes"
-            actionLabel="Toutes les marques"
-            actionTo="/brands"
-          />
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {BRANDS.map((b) => (
-              <BrandCard key={b.slug} brand={b} />
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* 10. Blog santé */}
+      <BlogTeaser />
+
+      {/* B2B */}
+      <section className="container-page py-14"><B2BBanner /></section>
+
+      {/* 11. FAQ */}
+      <FaqTeaser />
+
+      {/* 12. Newsletter */}
+      <NewsletterSection />
     </SiteLayout>
   );
 }
