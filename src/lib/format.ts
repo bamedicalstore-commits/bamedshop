@@ -4,15 +4,16 @@ import type { Money } from "@/types/product";
  * Format money for TN market. Amount is stored in minor units.
  * TND uses 3 decimals (millimes). EUR/USD use 2.
  */
-export function formatMoney(m: Money, locale = "fr-TN"): string {
+export function formatMoney(m: Money, locale = "fr-FR"): string {
   const decimals = m.currency === "TND" ? 3 : 2;
   const value = m.amount / 10 ** decimals;
-  return new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: m.currency,
-    minimumFractionDigits: decimals === 3 ? 3 : 2,
-    maximumFractionDigits: decimals === 3 ? 3 : 2,
+  const symbols: Record<string, string> = { TND: "DT", EUR: "€", USD: "$" };
+  const formatted = new Intl.NumberFormat(locale, {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   }).format(value);
+  const sym = symbols[m.currency] ?? m.currency;
+  return m.currency === "TND" ? `${formatted} ${sym}` : `${sym}${formatted}`;
 }
 
 export function formatDate(iso: string, locale = "fr-TN"): string {
