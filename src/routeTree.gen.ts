@@ -10,12 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as PacksRouteImport } from './routes/packs'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as CompareRouteImport } from './routes/compare'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogueRouteImport } from './routes/catalogue'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AdvisorRouteImport } from './routes/advisor'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
@@ -25,6 +28,7 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
+import { Route as PacksSlugRouteImport } from './routes/packs.$slug'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
@@ -38,6 +42,11 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PacksRoute = PacksRouteImport.update({
+  id: '/packs',
+  path: '/packs',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
@@ -46,6 +55,11 @@ const FaqRoute = FaqRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CheckoutRoute = CheckoutRouteImport.update({
@@ -66,6 +80,11 @@ const CartRoute = CartRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdvisorRoute = AdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -113,6 +132,11 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
   path: '/product/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PacksSlugRoute = PacksSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PacksRoute,
+} as any)
 const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
   id: '/categories/$slug',
   path: '/categories/$slug',
@@ -153,12 +177,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
   '/account/orders': typeof AccountOrdersRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
@@ -167,6 +194,7 @@ export interface FileRoutesByFullPath {
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/packs/$slug': typeof PacksSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -176,12 +204,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
   '/account/orders': typeof AccountOrdersRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
@@ -190,6 +221,7 @@ export interface FileRoutesByTo {
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/packs/$slug': typeof PacksSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
@@ -202,12 +234,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
+  '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
+  '/compare': typeof CompareRoute
   '/contact': typeof ContactRoute
   '/faq': typeof FaqRoute
+  '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
   '/account/orders': typeof AccountOrdersRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
@@ -216,6 +251,7 @@ export interface FileRoutesById {
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
+  '/packs/$slug': typeof PacksSlugRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -229,12 +265,15 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/admin'
+    | '/advisor'
     | '/auth'
     | '/cart'
     | '/catalogue'
     | '/checkout'
+    | '/compare'
     | '/contact'
     | '/faq'
+    | '/packs'
     | '/search'
     | '/account/orders'
     | '/account/subscriptions'
@@ -243,6 +282,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
+    | '/packs/$slug'
     | '/product/$slug'
     | '/account/'
     | '/admin/'
@@ -252,12 +292,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/advisor'
     | '/auth'
     | '/cart'
     | '/catalogue'
     | '/checkout'
+    | '/compare'
     | '/contact'
     | '/faq'
+    | '/packs'
     | '/search'
     | '/account/orders'
     | '/account/subscriptions'
@@ -266,6 +309,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
+    | '/packs/$slug'
     | '/product/$slug'
     | '/account'
     | '/admin'
@@ -277,12 +321,15 @@ export interface FileRouteTypes {
     | '/'
     | '/account'
     | '/admin'
+    | '/advisor'
     | '/auth'
     | '/cart'
     | '/catalogue'
     | '/checkout'
+    | '/compare'
     | '/contact'
     | '/faq'
+    | '/packs'
     | '/search'
     | '/account/orders'
     | '/account/subscriptions'
@@ -291,6 +338,7 @@ export interface FileRouteTypes {
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
+    | '/packs/$slug'
     | '/product/$slug'
     | '/account/'
     | '/admin/'
@@ -303,12 +351,15 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
+  AdvisorRoute: typeof AdvisorRoute
   AuthRoute: typeof AuthRoute
   CartRoute: typeof CartRoute
   CatalogueRoute: typeof CatalogueRoute
   CheckoutRoute: typeof CheckoutRoute
+  CompareRoute: typeof CompareRoute
   ContactRoute: typeof ContactRoute
   FaqRoute: typeof FaqRoute
+  PacksRoute: typeof PacksRouteWithChildren
   SearchRoute: typeof SearchRoute
   BlogSlugRoute: typeof BlogSlugRoute
   BrandsSlugRoute: typeof BrandsSlugRoute
@@ -328,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/packs': {
+      id: '/packs'
+      path: '/packs'
+      fullPath: '/packs'
+      preLoaderRoute: typeof PacksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/faq': {
       id: '/faq'
       path: '/faq'
@@ -340,6 +398,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/checkout': {
@@ -368,6 +433,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/advisor': {
+      id: '/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AdvisorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -432,6 +504,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/product/$slug'
       preLoaderRoute: typeof ProductSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/packs/$slug': {
+      id: '/packs/$slug'
+      path: '/$slug'
+      fullPath: '/packs/$slug'
+      preLoaderRoute: typeof PacksSlugRouteImport
+      parentRoute: typeof PacksRoute
     }
     '/categories/$slug': {
       id: '/categories/$slug'
@@ -514,16 +593,29 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface PacksRouteChildren {
+  PacksSlugRoute: typeof PacksSlugRoute
+}
+
+const PacksRouteChildren: PacksRouteChildren = {
+  PacksSlugRoute: PacksSlugRoute,
+}
+
+const PacksRouteWithChildren = PacksRoute._addFileChildren(PacksRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
+  AdvisorRoute: AdvisorRoute,
   AuthRoute: AuthRoute,
   CartRoute: CartRoute,
   CatalogueRoute: CatalogueRoute,
   CheckoutRoute: CheckoutRoute,
+  CompareRoute: CompareRoute,
   ContactRoute: ContactRoute,
   FaqRoute: FaqRoute,
+  PacksRoute: PacksRouteWithChildren,
   SearchRoute: SearchRoute,
   BlogSlugRoute: BlogSlugRoute,
   BrandsSlugRoute: BrandsSlugRoute,
