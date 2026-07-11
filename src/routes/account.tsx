@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { User, Package, Repeat, Heart, LogOut } from "lucide-react";
+import { LayoutDashboard, User, Package, Repeat, Heart, ShieldCheck, FileText, MapPin, Bell, LogOut } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -14,11 +14,22 @@ export const Route = createFileRoute("/account")({
   component: AccountLayout,
 });
 
-const LINKS: ReadonlyArray<{ to: "/account" | "/account/orders" | "/account/subscriptions" | "/account/wishlist"; label: string; icon: typeof User; exact?: boolean }> = [
-  { to: "/account", label: "Profil", icon: User, exact: true },
+type AccountLink = {
+  to: "/account/dashboard" | "/account/orders" | "/account/subscriptions" | "/account/wishlist" | "/account/warranties" | "/account/documents" | "/account/addresses" | "/account/notifications" | "/account/profile";
+  label: string;
+  icon: typeof User;
+};
+
+const LINKS: ReadonlyArray<AccountLink> = [
+  { to: "/account/dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { to: "/account/orders", label: "Mes commandes", icon: Package },
   { to: "/account/subscriptions", label: "Abonnements", icon: Repeat },
-  { to: "/account/wishlist", label: "Wishlist", icon: Heart },
+  { to: "/account/wishlist", label: "Favoris", icon: Heart },
+  { to: "/account/warranties", label: "Garanties", icon: ShieldCheck },
+  { to: "/account/documents", label: "Documents", icon: FileText },
+  { to: "/account/addresses", label: "Adresses", icon: MapPin },
+  { to: "/account/notifications", label: "Notifications", icon: Bell },
+  { to: "/account/profile", label: "Profil", icon: User },
 ];
 
 function AccountLayout() {
@@ -35,7 +46,7 @@ function AccountLayout() {
             <Card className="p-2">
               <nav aria-label="Navigation compte" className="flex flex-col">
                 {LINKS.map((l) => {
-                  const active = l.exact ? pathname === l.to : pathname.startsWith(l.to);
+                  const active = pathname === l.to || pathname.startsWith(l.to + "/");
                   return (
                     <Link
                       key={l.to}
