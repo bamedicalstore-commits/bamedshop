@@ -34,8 +34,14 @@ import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminB2bRouteImport } from './routes/admin.b2b'
 import { Route as AccountWishlistRouteImport } from './routes/account.wishlist'
+import { Route as AccountWarrantiesRouteImport } from './routes/account.warranties'
 import { Route as AccountSubscriptionsRouteImport } from './routes/account.subscriptions'
+import { Route as AccountProfileRouteImport } from './routes/account.profile'
 import { Route as AccountOrdersRouteImport } from './routes/account.orders'
+import { Route as AccountNotificationsRouteImport } from './routes/account.notifications'
+import { Route as AccountDocumentsRouteImport } from './routes/account.documents'
+import { Route as AccountDashboardRouteImport } from './routes/account.dashboard'
+import { Route as AccountAddressesRouteImport } from './routes/account.addresses'
 
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
@@ -162,14 +168,44 @@ const AccountWishlistRoute = AccountWishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => AccountRoute,
 } as any)
+const AccountWarrantiesRoute = AccountWarrantiesRouteImport.update({
+  id: '/warranties',
+  path: '/warranties',
+  getParentRoute: () => AccountRoute,
+} as any)
 const AccountSubscriptionsRoute = AccountSubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
   getParentRoute: () => AccountRoute,
 } as any)
+const AccountProfileRoute = AccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AccountRoute,
+} as any)
 const AccountOrdersRoute = AccountOrdersRouteImport.update({
   id: '/orders',
   path: '/orders',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountNotificationsRoute = AccountNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountDocumentsRoute = AccountDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountDashboardRoute = AccountDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountAddressesRoute = AccountAddressesRouteImport.update({
+  id: '/addresses',
+  path: '/addresses',
   getParentRoute: () => AccountRoute,
 } as any)
 
@@ -187,8 +223,14 @@ export interface FileRoutesByFullPath {
   '/faq': typeof FaqRoute
   '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/dashboard': typeof AccountDashboardRoute
+  '/account/documents': typeof AccountDocumentsRoute
+  '/account/notifications': typeof AccountNotificationsRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
+  '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -214,8 +256,14 @@ export interface FileRoutesByTo {
   '/faq': typeof FaqRoute
   '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/dashboard': typeof AccountDashboardRoute
+  '/account/documents': typeof AccountDocumentsRoute
+  '/account/notifications': typeof AccountNotificationsRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
+  '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -244,8 +292,14 @@ export interface FileRoutesById {
   '/faq': typeof FaqRoute
   '/packs': typeof PacksRouteWithChildren
   '/search': typeof SearchRoute
+  '/account/addresses': typeof AccountAddressesRoute
+  '/account/dashboard': typeof AccountDashboardRoute
+  '/account/documents': typeof AccountDocumentsRoute
+  '/account/notifications': typeof AccountNotificationsRoute
   '/account/orders': typeof AccountOrdersRoute
+  '/account/profile': typeof AccountProfileRoute
   '/account/subscriptions': typeof AccountSubscriptionsRoute
+  '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -275,8 +329,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/packs'
     | '/search'
+    | '/account/addresses'
+    | '/account/dashboard'
+    | '/account/documents'
+    | '/account/notifications'
     | '/account/orders'
+    | '/account/profile'
     | '/account/subscriptions'
+    | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
     | '/blog/$slug'
@@ -302,8 +362,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/packs'
     | '/search'
+    | '/account/addresses'
+    | '/account/dashboard'
+    | '/account/documents'
+    | '/account/notifications'
     | '/account/orders'
+    | '/account/profile'
     | '/account/subscriptions'
+    | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
     | '/blog/$slug'
@@ -331,8 +397,14 @@ export interface FileRouteTypes {
     | '/faq'
     | '/packs'
     | '/search'
+    | '/account/addresses'
+    | '/account/dashboard'
+    | '/account/documents'
+    | '/account/notifications'
     | '/account/orders'
+    | '/account/profile'
     | '/account/subscriptions'
+    | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
     | '/blog/$slug'
@@ -547,11 +619,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountWishlistRouteImport
       parentRoute: typeof AccountRoute
     }
+    '/account/warranties': {
+      id: '/account/warranties'
+      path: '/warranties'
+      fullPath: '/account/warranties'
+      preLoaderRoute: typeof AccountWarrantiesRouteImport
+      parentRoute: typeof AccountRoute
+    }
     '/account/subscriptions': {
       id: '/account/subscriptions'
       path: '/subscriptions'
       fullPath: '/account/subscriptions'
       preLoaderRoute: typeof AccountSubscriptionsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileRouteImport
       parentRoute: typeof AccountRoute
     }
     '/account/orders': {
@@ -561,19 +647,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountOrdersRouteImport
       parentRoute: typeof AccountRoute
     }
+    '/account/notifications': {
+      id: '/account/notifications'
+      path: '/notifications'
+      fullPath: '/account/notifications'
+      preLoaderRoute: typeof AccountNotificationsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/documents': {
+      id: '/account/documents'
+      path: '/documents'
+      fullPath: '/account/documents'
+      preLoaderRoute: typeof AccountDocumentsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/dashboard': {
+      id: '/account/dashboard'
+      path: '/dashboard'
+      fullPath: '/account/dashboard'
+      preLoaderRoute: typeof AccountDashboardRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/addresses': {
+      id: '/account/addresses'
+      path: '/addresses'
+      fullPath: '/account/addresses'
+      preLoaderRoute: typeof AccountAddressesRouteImport
+      parentRoute: typeof AccountRoute
+    }
   }
 }
 
 interface AccountRouteChildren {
+  AccountAddressesRoute: typeof AccountAddressesRoute
+  AccountDashboardRoute: typeof AccountDashboardRoute
+  AccountDocumentsRoute: typeof AccountDocumentsRoute
+  AccountNotificationsRoute: typeof AccountNotificationsRoute
   AccountOrdersRoute: typeof AccountOrdersRoute
+  AccountProfileRoute: typeof AccountProfileRoute
   AccountSubscriptionsRoute: typeof AccountSubscriptionsRoute
+  AccountWarrantiesRoute: typeof AccountWarrantiesRoute
   AccountWishlistRoute: typeof AccountWishlistRoute
   AccountIndexRoute: typeof AccountIndexRoute
 }
 
 const AccountRouteChildren: AccountRouteChildren = {
+  AccountAddressesRoute: AccountAddressesRoute,
+  AccountDashboardRoute: AccountDashboardRoute,
+  AccountDocumentsRoute: AccountDocumentsRoute,
+  AccountNotificationsRoute: AccountNotificationsRoute,
   AccountOrdersRoute: AccountOrdersRoute,
+  AccountProfileRoute: AccountProfileRoute,
   AccountSubscriptionsRoute: AccountSubscriptionsRoute,
+  AccountWarrantiesRoute: AccountWarrantiesRoute,
   AccountWishlistRoute: AccountWishlistRoute,
   AccountIndexRoute: AccountIndexRoute,
 }
