@@ -27,8 +27,8 @@ export const Route = createFileRoute("/")({
     meta: [
       { title: "BA Medical Store — Matériel médical certifié en Tunisie" },
       { name: "description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
-      { property: "og:title", content: "BA Medical Store — Matériel médical premium Tunisie" },
-      { property: "og:description", content: "2500+ références certifiées. Livraison rapide, service pro, prix négociés." },
+      { property: "og:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
+      { property: "og:description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
