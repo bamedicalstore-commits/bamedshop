@@ -1121,6 +1121,10 @@ export type Database = {
         Returns: boolean
       }
       is_staff: { Args: { _user_id: string }; Returns: boolean }
+      resolve_product_price: {
+        Args: { _product_id: string; _user_id: string }
+        Returns: number
+      }
     }
     Enums: {
       app_role:
