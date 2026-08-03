@@ -20,7 +20,15 @@ import { ReviewsSection } from "@/components/marketing/ReviewsSection";
 import { BlogTeaser } from "@/components/marketing/BlogTeaser";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 import { NewsletterSection } from "@/components/marketing/NewsletterSection";
-import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Package } from "lucide-react";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
+import { CATEGORIES, BRANDS } from "@/constants/navigation";
 
 export const Route = createFileRoute("/")({
   head: () => ({
