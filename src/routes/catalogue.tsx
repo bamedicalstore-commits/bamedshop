@@ -189,7 +189,17 @@ function CataloguePage() {
           <aside className="hidden lg:block">
             <FiltersPanel filters={filters} setFilters={setFilters} />
           </aside>
-          {filtered.length === 0 ? (
+          {isPending ? (
+            <ProductGridSkeleton count={6} />
+          ) : isError || data?.error ? (
+            <ErrorState description="Catalogue temporairement indisponible." />
+          ) : products.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title="Aucun produit disponible"
+              description="Le catalogue sera bientôt enrichi. Revenez très prochainement."
+            />
+          ) : filtered.length === 0 ? (
             <EmptyState
               title="Aucun produit ne correspond à vos filtres"
               description="Essayez d'élargir votre recherche ou de réinitialiser les filtres."
