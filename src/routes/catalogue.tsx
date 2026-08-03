@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, List, X, Package } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -19,10 +21,15 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
-import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
+import { CATEGORIES, BRANDS } from "@/constants/navigation";
 import type { Product, UsageProfile } from "@/types/product";
 import type { MedicalBadgeKind } from "@/components/ecommerce/MedicalBadges";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/catalogue")({
   head: () => ({
