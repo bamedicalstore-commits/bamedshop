@@ -167,3 +167,41 @@ function HomePage() {
     </SiteLayout>
   );
 }
+
+/**
+ * Grille "Best-sellers" — première surface publique branchée sur la DB réelle
+ * via `listPublicProducts` (lecture seule). Utilise les états existants du
+ * design system : ProductGridSkeleton / EmptyState / ErrorState.
+ */
+function BestSellersGrid() {
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 4 }],
+    queryFn: () => fetchProducts({ data: { limit: 4 } }),
+  });
+
+  if (isPending) return <ProductGridSkeleton count={4} />;
+  if (isError || data?.error) return <ErrorState description="Catalogue temporairement indisponible." />;
+
+  const products = (data?.products ?? []).map((row) =>
+    toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+  );
+
+  if (products.length === 0) {
+    return (
+      <EmptyState
+        icon={Package}
+        title="Aucun produit disponible"
+        description="Le catalogue sera bientôt enrichi. Revenez très prochainement."
+      />
+    );
+  }
+
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
+      ))}
+    </div>
+  );
+}
