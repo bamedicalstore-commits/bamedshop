@@ -81,7 +81,21 @@ function CataloguePage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<string>("pop");
 
-  const filtered = useMemo(() => applyFilters(MOCK_PRODUCTS, filters, sort), [filters, sort]);
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 100 }],
+    queryFn: () => fetchProducts({ data: { limit: 100 } }),
+  });
+
+  const products = useMemo(
+    () =>
+      (data?.products ?? []).map((row) =>
+        toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+      ),
+    [data],
+  );
+
+  const filtered = useMemo(() => applyFilters(products, filters, sort), [products, filters, sort]);
   const activeCount = countActive(filters);
 
   return (
