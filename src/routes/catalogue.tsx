@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { SlidersHorizontal, LayoutGrid, List, X } from "lucide-react";
+import { SlidersHorizontal, LayoutGrid, List, X, Package } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { Button } from "@/components/ui/button";
@@ -19,10 +21,15 @@ import {
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
-import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
+import { CATEGORIES, BRANDS } from "@/constants/navigation";
 import type { Product, UsageProfile } from "@/types/product";
 import type { MedicalBadgeKind } from "@/components/ecommerce/MedicalBadges";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/catalogue")({
   head: () => ({
@@ -74,7 +81,21 @@ function CataloguePage() {
   const [filters, setFilters] = useState<Filters>(DEFAULT_FILTERS);
   const [sort, setSort] = useState<string>("pop");
 
-  const filtered = useMemo(() => applyFilters(MOCK_PRODUCTS, filters, sort), [filters, sort]);
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 100 }],
+    queryFn: () => fetchProducts({ data: { limit: 100 } }),
+  });
+
+  const products = useMemo(
+    () =>
+      (data?.products ?? []).map((row) =>
+        toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+      ),
+    [data],
+  );
+
+  const filtered = useMemo(() => applyFilters(products, filters, sort), [products, filters, sort]);
   const activeCount = countActive(filters);
 
   return (
@@ -168,7 +189,17 @@ function CataloguePage() {
           <aside className="hidden lg:block">
             <FiltersPanel filters={filters} setFilters={setFilters} />
           </aside>
-          {filtered.length === 0 ? (
+          {isPending ? (
+            <ProductGridSkeleton count={6} />
+          ) : isError || data?.error ? (
+            <ErrorState description="Catalogue temporairement indisponible." />
+          ) : products.length === 0 ? (
+            <EmptyState
+              icon={Package}
+              title="Aucun produit disponible"
+              description="Le catalogue sera bientôt enrichi. Revenez très prochainement."
+            />
+          ) : filtered.length === 0 ? (
             <EmptyState
               title="Aucun produit ne correspond à vos filtres"
               description="Essayez d'élargir votre recherche ou de réinitialiser les filtres."
