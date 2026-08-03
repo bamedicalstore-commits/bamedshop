@@ -20,7 +20,15 @@ import { ReviewsSection } from "@/components/marketing/ReviewsSection";
 import { BlogTeaser } from "@/components/marketing/BlogTeaser";
 import { FaqTeaser } from "@/components/marketing/FaqTeaser";
 import { NewsletterSection } from "@/components/marketing/NewsletterSection";
-import { CATEGORIES, BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { Package } from "lucide-react";
+import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
+import { CATEGORIES, BRANDS } from "@/constants/navigation";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -130,9 +138,7 @@ function HomePage() {
         <SectionHeader eyebrow="Populaires" title="Best-sellers"
           description="Les produits préférés des professionnels."
           actionLabel="Tout le catalogue" actionTo="/catalogue" />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {MOCK_PRODUCTS.slice(0, 4).map((p) => <ProductCard key={p.id} product={p} />)}
-        </div>
+        <BestSellersGrid />
       </section>
 
       {/* 7. Packs santé */}
@@ -159,5 +165,43 @@ function HomePage() {
       {/* 12. Newsletter */}
       <NewsletterSection />
     </SiteLayout>
+  );
+}
+
+/**
+ * Grille "Best-sellers" — première surface publique branchée sur la DB réelle
+ * via `listPublicProducts` (lecture seule). Utilise les états existants du
+ * design system : ProductGridSkeleton / EmptyState / ErrorState.
+ */
+function BestSellersGrid() {
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 4 }],
+    queryFn: () => fetchProducts({ data: { limit: 4 } }),
+  });
+
+  if (isPending) return <ProductGridSkeleton count={4} />;
+  if (isError || data?.error) return <ErrorState description="Catalogue temporairement indisponible." />;
+
+  const products = (data?.products ?? []).map((row) =>
+    toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+  );
+
+  if (products.length === 0) {
+    return (
+      <EmptyState
+        icon={Package}
+        title="Aucun produit disponible"
+        description="Le catalogue sera bientôt enrichi. Revenez très prochainement."
+      />
+    );
+  }
+
+  return (
+    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      {products.map((p) => (
+        <ProductCard key={p.id} product={p} />
+      ))}
+    </div>
   );
 }
