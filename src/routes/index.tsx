@@ -138,9 +138,7 @@ function HomePage() {
         <SectionHeader eyebrow="Populaires" title="Best-sellers"
           description="Les produits préférés des professionnels."
           actionLabel="Tout le catalogue" actionTo="/catalogue" />
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {MOCK_PRODUCTS.slice(0, 4).map((p) => <ProductCard key={p.id} product={p} />)}
-        </div>
+        <BestSellersGrid />
       </section>
 
       {/* 7. Packs santé */}
