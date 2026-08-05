@@ -10,6 +10,8 @@ const MAP: Record<
   low_stock: { label: "Stock limité", variant: "warning", Icon: AlertCircle },
   preorder: { label: "Sur commande", variant: "info", Icon: Clock },
   out_of_stock: { label: "Rupture", variant: "destructive", Icon: XCircle },
+  available: { label: "Disponible", variant: "info", Icon: CheckCircle2 },
+  unavailable: { label: "Indisponible", variant: "destructive", Icon: XCircle },
 };
 
 export function AvailabilityBadge({ status }: { status: Availability }) {

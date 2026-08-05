@@ -7,8 +7,15 @@ import type { Database } from "@/integrations/supabase/types";
  * Uses the publishable key + the existing `products_public_read_active`
  * RLS policy (anon, active products only). No writes, no admin client.
  */
-const PRODUCT_COLUMNS =
-  "id, name, slug, description, sku, category_id, brand_id, price, professional_price, currency, ce_certified, warranty_months, technical_specs, created_at" as const;
+const PRODUCT_COLUMNS = `
+  id, name, slug, description, sku, category_id, brand_id, supplier_id,
+  price, professional_price, currency, ce_certified, warranty_months,
+  technical_specs, active, created_at, updated_at,
+  brand:brands ( name, slug ),
+  category:categories ( name, slug ),
+  media:product_media ( url, position ),
+  documents:product_documents ( label, url )
+` as const;
 
 function createPublicClient() {
   const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;

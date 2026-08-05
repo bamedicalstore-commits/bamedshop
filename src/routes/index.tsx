@@ -184,7 +184,7 @@ function BestSellersGrid() {
   if (isError || data?.error) return <ErrorState description="Catalogue temporairement indisponible." />;
 
   const products = (data?.products ?? []).map((row) =>
-    toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+    toProduct(row),
   );
 
   if (products.length === 0) {
