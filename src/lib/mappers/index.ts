@@ -38,13 +38,12 @@ export function fromMoney(m: Money): number {
 }
 
 // ────────────────────────────────────────────────────────────────────────────
-// Availability : la table `products` de B1 ne stocke pas encore le stock live.
-// On dérive un statut à partir de `active` en attendant l'intégration des
-// tables Inventory (Sprint B3). Les serverFn du Sprint B2 remplaceront cette
-// heuristique par une jointure sur `stock_levels`.
+// Availability : la DB actuelle n'expose AUCUN stock live. `active` traduit
+// uniquement la visibilité catalogue. On mappe donc vers un statut catalogue
+// honnête (`available` / `unavailable`) et non vers un statut de stock.
 // ────────────────────────────────────────────────────────────────────────────
 export function toAvailability(active: boolean | null): Availability {
-  return active === false ? "out_of_stock" : "in_stock";
+  return active === false ? "unavailable" : "available";
 }
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -83,7 +82,8 @@ export function toProduct(row: ProductJoined): Product {
     description: row.description ?? undefined,
     images,
     price: toMoney(row.price, row.currency),
-    compareAtPrice: row.professional_price
+    // professional_price n'est PAS un ancien prix : aucun compareAtPrice dérivé.
+    professionalPrice: row.professional_price
       ? toMoney(row.professional_price, row.currency)
       : undefined,
     availability: toAvailability(row.active),

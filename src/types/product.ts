@@ -7,7 +7,14 @@ export type Money = {
   currency: Currency;
 };
 
-export type Availability = "in_stock" | "low_stock" | "out_of_stock" | "preorder";
+export type Availability =
+  | "in_stock"
+  | "low_stock"
+  | "out_of_stock"
+  | "preorder"
+  /** Statut catalogue (aucun stock live en base) : produit publié / dépublié. */
+  | "available"
+  | "unavailable";
 
 /** Cible d'utilisation métier — filtre catalogue. */
 export type UsageProfile = "professional" | "personal" | "both";
@@ -34,6 +41,8 @@ export type Product = {
   images: string[];
   price: Money;
   compareAtPrice?: Money;
+  /** Tarif professionnel (BA Medical+) — jamais un prix barré. */
+  professionalPrice?: Money;
   rating?: number;
   ratingCount?: number;
   availability: Availability;

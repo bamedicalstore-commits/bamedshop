@@ -90,7 +90,7 @@ function CataloguePage() {
   const products = useMemo(
     () =>
       (data?.products ?? []).map((row) =>
-        toProduct({ ...row, active: true, supplier_id: null, updated_at: row.created_at }),
+        toProduct(row),
       ),
     [data],
   );
