@@ -35,7 +35,7 @@ export const Route = createFileRoute("/catalogue")({
   head: () => ({
     meta: [
       { title: "Catalogue matériel médical — BA Medical Store" },
-      { name: "description", content: "Parcourez notre catalogue complet de matériel médical : diagnostic, consommables, mobilier, orthopédie, premiers secours. Filtres métier : certification, usage, prescription, garantie." },
+      { name: "description", content: "Parcourez notre catalogue complet de matériel médical : diagnostic, consommables, mobilier, orthopédie, premiers secours. Filtres : catégorie, marque, prix, marquage CE, garantie." },
       { property: "og:title", content: "Catalogue matériel médical" },
       { property: "og:description", content: "Notre gamme complète de matériel médical certifié." },
     ],
