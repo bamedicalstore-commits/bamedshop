@@ -26,7 +26,7 @@ import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
 import { listPublicProducts } from "@/lib/catalog.functions";
 import { toProduct } from "@/lib/mappers";
 import { CATEGORIES, BRANDS } from "@/constants/navigation";
-import type { Product, UsageProfile } from "@/types/product";
+import type { Product } from "@/types/product";
 import type { MedicalBadgeKind } from "@/components/ecommerce/MedicalBadges";
 import { cn } from "@/lib/utils";
 
@@ -47,33 +47,21 @@ interface Filters {
   categories: string[];
   brands: string[];
   price: [number, number];
-  inStockOnly: boolean;
   certifications: MedicalBadgeKind[];
-  usage: UsageProfile | "all";
-  prescription: "all" | "yes" | "no";
   warrantyMinMonths: number;
-  subscriptionOnly: boolean;
 }
 
 const DEFAULT_FILTERS: Filters = {
   categories: [],
   brands: [],
   price: [0, 2000],
-  inStockOnly: false,
   certifications: [],
-  usage: "all",
-  prescription: "all",
   warrantyMinMonths: 0,
-  subscriptionOnly: false,
 };
 
+/** Seule certification réellement alimentée par la DB : products.ce_certified. */
 const CERT_OPTIONS: { value: MedicalBadgeKind; label: string }[] = [
-  { value: "ce", label: "CE" },
-  { value: "iso-13485", label: "ISO 13485" },
-  { value: "sterile", label: "Stérile" },
-  { value: "latex-free", label: "Sans latex" },
-  { value: "single-use", label: "Usage unique" },
-  { value: "reusable", label: "Réutilisable" },
+  { value: "ce", label: "Marquage CE" },
 ];
 
 function CataloguePage() {
@@ -300,46 +288,6 @@ function FiltersPanel({
         ))}
       </FilterGroup>
       <Separator />
-      <FilterGroup title="Usage">
-        <div className="space-y-1.5">
-          {(["all", "professional", "personal", "both"] as const).map((u) => (
-            <label key={u} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="usage"
-                value={u}
-                checked={filters.usage === u}
-                onChange={() => set("usage", u)}
-                className="accent-primary"
-              />
-              <span>
-                {u === "all" ? "Tous" : u === "professional" ? "Professionnel" : u === "personal" ? "Particulier" : "Mixte"}
-              </span>
-            </label>
-          ))}
-        </div>
-      </FilterGroup>
-      <Separator />
-      <FilterGroup title="Prescription">
-        <div className="space-y-1.5">
-          {(["all", "no", "yes"] as const).map((p) => (
-            <label key={p} className="flex items-center gap-2 text-sm">
-              <input
-                type="radio"
-                name="rx"
-                value={p}
-                checked={filters.prescription === p}
-                onChange={() => set("prescription", p)}
-                className="accent-primary"
-              />
-              <span>
-                {p === "all" ? "Tous" : p === "no" ? "Sans ordonnance" : "Sur ordonnance"}
-              </span>
-            </label>
-          ))}
-        </div>
-      </FilterGroup>
-      <Separator />
       <FilterGroup title="Garantie minimum">
         <div className="px-1 pt-2">
           <Slider
@@ -354,25 +302,6 @@ function FiltersPanel({
             <span>{filters.warrantyMinMonths} mois</span>
           </div>
         </div>
-      </FilterGroup>
-      <Separator />
-      <FilterGroup title="Options">
-        <label className="flex items-center gap-2 py-1 text-sm">
-          <Checkbox
-            id="in-stock"
-            checked={filters.inStockOnly}
-            onCheckedChange={(v) => set("inStockOnly", !!v)}
-          />
-          <span>En stock uniquement</span>
-        </label>
-        <label className="flex items-center gap-2 py-1 text-sm">
-          <Checkbox
-            id="sub"
-            checked={filters.subscriptionOnly}
-            onCheckedChange={(v) => set("subscriptionOnly", !!v)}
-          />
-          <span>Éligible abonnement BA Medical+</span>
-        </label>
       </FilterGroup>
     </div>
   );
@@ -419,31 +348,10 @@ function ActiveChips({
       remove: () => setFilters({ ...filters, certifications: filters.certifications.filter((v) => v !== c) }),
     });
   });
-  if (filters.usage !== "all") {
-    chips.push({ label: `Usage: ${filters.usage}`, remove: () => setFilters({ ...filters, usage: "all" }) });
-  }
-  if (filters.prescription !== "all") {
-    chips.push({
-      label: filters.prescription === "yes" ? "Sur ordonnance" : "Sans ordonnance",
-      remove: () => setFilters({ ...filters, prescription: "all" }),
-    });
-  }
   if (filters.warrantyMinMonths > 0) {
     chips.push({
       label: `Garantie ≥ ${filters.warrantyMinMonths}m`,
       remove: () => setFilters({ ...filters, warrantyMinMonths: 0 }),
-    });
-  }
-  if (filters.subscriptionOnly) {
-    chips.push({
-      label: "Abonnement",
-      remove: () => setFilters({ ...filters, subscriptionOnly: false }),
-    });
-  }
-  if (filters.inStockOnly) {
-    chips.push({
-      label: "En stock",
-      remove: () => setFilters({ ...filters, inStockOnly: false }),
     });
   }
   return (
@@ -466,11 +374,7 @@ function ActiveChips({
 function countActive(f: Filters): number {
   let n = 0;
   n += f.categories.length + f.brands.length + f.certifications.length;
-  if (f.usage !== "all") n++;
-  if (f.prescription !== "all") n++;
   if (f.warrantyMinMonths > 0) n++;
-  if (f.subscriptionOnly) n++;
-  if (f.inStockOnly) n++;
   return n;
 }
 
@@ -483,19 +387,11 @@ function applyFilters(products: Product[], f: Filters, sort: string): Product[] 
     if (f.categories.length && !f.categories.includes(p.categorySlug)) return false;
     if (f.brands.length && !f.brands.includes(p.brandSlug)) return false;
     if (p.price.amount < minPMinor || p.price.amount > maxPMinor) return false;
-    if (f.inStockOnly && p.availability !== "in_stock") return false;
     if (f.certifications.length) {
       const certs = p.certifications ?? [];
       if (!f.certifications.every((c) => certs.includes(c))) return false;
     }
-    if (f.usage !== "all" && p.usage && p.usage !== f.usage && p.usage !== "both") return false;
-    if (f.prescription !== "all") {
-      const rx = !!p.prescriptionRequired;
-      if (f.prescription === "yes" && !rx) return false;
-      if (f.prescription === "no" && rx) return false;
-    }
     if (f.warrantyMinMonths > 0 && (p.warrantyMonths ?? 0) < f.warrantyMinMonths) return false;
-    if (f.subscriptionOnly && !p.subscriptionEligible) return false;
     return true;
   });
 

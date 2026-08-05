@@ -20,7 +20,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, layout = "grid", className }: ProductCardProps) {
-  const outOfStock = product.availability === "out_of_stock";
+  const outOfStock =
+    product.availability === "out_of_stock" || product.availability === "unavailable";
+  const image = product.images?.[0];
   const chips = buildChips(product);
   return (
     <Card
@@ -36,9 +38,18 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
           layout === "grid" ? "aspect-square w-full" : "aspect-square w-40 sm:w-48",
         )}
       >
-        <div className="flex size-full items-center justify-center text-muted-foreground/40 transition-transform duration-500 group-hover:scale-105">
-          <Pill className="size-16" aria-hidden="true" />
-        </div>
+        {image ? (
+          <img
+            src={image}
+            alt={product.name}
+            loading="lazy"
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center text-muted-foreground/40 transition-transform duration-500 group-hover:scale-105">
+            <Pill className="size-16" aria-hidden="true" />
+          </div>
+        )}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {product.isNew && <Badge variant="info">Nouveau</Badge>}
           {product.isBestSeller && <Badge variant="soft">Best-seller</Badge>}
