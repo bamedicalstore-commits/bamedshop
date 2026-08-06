@@ -1,10 +1,17 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
 import { Button } from "@/components/ui/button";
-import { BRANDS, MOCK_PRODUCTS } from "@/constants/navigation";
+import { BRANDS } from "@/constants/navigation";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
 import { PackageX } from "lucide-react";
 
 export const Route = createFileRoute("/brands/$slug")({
@@ -20,6 +27,8 @@ export const Route = createFileRoute("/brands/$slug")({
       meta: [
         { title: `${b.name} — BA Medical Store` },
         { name: "description", content: `Découvrez tous les produits ${b.name} disponibles chez BA Medical Store.` },
+        { property: "og:title", content: `${b.name} — BA Medical Store` },
+        { property: "og:description", content: `Les produits ${b.name} du catalogue BA Medical Store.` },
       ],
     };
   },
@@ -30,7 +39,18 @@ export const Route = createFileRoute("/brands/$slug")({
 function BrandDetail() {
   const { slug } = Route.useLoaderData();
   const brand = BRANDS.find((b) => b.slug === slug)!;
-  const products = MOCK_PRODUCTS.filter((p) => p.brandSlug === slug);
+
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 100 }],
+    queryFn: () => fetchProducts({ data: { limit: 100 } }),
+  });
+
+  const products = useMemo(
+    () => (data?.products ?? []).map((row) => toProduct(row)).filter((p) => p.brandSlug === slug),
+    [data, slug],
+  );
+
   return (
     <SiteLayout>
       <div className="container-page py-6">
@@ -47,9 +67,17 @@ function BrandDetail() {
       <div className="container-page pb-14">
         <header className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{brand.name}</h1>
-          <p className="mt-2 text-muted-foreground">{brand.productCount ?? 0} produits</p>
+          {!isPending && !isError && !data?.error && (
+            <p className="mt-2 text-muted-foreground">
+              {products.length} produit{products.length > 1 ? "s" : ""}
+            </p>
+          )}
         </header>
-        {products.length ? (
+        {isPending ? (
+          <ProductGridSkeleton count={4} />
+        ) : isError || data?.error ? (
+          <ErrorState description="Catalogue temporairement indisponible." />
+        ) : products.length ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((p) => (<ProductCard key={p.id} product={p} />))}
           </div>

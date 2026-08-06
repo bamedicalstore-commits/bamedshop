@@ -103,7 +103,7 @@ function CataloguePage() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Catalogue</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              {filtered.length} produits · Catalogue Pharmatec Tunisie
+              {filtered.length} produits · Catalogue BA Medical Store
             </p>
           </div>
           <div className="flex items-center gap-2">
