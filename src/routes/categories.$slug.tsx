@@ -1,10 +1,17 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, MOCK_PRODUCTS } from "@/constants/navigation";
+import { CATEGORIES } from "@/constants/navigation";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
 import { PackageX } from "lucide-react";
 
 export const Route = createFileRoute("/categories/$slug")({
@@ -32,7 +39,17 @@ export const Route = createFileRoute("/categories/$slug")({
 function CategoryDetail() {
   const { slug } = Route.useLoaderData();
   const category = CATEGORIES.find((c) => c.slug === slug)!;
-  const products = MOCK_PRODUCTS.filter((p) => p.categorySlug === slug);
+
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 100 }],
+    queryFn: () => fetchProducts({ data: { limit: 100 } }),
+  });
+
+  const products = useMemo(
+    () => (data?.products ?? []).map((row) => toProduct(row)).filter((p) => p.categorySlug === slug),
+    [data, slug],
+  );
 
   return (
     <SiteLayout>
@@ -56,7 +73,11 @@ function CategoryDetail() {
           )}
         </header>
 
-        {products.length ? (
+        {isPending ? (
+          <ProductGridSkeleton count={4} />
+        ) : isError || data?.error ? (
+          <ErrorState description="Catalogue temporairement indisponible." />
+        ) : products.length ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {products.map((p) => (
               <ProductCard key={p.id} product={p} />

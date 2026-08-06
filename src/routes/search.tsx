@@ -1,12 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { Search as SearchIcon } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
 import { EmptyState } from "@/components/feedback/EmptyState";
-import { MOCK_PRODUCTS } from "@/constants/navigation";
+import { ErrorState } from "@/components/feedback/ErrorState";
+import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
+import { listPublicProducts } from "@/lib/catalog.functions";
+import { toProduct } from "@/lib/mappers";
 
 export const Route = createFileRoute("/search")({
   head: () => ({
@@ -21,9 +26,26 @@ export const Route = createFileRoute("/search")({
 
 function SearchPage() {
   const [q, setQ] = useState("");
-  const results = q
-    ? MOCK_PRODUCTS.filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))
-    : [];
+
+  const fetchProducts = useServerFn(listPublicProducts);
+  const { data, isPending, isError } = useQuery({
+    queryKey: ["public-products", { limit: 100 }],
+    queryFn: () => fetchProducts({ data: { limit: 100 } }),
+  });
+
+  const products = useMemo(() => (data?.products ?? []).map((row) => toProduct(row)), [data]);
+
+  const results = useMemo(() => {
+    const term = q.trim().toLowerCase();
+    if (!term) return [];
+    return products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(term) ||
+        p.brand.toLowerCase().includes(term) ||
+        (p.sku ?? "").toLowerCase().includes(term),
+    );
+  }, [products, q]);
+
   return (
     <SiteLayout>
       <div className="container-page py-10">
@@ -56,6 +78,10 @@ function SearchPage() {
               title="Que cherchez-vous ?"
               description="Saisissez un mot-clé pour lancer la recherche dans le catalogue."
             />
+          ) : isPending ? (
+            <ProductGridSkeleton count={4} />
+          ) : isError || data?.error ? (
+            <ErrorState description="Catalogue temporairement indisponible." />
           ) : results.length ? (
             <>
               <p className="mb-4 text-sm text-muted-foreground">
