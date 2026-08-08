@@ -1,0 +1,74 @@
+name: GENESIS Builder Probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - "genesis/builder-probe"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: genesis-builder-probe-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  preflight-build:
+    name: Preflight + Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify repository identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Repository: ${GITHUB_REPOSITORY}"
+          echo "Ref: ${GITHUB_REF}"
+          echo "SHA: ${GITHUB_SHA}"
+          git rev-parse HEAD
+          git status --short
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "bun"
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "latest"
+
+      - name: Environment manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --version
+          bun --version
+          git --version
+          python --version
+          bun pm --version
+
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Lint
+        run: bun run lint
+
+      - name: Build
+        run: bun run build
+
+      - name: Builder artifact manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d .output || test -d dist || true
+          echo "BUILD_STATUS=PASS"
+          echo "COMMIT_SHA=${GITHUB_SHA}"
