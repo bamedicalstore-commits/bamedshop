@@ -101,11 +101,7 @@ function getServerSnapshot() {
 }
 
 export function useUiStore<T>(selector: (s: UiState) => T): T {
-  const snap = useSyncExternalStore(
-    subscribe,
-    () => selector(state),
-    () => selector(state),
-  );
+  const snap = useSyncExternalStore(subscribe, () => selector(state), () => selector(state));
   return snap;
 }
 
@@ -132,10 +128,9 @@ export const uiActions = {
     setState({ cart, overlays: { ...state.overlays, miniCart: true } });
   },
   updateCartQty(productId: string, quantity: number) {
-    const cart =
-      quantity <= 0
-        ? state.cart.filter((l) => l.productId !== productId)
-        : state.cart.map((l) => (l.productId === productId ? { ...l, quantity } : l));
+    const cart = quantity <= 0
+      ? state.cart.filter((l) => l.productId !== productId)
+      : state.cart.map((l) => (l.productId === productId ? { ...l, quantity } : l));
     setState({ cart });
   },
   removeFromCart(productId: string) {

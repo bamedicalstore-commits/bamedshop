@@ -36,9 +36,7 @@ export function B2BBanner({ className, variant = "wide" }: Props) {
       <div
         className={cn(
           "relative grid gap-8 p-8 md:p-12",
-          variant === "wide"
-            ? "md:grid-cols-2 md:items-center"
-            : "md:grid-cols-[1fr_auto] md:items-center",
+          variant === "wide" ? "md:grid-cols-2 md:items-center" : "md:grid-cols-[1fr_auto] md:items-center",
         )}
       >
         <div className="space-y-4">
@@ -49,8 +47,8 @@ export function B2BBanner({ className, variant = "wide" }: Props) {
             Équipez votre structure de santé avec un compte pro
           </h2>
           <p className="max-w-xl text-sm text-primary-foreground/90 sm:text-base">
-            Cabinets, cliniques, pharmacies, laboratoires — bénéficiez de tarifs négociés, devis en
-            24h, facturation à échéance et livraison prioritaire partout en Tunisie.
+            Cabinets, cliniques, pharmacies, laboratoires — bénéficiez de tarifs négociés,
+            devis en 24h, facturation à échéance et livraison prioritaire partout en Tunisie.
           </p>
 
           {variant === "wide" && (
@@ -67,12 +65,7 @@ export function B2BBanner({ className, variant = "wide" }: Props) {
           )}
 
           <div className="flex flex-wrap gap-3 pt-2">
-            <Button
-              asChild
-              size="lg"
-              variant="secondary"
-              className="bg-white text-primary hover:bg-white/90"
-            >
+            <Button asChild size="lg" variant="secondary" className="bg-white text-primary hover:bg-white/90">
               <Link to="/contact">
                 Demander un compte pro <ArrowRight aria-hidden="true" />
               </Link>

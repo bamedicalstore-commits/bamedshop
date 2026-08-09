@@ -2,7 +2,13 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, ShoppingCart, Heart, User, Phone, HeartPulse, Scale } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { MAIN_NAV, CATEGORIES } from "@/constants/navigation";
 import { cn } from "@/lib/utils";
 import { SmartSearchTrigger, SmartSearchIconTrigger } from "@/components/ecommerce/SmartSearch";
@@ -62,11 +68,7 @@ export function SiteHeader() {
         </Sheet>
 
         {/* Logo */}
-        <Link
-          to="/"
-          className="flex shrink-0 items-center gap-2"
-          aria-label="BA Medical Store, accueil"
-        >
+        <Link to="/" className="flex shrink-0 items-center gap-2" aria-label="BA Medical Store, accueil">
           <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]">
             <HeartPulse className="size-5" aria-hidden="true" />
           </div>

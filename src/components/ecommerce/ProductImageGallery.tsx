@@ -52,9 +52,7 @@ export function ProductImageGallery({ images, alt, className }: ProductImageGall
               aria-current={active === i}
               className={cn(
                 "grid size-20 shrink-0 place-items-center overflow-hidden rounded-md border bg-surface-muted text-muted-foreground/40 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-                active === i
-                  ? "border-primary ring-1 ring-primary/40"
-                  : "border-border hover:border-input",
+                active === i ? "border-primary ring-1 ring-primary/40" : "border-border hover:border-input",
               )}
             >
               {src ? (
@@ -83,7 +81,9 @@ export function ProductImageGallery({ images, alt, className }: ProductImageGall
                 "size-full object-cover transition-transform duration-200",
                 zoomActive && "scale-[1.75]",
               )}
-              style={zoomActive ? { transformOrigin: `${origin.x}% ${origin.y}%` } : undefined}
+              style={
+                zoomActive ? { transformOrigin: `${origin.x}% ${origin.y}%` } : undefined
+              }
             />
           ) : (
             <div className="grid size-full place-items-center text-muted-foreground/30">
@@ -148,11 +148,7 @@ export function ProductImageGallery({ images, alt, className }: ProductImageGall
           </DialogDescription>
           <div className="relative flex aspect-square items-center justify-center bg-surface-muted">
             {list[active] ? (
-              <img
-                src={list[active] as string}
-                alt={alt}
-                className="max-h-full max-w-full object-contain"
-              />
+              <img src={list[active] as string} alt={alt} className="max-h-full max-w-full object-contain" />
             ) : (
               <Pill className="size-40 text-muted-foreground/30" aria-hidden="true" />
             )}

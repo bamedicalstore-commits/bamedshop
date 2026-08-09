@@ -49,9 +49,7 @@ function ProfilePage() {
             <Input id="p-new" type="password" className="mt-2" />
           </div>
           <div className="sm:col-span-2">
-            <Button type="submit" variant="outline">
-              Mettre à jour
-            </Button>
+            <Button type="submit" variant="outline">Mettre à jour</Button>
           </div>
         </form>
       </Card>

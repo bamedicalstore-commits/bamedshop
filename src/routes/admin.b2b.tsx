@@ -3,27 +3,14 @@ import { Building2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 export const Route = createFileRoute("/admin/b2b")({
   component: B2BPage,
 });
 
 const ACCOUNTS = [
-  {
-    name: "Clinique El Manar",
-    contact: "Dr. Ben Salah",
-    status: "active",
-    orders: 42,
-    ca: "18 240 DT",
-  },
+  { name: "Clinique El Manar", contact: "Dr. Ben Salah", status: "active", orders: 42, ca: "18 240 DT" },
   { name: "Pharmacie Nour", contact: "M. Trabelsi", status: "active", orders: 27, ca: "9 130 DT" },
   { name: "Cabinet Dermo+", contact: "Dr. Kouki", status: "pending", orders: 0, ca: "—" },
   { name: "Kiné Sfax Center", contact: "M. Amri", status: "active", orders: 15, ca: "6 420 DT" },
@@ -68,9 +55,7 @@ function B2BPage() {
                   <TableCell>{a.orders}</TableCell>
                   <TableCell>{a.ca}</TableCell>
                   <TableCell className="text-right">
-                    <Button variant="outline" size="sm">
-                      Détails
-                    </Button>
+                    <Button variant="outline" size="sm">Détails</Button>
                   </TableCell>
                 </TableRow>
               ))}

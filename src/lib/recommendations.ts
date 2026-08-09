@@ -30,7 +30,7 @@ export function frequentlyBoughtTogether(product: Product, all: Product[], limit
       if (p.brandSlug === product.brandSlug) score += 3;
       if (p.categorySlug !== product.categorySlug) score += 2;
       if (p.isBestSeller) score += 2;
-      score += p.rating ?? 0;
+      score += (p.rating ?? 0);
       return { p, score };
     })
     .sort((a, b) => b.score - a.score);

@@ -1,53 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 const FAQS = [
-  {
-    q: "Quels sont les délais de livraison ?",
-    a: "Nous livrons partout en Tunisie sous 24 à 48h ouvrées. La livraison est offerte dès 200 DT d'achat.",
-  },
-  {
-    q: "Puis-je bénéficier de tarifs professionnels ?",
-    a: "Oui, créez un compte pro (cabinet, clinique, entreprise) pour accéder à des tarifs négociés et à un interlocuteur dédié.",
-  },
-  {
-    q: "Vos produits sont-ils certifiés ?",
-    a: "Tous nos produits sont marqués CE et respectent les normes internationales applicables au matériel médical.",
-  },
-  {
-    q: "Comment retourner un produit ?",
-    a: "Vous disposez de 14 jours après réception pour retourner un produit non ouvert et non utilisé. Contactez notre support pour initier le retour.",
-  },
-  {
-    q: "Proposez-vous des abonnements ?",
-    a: "Oui, notre programme BA Medical+ permet aux professionnels de recevoir automatiquement leurs consommables à intervalle défini, avec remises exclusives.",
-  },
-  {
-    q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Carte bancaire via Konnect ou Flouci, paiement à la livraison, virement bancaire pour les comptes pros.",
-  },
+  { q: "Quels sont les délais de livraison ?", a: "Nous livrons partout en Tunisie sous 24 à 48h ouvrées. La livraison est offerte dès 200 DT d'achat." },
+  { q: "Puis-je bénéficier de tarifs professionnels ?", a: "Oui, créez un compte pro (cabinet, clinique, entreprise) pour accéder à des tarifs négociés et à un interlocuteur dédié." },
+  { q: "Vos produits sont-ils certifiés ?", a: "Tous nos produits sont marqués CE et respectent les normes internationales applicables au matériel médical." },
+  { q: "Comment retourner un produit ?", a: "Vous disposez de 14 jours après réception pour retourner un produit non ouvert et non utilisé. Contactez notre support pour initier le retour." },
+  { q: "Proposez-vous des abonnements ?", a: "Oui, notre programme BA Medical+ permet aux professionnels de recevoir automatiquement leurs consommables à intervalle défini, avec remises exclusives." },
+  { q: "Quels moyens de paiement acceptez-vous ?", a: "Carte bancaire via Konnect ou Flouci, paiement à la livraison, virement bancaire pour les comptes pros." },
 ];
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
       { title: "FAQ — BA Medical Store" },
-      {
-        name: "description",
-        content:
-          "Réponses aux questions fréquentes : livraison, retours, comptes pros, paiements, certifications.",
-      },
+      { name: "description", content: "Réponses aux questions fréquentes : livraison, retours, comptes pros, paiements, certifications." },
       { property: "og:title", content: "FAQ — BA Medical Store" },
-      {
-        property: "og:description",
-        content: "Toutes les réponses à vos questions sur BA Medical Store.",
-      },
+      { property: "og:description", content: "Toutes les réponses à vos questions sur BA Medical Store." },
     ],
   }),
   component: FaqPage,

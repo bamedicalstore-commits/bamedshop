@@ -4,11 +4,7 @@ import type { Availability } from "@/types/product";
 
 const MAP: Record<
   Availability,
-  {
-    label: string;
-    variant: "success" | "warning" | "destructive" | "info";
-    Icon: typeof CheckCircle2;
-  }
+  { label: string; variant: "success" | "warning" | "destructive" | "info"; Icon: typeof CheckCircle2 }
 > = {
   in_stock: { label: "En stock", variant: "success", Icon: CheckCircle2 },
   low_stock: { label: "Stock limité", variant: "warning", Icon: AlertCircle },

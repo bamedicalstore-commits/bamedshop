@@ -1,12 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetFooter,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -29,9 +22,7 @@ export function MiniCart() {
   return (
     <Sheet
       open={open}
-      onOpenChange={(o) =>
-        o ? uiActions.openOverlay("miniCart") : uiActions.closeOverlay("miniCart")
-      }
+      onOpenChange={(o) => (o ? uiActions.openOverlay("miniCart") : uiActions.closeOverlay("miniCart"))}
     >
       <SheetContent side="right" className="flex w-full flex-col p-0 sm:max-w-md">
         <SheetHeader className="border-b border-border p-5">
@@ -67,10 +58,7 @@ export function MiniCart() {
                 aria-valuenow={progress}
                 className="mt-2 h-1.5 overflow-hidden rounded-full bg-background"
               >
-                <div
-                  className="h-full bg-primary transition-all"
-                  style={{ width: `${progress}%` }}
-                />
+                <div className="h-full bg-primary transition-all" style={{ width: `${progress}%` }} />
               </div>
             </div>
           )}
@@ -142,12 +130,14 @@ export function MiniCart() {
                 {formatMoney({ amount: subtotal, currency: "TND" })}
               </span>
             </div>
-            <p className="-mt-2 text-xs text-muted-foreground">
-              TVA incluse — Frais de livraison au checkout
-            </p>
+            <p className="-mt-2 text-xs text-muted-foreground">TVA incluse — Frais de livraison au checkout</p>
             <Separator />
             <div className="grid gap-2 sm:grid-cols-2">
-              <Button asChild variant="outline" onClick={() => uiActions.closeOverlay("miniCart")}>
+              <Button
+                asChild
+                variant="outline"
+                onClick={() => uiActions.closeOverlay("miniCart")}
+              >
                 <Link to="/cart">Voir le panier</Link>
               </Button>
               <Button asChild size="lg" onClick={() => uiActions.closeOverlay("miniCart")}>

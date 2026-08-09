@@ -17,19 +17,13 @@ function WishlistPage() {
         icon={Heart}
         title="Votre wishlist est vide"
         description="Ajoutez des produits à votre wishlist depuis le catalogue."
-        action={
-          <Button asChild>
-            <Link to="/catalogue">Voir le catalogue</Link>
-          </Button>
-        }
+        action={<Button asChild><Link to="/catalogue">Voir le catalogue</Link></Button>}
       />
     );
   }
   return (
     <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-      {items.map((p) => (
-        <ProductCard key={p.id} product={p} />
-      ))}
+      {items.map((p) => (<ProductCard key={p.id} product={p} />))}
     </div>
   );
 }
