@@ -1,9 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TrendingUp, TrendingDown, ShoppingBag, Users, Package, DollarSign, Bell, AlertTriangle } from "lucide-react";
+import {
+  TrendingUp,
+  TrendingDown,
+  ShoppingBag,
+  Users,
+  Package,
+  DollarSign,
+  Bell,
+  AlertTriangle,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +36,13 @@ function AdminDashboard() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard icon={DollarSign} label="Chiffre d'affaires" value="42 380 DT" delta="+12.4%" positive />
+        <KpiCard
+          icon={DollarSign}
+          label="Chiffre d'affaires"
+          value="42 380 DT"
+          delta="+12.4%"
+          positive
+        />
         <KpiCard icon={ShoppingBag} label="Commandes" value="184" delta="+8.1%" positive />
         <KpiCard icon={Users} label="Nouveaux clients" value="57" delta="-2.3%" />
         <KpiCard icon={Package} label="Produits vendus" value="612" delta="+15.7%" positive />
@@ -30,7 +52,9 @@ function AdminDashboard() {
         <Card className="p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Ventes récentes</h2>
-            <Button variant="outline" size="sm">Voir tout</Button>
+            <Button variant="outline" size="sm">
+              Voir tout
+            </Button>
           </div>
           <div className="mt-6 overflow-x-auto">
             <Table>
@@ -67,7 +91,8 @@ function AdminDashboard() {
         <div className="space-y-4">
           <Card className="p-6">
             <h2 className="flex items-center gap-2 text-lg font-semibold">
-              <AlertTriangle className="size-4 text-warning-foreground" aria-hidden="true" /> Alertes stock
+              <AlertTriangle className="size-4 text-warning-foreground" aria-hidden="true" />{" "}
+              Alertes stock
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
               {[
@@ -106,7 +131,19 @@ function AdminDashboard() {
   );
 }
 
-function KpiCard({ icon: Icon, label, value, delta, positive }: { icon: LucideIcon; label: string; value: string; delta: string; positive?: boolean }) {
+function KpiCard({
+  icon: Icon,
+  label,
+  value,
+  delta,
+  positive,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  delta: string;
+  positive?: boolean;
+}) {
   const TrendIcon = positive ? TrendingUp : TrendingDown;
   return (
     <Card className="p-5">
@@ -121,7 +158,12 @@ function KpiCard({ icon: Icon, label, value, delta, positive }: { icon: LucideIc
           <Icon className="size-5" aria-hidden="true" />
         </div>
       </div>
-      <div className={cn("mt-3 inline-flex items-center gap-1 text-xs font-medium", positive ? "text-success" : "text-destructive")}>
+      <div
+        className={cn(
+          "mt-3 inline-flex items-center gap-1 text-xs font-medium",
+          positive ? "text-success" : "text-destructive",
+        )}
+      >
         <TrendIcon className="size-3.5" aria-hidden="true" /> {delta}
         <span className="text-muted-foreground">vs période précédente</span>
       </div>

@@ -7,7 +7,11 @@ export const Route = createFileRoute("/brands/")({
   head: () => ({
     meta: [
       { title: "Nos marques — BA Medical Store" },
-      { name: "description", content: "Découvrez toutes les marques référentes de matériel médical distribuées par BA Medical Store." },
+      {
+        name: "description",
+        content:
+          "Découvrez toutes les marques référentes de matériel médical distribuées par BA Medical Store.",
+      },
       { property: "og:title", content: "Nos marques" },
       { property: "og:description", content: "Marques référentes de matériel médical." },
     ],

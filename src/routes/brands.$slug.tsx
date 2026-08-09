@@ -4,7 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
@@ -21,14 +28,21 @@ export const Route = createFileRoute("/brands/$slug")({
     return { slug: b.slug };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Marque introuvable" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData)
+      return { meta: [{ title: "Marque introuvable" }, { name: "robots", content: "noindex" }] };
     const b = BRANDS.find((x) => x.slug === loaderData.slug)!;
     return {
       meta: [
         { title: `${b.name} — BA Medical Store` },
-        { name: "description", content: `Découvrez tous les produits ${b.name} disponibles chez BA Medical Store.` },
+        {
+          name: "description",
+          content: `Découvrez tous les produits ${b.name} disponibles chez BA Medical Store.`,
+        },
         { property: "og:title", content: `${b.name} — BA Medical Store` },
-        { property: "og:description", content: `Les produits ${b.name} du catalogue BA Medical Store.` },
+        {
+          property: "og:description",
+          content: `Les produits ${b.name} du catalogue BA Medical Store.`,
+        },
       ],
     };
   },
@@ -56,11 +70,17 @@ function BrandDetail() {
       <div className="container-page py-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem><BreadcrumbLink href="/">Accueil</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbLink href="/brands">Marques</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/brands">Marques</BreadcrumbLink>
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbPage>{brand.name}</BreadcrumbPage></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbPage>{brand.name}</BreadcrumbPage>
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -79,13 +99,19 @@ function BrandDetail() {
           <ErrorState description="Catalogue temporairement indisponible." />
         ) : products.length ? (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((p) => (<ProductCard key={p.id} product={p} />))}
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
           </div>
         ) : (
           <EmptyState
             icon={PackageX}
             title="Aucun produit pour cette marque"
-            action={<Button asChild><Link to="/catalogue">Voir le catalogue</Link></Button>}
+            action={
+              <Button asChild>
+                <Link to="/catalogue">Voir le catalogue</Link>
+              </Button>
+            }
           />
         )}
       </div>
