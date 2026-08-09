@@ -43,7 +43,7 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: "latest"
+          bun-version: "1.2.20"
 
       - name: Environment manifest
         shell: bash
@@ -53,6 +53,7 @@ jobs:
           bun --version
           git --version
           python --version
+          bun pm --version
 
       - name: Install locked dependencies
         run: bun install --frozen-lockfile
