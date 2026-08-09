@@ -11,13 +11,7 @@
  * Le Frontend attend des minor units (millimes) → conversion ×1000.
  */
 import type { Tables } from "@/integrations/supabase/types";
-import type {
-  Availability,
-  Brand,
-  Category,
-  Money,
-  Product,
-} from "@/types/product";
+import type { Availability, Brand, Category, Money, Product } from "@/types/product";
 
 // ────────────────────────────────────────────────────────────────────────────
 // Money — DB (NUMERIC TND unité) → Frontend (minor units millimes)
@@ -26,7 +20,7 @@ export function toMoney(
   amount: number | string | null | undefined,
   currency: string | null | undefined = "TND",
 ): Money {
-  const n = typeof amount === "string" ? Number(amount) : amount ?? 0;
+  const n = typeof amount === "string" ? Number(amount) : (amount ?? 0);
   return {
     amount: Math.round(n * 1000),
     currency: (currency ?? "TND") as Money["currency"],
@@ -88,9 +82,7 @@ export function toProduct(row: ProductJoined): Product {
       : undefined,
     availability: toAvailability(row.active),
     warrantyMonths: row.warranty_months ?? undefined,
-    attributes: Object.fromEntries(
-      Object.entries(specs).map(([k, v]) => [k, String(v)]),
-    ),
+    attributes: Object.fromEntries(Object.entries(specs).map(([k, v]) => [k, String(v)])),
     documents: row.documents?.map((d) => ({ label: d.label, url: d.url })),
     certifications: row.ce_certified ? ["ce"] : undefined,
   };
@@ -99,10 +91,7 @@ export function toProduct(row: ProductJoined): Product {
 // ────────────────────────────────────────────────────────────────────────────
 // Catégorie
 // ────────────────────────────────────────────────────────────────────────────
-export function toCategory(
-  row: Tables<"categories">,
-  productCount?: number,
-): Category {
+export function toCategory(row: Tables<"categories">, productCount?: number): Category {
   return {
     id: row.id,
     slug: row.slug,
@@ -115,10 +104,7 @@ export function toCategory(
 // ────────────────────────────────────────────────────────────────────────────
 // Marque
 // ────────────────────────────────────────────────────────────────────────────
-export function toBrand(
-  row: Tables<"brands">,
-  productCount?: number,
-): Brand {
+export function toBrand(row: Tables<"brands">, productCount?: number): Brand {
   return {
     id: row.id,
     slug: row.slug,

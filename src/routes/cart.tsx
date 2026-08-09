@@ -41,7 +41,11 @@ function CartPage() {
             icon={ShoppingBag}
             title="Votre panier est vide"
             description="Parcourez notre catalogue pour trouver le matériel dont vous avez besoin."
-            action={<Button asChild><Link to="/catalogue">Voir le catalogue</Link></Button>}
+            action={
+              <Button asChild>
+                <Link to="/catalogue">Voir le catalogue</Link>
+              </Button>
+            }
           />
         </div>
       </SiteLayout>
@@ -52,7 +56,9 @@ function CartPage() {
     <SiteLayout>
       <div className="container-page py-10">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Mon panier</h1>
-        <p className="mt-1 text-sm text-muted-foreground">{items.length} article{items.length > 1 ? "s" : ""}</p>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {items.length} article{items.length > 1 ? "s" : ""}
+        </p>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
           <ul className="space-y-3">
@@ -86,7 +92,10 @@ function CartPage() {
                   <div className="flex flex-col items-end gap-2">
                     <div className="hidden sm:block">
                       <PriceBlock
-                        price={{ ...item.product.price, amount: item.product.price.amount * item.qty }}
+                        price={{
+                          ...item.product.price,
+                          amount: item.product.price.amount * item.qty,
+                        }}
                       />
                     </div>
                     <Button
@@ -117,12 +126,16 @@ function CartPage() {
               <dl className="mt-4 space-y-2 text-sm">
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Sous-total</dt>
-                  <dd className="font-medium">{formatMoney({ amount: subtotal, currency: "TND" })}</dd>
+                  <dd className="font-medium">
+                    {formatMoney({ amount: subtotal, currency: "TND" })}
+                  </dd>
                 </div>
                 <div className="flex justify-between">
                   <dt className="text-muted-foreground">Livraison</dt>
                   <dd className="font-medium">
-                    {shipping === 0 ? "Offerte" : formatMoney({ amount: shipping, currency: "TND" })}
+                    {shipping === 0
+                      ? "Offerte"
+                      : formatMoney({ amount: shipping, currency: "TND" })}
                   </dd>
                 </div>
               </dl>
@@ -134,9 +147,13 @@ function CartPage() {
                 </span>
               </div>
               <form onSubmit={(e) => e.preventDefault()} className="mt-4 flex gap-2">
-                <label htmlFor="coupon" className="sr-only">Code promo</label>
+                <label htmlFor="coupon" className="sr-only">
+                  Code promo
+                </label>
                 <Input id="coupon" placeholder="Code promo" className="h-10" />
-                <Button type="submit" variant="outline">Appliquer</Button>
+                <Button type="submit" variant="outline">
+                  Appliquer
+                </Button>
               </form>
               <Button asChild size="lg" width="full" className="mt-6">
                 <Link to="/checkout">Passer commande</Link>

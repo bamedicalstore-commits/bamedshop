@@ -17,9 +17,7 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-          Erreur 404
-        </p>
+        <p className="text-sm font-semibold uppercase tracking-widest text-primary">Erreur 404</p>
         <h1 className="mt-3 text-4xl font-bold text-foreground">Page introuvable</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           La page que vous cherchez n'existe pas ou a été déplacée.
@@ -96,11 +94,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "BA Medical Store — Matériel médical certifié en Tunisie" },
       { property: "og:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
       { name: "twitter:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
-      { name: "description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
-      { property: "og:description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
-      { name: "twitter:description", content: "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f" },
+      {
+        name: "description",
+        content:
+          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
+      },
+      {
+        property: "og:description",
+        content:
+          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

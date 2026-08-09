@@ -19,7 +19,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "hypertension",
     name: "Pack Hypertension",
     tagline: "Suivi tensionnel à domicile",
-    description: "Tensiomètre validé, brassard confort, carnet de suivi et guide pratique pour un contrôle régulier de la pression artérielle.",
+    description:
+      "Tensiomètre validé, brassard confort, carnet de suivi et guide pratique pour un contrôle régulier de la pression artérielle.",
     icon: HeartPulse,
     color: "bg-destructive/10 text-destructive",
     categories: ["Diagnostic", "Consommables"],
@@ -31,7 +32,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "diabete",
     name: "Pack Diabète",
     tagline: "Auto-surveillance glycémique",
-    description: "Lecteur de glycémie, bandelettes, lancettes stériles et pochette de transport pour une gestion sereine du diabète.",
+    description:
+      "Lecteur de glycémie, bandelettes, lancettes stériles et pochette de transport pour une gestion sereine du diabète.",
     icon: Droplet,
     color: "bg-info-soft text-info",
     categories: ["Diagnostic", "Consommables"],
@@ -43,7 +45,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "bebe",
     name: "Pack Bébé",
     tagline: "Soins essentiels 0-24 mois",
-    description: "Thermomètre sans contact, mouche-bébé, sérum physiologique, kit de premiers soins nouveau-nés.",
+    description:
+      "Thermomètre sans contact, mouche-bébé, sérum physiologique, kit de premiers soins nouveau-nés.",
     icon: Baby,
     color: "bg-warning-soft text-warning",
     categories: ["Diagnostic", "Premiers secours"],
@@ -55,7 +58,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "senior",
     name: "Pack Senior",
     tagline: "Confort et sécurité au quotidien",
-    description: "Tensiomètre, oxymètre, pilulier hebdomadaire, canne réglable et téléalarme. Sélection dédiée au bien vieillir.",
+    description:
+      "Tensiomètre, oxymètre, pilulier hebdomadaire, canne réglable et téléalarme. Sélection dédiée au bien vieillir.",
     icon: Accessibility,
     color: "bg-primary-soft text-primary",
     categories: ["Diagnostic", "Orthopédie"],
@@ -67,7 +71,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "maintien-domicile",
     name: "Pack Maintien à domicile",
     tagline: "Équipement complet HAD",
-    description: "Lit médicalisé, matelas anti-escarres, potence, table de lit, chaise garde-robe : la solution intégrale hospitalisation à domicile.",
+    description:
+      "Lit médicalisé, matelas anti-escarres, potence, table de lit, chaise garde-robe : la solution intégrale hospitalisation à domicile.",
     icon: Home,
     color: "bg-success-soft text-success",
     categories: ["Mobilier médical", "Orthopédie"],
@@ -79,7 +84,8 @@ export const HEALTH_PACKS: HealthPack[] = [
     slug: "cabinet-medical",
     name: "Pack Cabinet Médical",
     tagline: "Installation clé en main",
-    description: "Stéthoscope, tensiomètre, otoscope, table d'examen, tabouret, chariot de soins : équipement standard d'un cabinet neuf.",
+    description:
+      "Stéthoscope, tensiomètre, otoscope, table d'examen, tabouret, chariot de soins : équipement standard d'un cabinet neuf.",
     icon: Stethoscope,
     color: "bg-primary-soft text-primary",
     categories: ["Diagnostic", "Mobilier médical"],

@@ -4,7 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
@@ -21,12 +28,16 @@ export const Route = createFileRoute("/categories/$slug")({
     return { slug: cat.slug };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Catégorie introuvable" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData)
+      return { meta: [{ title: "Catégorie introuvable" }, { name: "robots", content: "noindex" }] };
     const cat = CATEGORIES.find((c) => c.slug === loaderData.slug)!;
     return {
       meta: [
         { title: `${cat.name} — BA Medical Store` },
-        { name: "description", content: cat.description ?? `Découvrez notre sélection de ${cat.name.toLowerCase()}.` },
+        {
+          name: "description",
+          content: cat.description ?? `Découvrez notre sélection de ${cat.name.toLowerCase()}.`,
+        },
         { property: "og:title", content: `${cat.name} — BA Medical Store` },
         { property: "og:description", content: cat.description ?? "" },
       ],
@@ -47,7 +58,8 @@ function CategoryDetail() {
   });
 
   const products = useMemo(
-    () => (data?.products ?? []).map((row) => toProduct(row)).filter((p) => p.categorySlug === slug),
+    () =>
+      (data?.products ?? []).map((row) => toProduct(row)).filter((p) => p.categorySlug === slug),
     [data, slug],
   );
 
@@ -56,11 +68,17 @@ function CategoryDetail() {
       <div className="container-page py-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem><BreadcrumbLink href="/">Accueil</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbLink href="/categories">Catégories</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/categories">Catégories</BreadcrumbLink>
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbPage>{category.name}</BreadcrumbPage></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbPage>{category.name}</BreadcrumbPage>
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -108,7 +126,11 @@ function CategoryNotFound() {
           icon={PackageX}
           title="Catégorie introuvable"
           description="Cette catégorie n'existe pas ou a été renommée."
-          action={<Button asChild><Link to="/categories">Voir les catégories</Link></Button>}
+          action={
+            <Button asChild>
+              <Link to="/categories">Voir les catégories</Link>
+            </Button>
+          }
         />
       </div>
     </SiteLayout>

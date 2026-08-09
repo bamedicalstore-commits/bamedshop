@@ -22,7 +22,9 @@ export function HealthPacksGrid({ limit }: { limit?: number }) {
           <Link key={p.slug} to="/packs/$slug" params={{ slug: p.slug }} className="group">
             <Card className="flex h-full flex-col gap-4 p-6 transition-shadow group-hover:shadow-md">
               <div className="flex items-start justify-between gap-3">
-                <span className={cn("grid size-12 shrink-0 place-items-center rounded-xl", p.color)}>
+                <span
+                  className={cn("grid size-12 shrink-0 place-items-center rounded-xl", p.color)}
+                >
                   <p.icon className="size-6" aria-hidden="true" />
                 </span>
                 <Badge variant="soft">{p.savings}</Badge>
@@ -34,7 +36,10 @@ export function HealthPacksGrid({ limit }: { limit?: number }) {
               <p className="text-sm text-muted-foreground">{p.description}</p>
               <div className="mt-auto flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{p.audience}</span>
-                <ArrowRight className="size-4 text-primary transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                <ArrowRight
+                  className="size-4 text-primary transition-transform group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
               </div>
             </Card>
           </Link>

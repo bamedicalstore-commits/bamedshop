@@ -4,9 +4,24 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { Quote } from "lucide-react";
 
 const REVIEWS = [
-  { name: "Dr. Amine B.", role: "Médecin généraliste — Tunis", rating: 5, text: "Livraison express, produits authentiques, service client au top. Ma pharmacie de référence pour l'équipement du cabinet." },
-  { name: "Salma T.", role: "Infirmière libérale — Sfax", rating: 5, text: "J'apprécie particulièrement les tarifs pros et la disponibilité des consommables. Zéro rupture depuis un an." },
-  { name: "Clinique El Amen", role: "Sousse", rating: 4, text: "Interlocuteur unique, devis rapides, respect des délais. Une vraie plus-value pour notre chaîne d'approvisionnement." },
+  {
+    name: "Dr. Amine B.",
+    role: "Médecin généraliste — Tunis",
+    rating: 5,
+    text: "Livraison express, produits authentiques, service client au top. Ma pharmacie de référence pour l'équipement du cabinet.",
+  },
+  {
+    name: "Salma T.",
+    role: "Infirmière libérale — Sfax",
+    rating: 5,
+    text: "J'apprécie particulièrement les tarifs pros et la disponibilité des consommables. Zéro rupture depuis un an.",
+  },
+  {
+    name: "Clinique El Amen",
+    role: "Sousse",
+    rating: 4,
+    text: "Interlocuteur unique, devis rapides, respect des délais. Une vraie plus-value pour notre chaîne d'approvisionnement.",
+  },
 ];
 
 export function ReviewsSection() {

@@ -6,7 +6,11 @@ export const Route = createFileRoute("/packs")({
   head: () => ({
     meta: [
       { title: "Packs santé — BA Medical Store" },
-      { name: "description", content: "Sélections prêtes à l'emploi : Hypertension, Diabète, Bébé, Senior, Maintien à domicile, Cabinet médical." },
+      {
+        name: "description",
+        content:
+          "Sélections prêtes à l'emploi : Hypertension, Diabète, Bébé, Senior, Maintien à domicile, Cabinet médical.",
+      },
     ],
   }),
   component: PacksLayout,

@@ -17,7 +17,10 @@ export const Route = createFileRoute("/search")({
   head: () => ({
     meta: [
       { title: "Rechercher — BA Medical Store" },
-      { name: "description", content: "Recherchez parmi tout notre catalogue de matériel médical." },
+      {
+        name: "description",
+        content: "Recherchez parmi tout notre catalogue de matériel médical.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -55,9 +58,14 @@ function SearchPage() {
           onSubmit={(e) => e.preventDefault()}
           className="mt-6 flex max-w-2xl gap-2"
         >
-          <label htmlFor="q" className="sr-only">Terme de recherche</label>
+          <label htmlFor="q" className="sr-only">
+            Terme de recherche
+          </label>
           <div className="relative flex-1">
-            <SearchIcon className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <SearchIcon
+              className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
             <Input
               id="q"
               type="search"
@@ -68,7 +76,9 @@ function SearchPage() {
               autoFocus
             />
           </div>
-          <Button type="submit" size="lg">Rechercher</Button>
+          <Button type="submit" size="lg">
+            Rechercher
+          </Button>
         </form>
 
         <div className="mt-10">
@@ -88,7 +98,9 @@ function SearchPage() {
                 {results.length} résultat{results.length > 1 ? "s" : ""} pour « {q} »
               </p>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {results.map((p) => (<ProductCard key={p.id} product={p} />))}
+                {results.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
               </div>
             </>
           ) : (

@@ -126,7 +126,10 @@ interface MedicalBadgesProps {
 export function MedicalBadges({ kinds, className }: MedicalBadgesProps) {
   if (kinds.length === 0) return null;
   return (
-    <ul className={cn("flex flex-wrap gap-1.5", className)} aria-label="Certifications et propriétés">
+    <ul
+      className={cn("flex flex-wrap gap-1.5", className)}
+      aria-label="Certifications et propriétés"
+    >
       {kinds.map((k) => (
         <li key={k}>
           <MedicalBadge kind={k} />
