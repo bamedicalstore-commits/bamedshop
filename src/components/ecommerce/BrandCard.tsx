@@ -9,7 +9,9 @@ export function BrandCard({ brand }: { brand: Brand }) {
         <div className="grid h-16 w-full place-items-center rounded-md bg-surface-muted text-lg font-bold tracking-tight text-foreground">
           {brand.name}
         </div>
-        <span className="text-xs text-muted-foreground">{brand.productCount ?? 0} produits</span>
+        <span className="text-xs text-muted-foreground">
+          {brand.productCount ?? 0} produits
+        </span>
       </Card>
     </Link>
   );

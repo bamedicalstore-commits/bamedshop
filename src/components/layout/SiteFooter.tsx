@@ -20,7 +20,10 @@ export function SiteFooter() {
               Nouveautés, promotions et guides d'achat pour professionnels de santé.
             </p>
           </div>
-          <form className="flex flex-col gap-2 sm:flex-row" onSubmit={(e) => e.preventDefault()}>
+          <form
+            className="flex flex-col gap-2 sm:flex-row"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <label htmlFor="newsletter-email" className="sr-only">
               Adresse email
             </label>
@@ -69,19 +72,13 @@ export function SiteFooter() {
           </ul>
           <div className="mt-6 flex gap-2">
             <Button variant="outline" size="icon-sm" aria-label="Facebook" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Facebook />
-              </a>
+              <a href="#" rel="noreferrer noopener"><Facebook /></a>
             </Button>
             <Button variant="outline" size="icon-sm" aria-label="Instagram" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Instagram />
-              </a>
+              <a href="#" rel="noreferrer noopener"><Instagram /></a>
             </Button>
             <Button variant="outline" size="icon-sm" aria-label="LinkedIn" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Linkedin />
-              </a>
+              <a href="#" rel="noreferrer noopener"><Linkedin /></a>
             </Button>
           </div>
         </div>
@@ -117,7 +114,10 @@ export function SiteFooter() {
         <FooterColumn title="Service client">
           {FOOTER_LINKS.service.map((l) => (
             <li key={l.label}>
-              <Link to={l.to} className="text-sm text-muted-foreground hover:text-foreground">
+              <Link
+                to={l.to}
+                className="text-sm text-muted-foreground hover:text-foreground"
+              >
                 {l.label}
               </Link>
             </li>

@@ -24,9 +24,10 @@ export function StickyAddToCart({ product, triggerRef }: StickyAddToCartProps) {
   useEffect(() => {
     const el = triggerRef?.current;
     if (!el) return;
-    const io = new IntersectionObserver(([entry]) => setVisible(!entry.isIntersecting), {
-      rootMargin: "-80px 0px 0px 0px",
-    });
+    const io = new IntersectionObserver(
+      ([entry]) => setVisible(!entry.isIntersecting),
+      { rootMargin: "-80px 0px 0px 0px" },
+    );
     io.observe(el);
     return () => io.disconnect();
   }, [triggerRef]);

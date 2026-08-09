@@ -32,13 +32,7 @@ function saveRecent(list: string[]) {
   window.localStorage.setItem(RECENT_KEY, JSON.stringify(list.slice(0, 5)));
 }
 
-const TRENDING = [
-  "Tensiomètre",
-  "Oxymètre",
-  "Stéthoscope Littmann",
-  "Gants nitrile",
-  "Thermomètre",
-];
+const TRENDING = ["Tensiomètre", "Oxymètre", "Stéthoscope Littmann", "Gants nitrile", "Thermomètre"];
 
 export function SmartSearchTrigger({ className }: { className?: string }) {
   return (
@@ -189,10 +183,7 @@ export function SmartSearch() {
                   key={c.slug}
                   value={`c-${c.slug}`}
                   onSelect={() =>
-                    go(
-                      () => navigate({ to: "/categories/$slug", params: { slug: c.slug } }),
-                      c.name,
-                    )
+                    go(() => navigate({ to: "/categories/$slug", params: { slug: c.slug } }), c.name)
                   }
                 >
                   <Tag aria-hidden="true" />

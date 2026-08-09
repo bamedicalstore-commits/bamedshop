@@ -9,32 +9,12 @@ interface TrustItem {
 }
 
 const DEFAULT_ITEMS: TrustItem[] = [
-  {
-    icon: ShieldCheck,
-    title: "Produits certifiés",
-    description: "Dispositifs marquage CE et normes ISO 13485.",
-  },
-  {
-    icon: Truck,
-    title: "Livraison rapide",
-    description: "Expédition sous 24h · offerte dès 200 DT.",
-  },
-  {
-    icon: RotateCcw,
-    title: "Retours 14 jours",
-    description: "Retour gratuit, remboursement sous 7 jours.",
-  },
-  {
-    icon: Lock,
-    title: "Paiement sécurisé",
-    description: "Konnect, Flouci, virement et carte bancaire.",
-  },
+  { icon: ShieldCheck, title: "Produits certifiés", description: "Dispositifs marquage CE et normes ISO 13485." },
+  { icon: Truck, title: "Livraison rapide", description: "Expédition sous 24h · offerte dès 200 DT." },
+  { icon: RotateCcw, title: "Retours 14 jours", description: "Retour gratuit, remboursement sous 7 jours." },
+  { icon: Lock, title: "Paiement sécurisé", description: "Konnect, Flouci, virement et carte bancaire." },
   { icon: Headset, title: "Support pro dédié", description: "Conseillers médicaux 6j/7 pour B2B." },
-  {
-    icon: Award,
-    title: "Sélection experte",
-    description: "Curated par des pharmaciens et distributeurs Pharmatec.",
-  },
+  { icon: Award, title: "Sélection experte", description: "Curated par des pharmaciens et distributeurs Pharmatec." },
 ];
 
 interface TrustSectionProps {

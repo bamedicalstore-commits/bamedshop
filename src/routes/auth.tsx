@@ -45,13 +45,7 @@ function AuthPage() {
               <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
                 <div>
                   <Label htmlFor="login-email">Email</Label>
-                  <Input
-                    id="login-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="mt-2"
-                  />
+                  <Input id="login-email" type="email" autoComplete="email" required className="mt-2" />
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
@@ -60,26 +54,16 @@ function AuthPage() {
                       Mot de passe oublié ?
                     </Link>
                   </div>
-                  <Input
-                    id="login-password"
-                    type="password"
-                    autoComplete="current-password"
-                    required
-                    className="mt-2"
-                  />
+                  <Input id="login-password" type="password" autoComplete="current-password" required className="mt-2" />
                 </div>
-                <Button type="submit" size="lg" width="full">
-                  Se connecter
-                </Button>
+                <Button type="submit" size="lg" width="full">Se connecter</Button>
                 <div className="relative py-2">
                   <Separator />
                   <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
                     ou
                   </span>
                 </div>
-                <Button type="button" variant="outline" width="full">
-                  Continuer avec Google
-                </Button>
+                <Button type="button" variant="outline" width="full">Continuer avec Google</Button>
               </form>
             </TabsContent>
 
@@ -97,41 +81,19 @@ function AuthPage() {
                 </div>
                 <div>
                   <Label htmlFor="reg-email">Email</Label>
-                  <Input
-                    id="reg-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    className="mt-2"
-                  />
+                  <Input id="reg-email" type="email" autoComplete="email" required className="mt-2" />
                 </div>
                 <div>
                   <Label htmlFor="reg-password">Mot de passe</Label>
-                  <Input
-                    id="reg-password"
-                    type="password"
-                    autoComplete="new-password"
-                    required
-                    className="mt-2"
-                  />
+                  <Input id="reg-password" type="password" autoComplete="new-password" required className="mt-2" />
                 </div>
                 <label className="flex items-start gap-2 text-xs text-muted-foreground">
                   <Checkbox id="cgv" className="mt-0.5" required />
                   <span>
-                    J'accepte les{" "}
-                    <a className="text-primary hover:underline" href="#">
-                      conditions générales
-                    </a>{" "}
-                    et la{" "}
-                    <a className="text-primary hover:underline" href="#">
-                      politique de confidentialité
-                    </a>
-                    .
+                    J'accepte les <a className="text-primary hover:underline" href="#">conditions générales</a> et la <a className="text-primary hover:underline" href="#">politique de confidentialité</a>.
                   </span>
                 </label>
-                <Button type="submit" size="lg" width="full">
-                  Créer mon compte
-                </Button>
+                <Button type="submit" size="lg" width="full">Créer mon compte</Button>
               </form>
             </TabsContent>
           </Tabs>

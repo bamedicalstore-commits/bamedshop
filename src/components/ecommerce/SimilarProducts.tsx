@@ -27,9 +27,7 @@ export function SimilarProducts({
   return (
     <section className={cn(className)} aria-labelledby="similar-heading">
       <SectionHeader eyebrow={eyebrow} title={title} />
-      <h3 id="similar-heading" className="sr-only">
-        {title}
-      </h3>
+      <h3 id="similar-heading" className="sr-only">{title}</h3>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {items.map((p) => (
           <ProductCard key={p.id} product={p} />

@@ -1,38 +1,21 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import {
-  LayoutDashboard,
-  User,
-  Package,
-  Repeat,
-  Heart,
-  ShieldCheck,
-  FileText,
-  MapPin,
-  Bell,
-  LogOut,
-} from "lucide-react";
+import { LayoutDashboard, User, Package, Repeat, Heart, ShieldCheck, FileText, MapPin, Bell, LogOut } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/account")({
   head: () => ({
-    meta: [{ title: "Mon compte — BA Medical Store" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "Mon compte — BA Medical Store" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: AccountLayout,
 });
 
 type AccountLink = {
-  to:
-    | "/account/dashboard"
-    | "/account/orders"
-    | "/account/subscriptions"
-    | "/account/wishlist"
-    | "/account/warranties"
-    | "/account/documents"
-    | "/account/addresses"
-    | "/account/notifications"
-    | "/account/profile";
+  to: "/account/dashboard" | "/account/orders" | "/account/subscriptions" | "/account/wishlist" | "/account/warranties" | "/account/documents" | "/account/addresses" | "/account/notifications" | "/account/profile";
   label: string;
   icon: typeof User;
 };
@@ -56,9 +39,7 @@ function AccountLayout() {
       <div className="container-page py-10">
         <header className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Mon compte</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Bienvenue, gérez vos données et vos commandes.
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Bienvenue, gérez vos données et vos commandes.</p>
         </header>
         <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
           <aside>
@@ -72,7 +53,9 @@ function AccountLayout() {
                       to={l.to}
                       className={cn(
                         "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
-                        active ? "bg-primary-soft text-primary" : "text-foreground hover:bg-accent",
+                        active
+                          ? "bg-primary-soft text-primary"
+                          : "text-foreground hover:bg-accent",
                       )}
                     >
                       <l.icon className="size-4" aria-hidden="true" /> {l.label}

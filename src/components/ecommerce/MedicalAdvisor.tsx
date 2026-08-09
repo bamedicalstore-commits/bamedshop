@@ -20,54 +20,14 @@ export type AdvisorProfile =
   | "pharmacie"
   | "entreprise";
 
-const PROFILES: {
-  value: AdvisorProfile;
-  label: string;
-  description: string;
-  recommendations: string[];
-}[] = [
-  {
-    value: "particulier",
-    label: "Particulier",
-    description: "Usage familial ou personnel",
-    recommendations: ["Diagnostic domicile", "Premiers secours", "Confort"],
-  },
-  {
-    value: "medecin",
-    label: "Médecin",
-    description: "Généraliste ou spécialiste libéral",
-    recommendations: ["Diagnostic pro", "Mobilier de cabinet", "Consommables"],
-  },
-  {
-    value: "infirmier",
-    label: "Infirmier·ère",
-    description: "Libéral, hospitalier, HAD",
-    recommendations: ["Consommables stériles", "Diagnostic mobile", "EPI"],
-  },
-  {
-    value: "kinesitherapeute",
-    label: "Kinésithérapeute",
-    description: "Cabinet ou domicile",
-    recommendations: ["Rééducation", "Électrothérapie", "Confort patient"],
-  },
-  {
-    value: "clinique",
-    label: "Clinique / Hôpital",
-    description: "Achats volumiques, appels d'offres",
-    recommendations: ["B2B", "Devis groupés", "Contrats annuels"],
-  },
-  {
-    value: "pharmacie",
-    label: "Pharmacie",
-    description: "Officine, revente",
-    recommendations: ["OTC", "Location matériel", "Consommables"],
-  },
-  {
-    value: "entreprise",
-    label: "Entreprise",
-    description: "Médecine du travail, sécurité",
-    recommendations: ["Trousses secours", "Défibrillateurs", "EPI collectifs"],
-  },
+const PROFILES: { value: AdvisorProfile; label: string; description: string; recommendations: string[] }[] = [
+  { value: "particulier", label: "Particulier", description: "Usage familial ou personnel", recommendations: ["Diagnostic domicile", "Premiers secours", "Confort"] },
+  { value: "medecin", label: "Médecin", description: "Généraliste ou spécialiste libéral", recommendations: ["Diagnostic pro", "Mobilier de cabinet", "Consommables"] },
+  { value: "infirmier", label: "Infirmier·ère", description: "Libéral, hospitalier, HAD", recommendations: ["Consommables stériles", "Diagnostic mobile", "EPI"] },
+  { value: "kinesitherapeute", label: "Kinésithérapeute", description: "Cabinet ou domicile", recommendations: ["Rééducation", "Électrothérapie", "Confort patient"] },
+  { value: "clinique", label: "Clinique / Hôpital", description: "Achats volumiques, appels d'offres", recommendations: ["B2B", "Devis groupés", "Contrats annuels"] },
+  { value: "pharmacie", label: "Pharmacie", description: "Officine, revente", recommendations: ["OTC", "Location matériel", "Consommables"] },
+  { value: "entreprise", label: "Entreprise", description: "Médecine du travail, sécurité", recommendations: ["Trousses secours", "Défibrillateurs", "EPI collectifs"] },
 ];
 
 const STORAGE_KEY = "ba-advisor-profile";
@@ -78,18 +38,14 @@ export function useAdvisorProfile(): [AdvisorProfile | null, (p: AdvisorProfile 
     try {
       const v = localStorage.getItem(STORAGE_KEY) as AdvisorProfile | null;
       if (v) setProfile(v);
-    } catch {
-      /* noop */
-    }
+    } catch { /* noop */ }
   }, []);
   const update = (p: AdvisorProfile | null) => {
     setProfile(p);
     try {
       if (p) localStorage.setItem(STORAGE_KEY, p);
       else localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      /* noop */
-    }
+    } catch { /* noop */ }
   };
   return [profile, update];
 }
@@ -108,9 +64,7 @@ export function MedicalAdvisor({ className }: { className?: string }) {
           <Stethoscope aria-hidden="true" />
         </span>
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-primary">
-            Medical Advisor
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary">Medical Advisor</p>
           <h2 id="advisor-heading" className="text-xl font-bold sm:text-2xl">
             Personnalisez vos recommandations
           </h2>
@@ -128,9 +82,7 @@ export function MedicalAdvisor({ className }: { className?: string }) {
               aria-pressed={selected}
               className={cn(
                 "flex flex-col items-start gap-1 rounded-xl border-2 p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                selected
-                  ? "border-primary bg-primary-soft"
-                  : "border-border hover:border-primary/40 hover:bg-accent",
+                selected ? "border-primary bg-primary-soft" : "border-border hover:border-primary/40 hover:bg-accent",
               )}
             >
               <div className="flex w-full items-center justify-between">
@@ -150,9 +102,7 @@ export function MedicalAdvisor({ className }: { className?: string }) {
               <p className="text-sm font-semibold">Recommandations pour {active.label}</p>
               <div className="mt-2 flex flex-wrap gap-2">
                 {active.recommendations.map((r) => (
-                  <Badge key={r} variant="soft">
-                    {r}
-                  </Badge>
+                  <Badge key={r} variant="soft">{r}</Badge>
                 ))}
               </div>
             </div>

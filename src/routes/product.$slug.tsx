@@ -5,14 +5,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { PriceBlock } from "@/components/ecommerce/PriceBlock";
 import { Rating } from "@/components/ecommerce/Rating";
 import { AvailabilityBadge } from "@/components/ecommerce/AvailabilityBadge";
@@ -36,8 +29,7 @@ export const Route = createFileRoute("/product/$slug")({
     return { slug: p.slug };
   },
   head: ({ loaderData }) => {
-    if (!loaderData)
-      return { meta: [{ title: "Produit introuvable" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData) return { meta: [{ title: "Produit introuvable" }, { name: "robots", content: "noindex" }] };
     const p = MOCK_PRODUCTS.find((x) => x.slug === loaderData.slug)!;
     const desc = p.shortDescription ?? `${p.name} — ${p.brand}`;
     return {
@@ -65,13 +57,9 @@ function ProductPage() {
       <div className="container-page py-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
-            </BreadcrumbItem>
+            <BreadcrumbItem><BreadcrumbLink href="/">Accueil</BreadcrumbLink></BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/catalogue">Catalogue</BreadcrumbLink>
-            </BreadcrumbItem>
+            <BreadcrumbItem><BreadcrumbLink href="/catalogue">Catalogue</BreadcrumbLink></BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink href={`/categories/${product.categorySlug}`}>
@@ -79,9 +67,7 @@ function ProductPage() {
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{product.name}</BreadcrumbPage>
-            </BreadcrumbItem>
+            <BreadcrumbItem><BreadcrumbPage>{product.name}</BreadcrumbPage></BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -165,13 +151,7 @@ function ProductPage() {
   );
 }
 
-function FeatureLine({
-  icon: Icon,
-  children,
-}: {
-  icon: typeof ShieldCheck;
-  children: React.ReactNode;
-}) {
+function FeatureLine({ icon: Icon, children }: { icon: typeof ShieldCheck; children: React.ReactNode }) {
   return (
     <li className="flex items-center gap-3">
       <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
@@ -188,11 +168,7 @@ function ProductNotFound() {
           icon={Pill}
           title="Produit introuvable"
           description="Ce produit n'existe pas ou n'est plus disponible."
-          action={
-            <Button asChild>
-              <Link to="/catalogue">Voir le catalogue</Link>
-            </Button>
-          }
+          action={<Button asChild><Link to="/catalogue">Voir le catalogue</Link></Button>}
         />
       </div>
     </SiteLayout>

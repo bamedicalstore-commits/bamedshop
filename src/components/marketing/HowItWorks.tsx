@@ -2,26 +2,10 @@ import { Search, ShoppingCart, Truck, HeartHandshake } from "lucide-react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
 const STEPS = [
-  {
-    icon: Search,
-    title: "Choisissez",
-    description: "Explorez 2500+ références certifiées, filtrées par spécialité.",
-  },
-  {
-    icon: ShoppingCart,
-    title: "Commandez",
-    description: "Paiement sécurisé, devis pro en ligne, tarifs dégressifs.",
-  },
-  {
-    icon: Truck,
-    title: "Recevez",
-    description: "Livraison 24-48h partout en Tunisie, offerte dès 200 DT.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Utilisez sereinement",
-    description: "Support pro dédié, garantie constructeur, retours 14 jours.",
-  },
+  { icon: Search, title: "Choisissez", description: "Explorez 2500+ références certifiées, filtrées par spécialité." },
+  { icon: ShoppingCart, title: "Commandez", description: "Paiement sécurisé, devis pro en ligne, tarifs dégressifs." },
+  { icon: Truck, title: "Recevez", description: "Livraison 24-48h partout en Tunisie, offerte dès 200 DT." },
+  { icon: HeartHandshake, title: "Utilisez sereinement", description: "Support pro dédié, garantie constructeur, retours 14 jours." },
 ];
 
 export function HowItWorks() {
@@ -34,10 +18,7 @@ export function HowItWorks() {
       />
       <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {STEPS.map((s, i) => (
-          <li
-            key={s.title}
-            className="relative rounded-2xl border border-border bg-card p-6 shadow-sm"
-          >
+          <li key={s.title} className="relative rounded-2xl border border-border bg-card p-6 shadow-sm">
             <span className="absolute -top-3 left-6 rounded-full bg-primary px-2.5 py-0.5 text-xs font-bold text-primary-foreground">
               {String(i + 1).padStart(2, "0")}
             </span>

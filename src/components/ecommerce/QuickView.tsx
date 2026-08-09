@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PriceBlock } from "./PriceBlock";
@@ -46,8 +40,7 @@ export function QuickView() {
                 </div>
                 <DialogTitle className="text-xl">{product.name}</DialogTitle>
                 <DialogDescription>
-                  {product.shortDescription ??
-                    "Aperçu rapide — consultez la fiche complète pour tous les détails."}
+                  {product.shortDescription ?? "Aperçu rapide — consultez la fiche complète pour tous les détails."}
                 </DialogDescription>
               </DialogHeader>
 
@@ -81,12 +74,7 @@ export function QuickView() {
                 <WishlistButton productId={product.id} />
               </div>
 
-              <Button
-                asChild
-                variant="link"
-                className="justify-start px-0"
-                onClick={() => uiActions.closeQuickView()}
-              >
+              <Button asChild variant="link" className="justify-start px-0" onClick={() => uiActions.closeQuickView()}>
                 <Link to="/product/$slug" params={{ slug: product.slug }}>
                   Voir la fiche complète <ArrowRight aria-hidden="true" />
                 </Link>
