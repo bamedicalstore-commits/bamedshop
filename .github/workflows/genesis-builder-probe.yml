@@ -53,10 +53,12 @@ jobs:
           bun --version
           git --version
           python --version
-          bun pm --version
 
       - name: Install locked dependencies
         run: bun install --frozen-lockfile
+
+      - name: Format code with Prettier
+        run: bun run format
 
       - name: Lint
         run: bun run lint
@@ -68,6 +70,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -d .output || test -d dist || true
+          test -d dist
           echo "BUILD_STATUS=PASS"
           echo "COMMIT_SHA=${GITHUB_SHA}"
+          echo "DIST_PRESENT=YES"
