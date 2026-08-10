@@ -1,6 +1,7 @@
 name: GENESIS Format Fix
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - "genesis/builder-probe"
@@ -10,16 +11,16 @@ permissions:
 
 concurrency:
   group: genesis-format-fix-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   format-fix:
-    if: "${{ !startsWith(github.event.head_commit.message, 'chore(ci): apply Prettier formatting') && !startsWith(github.event.head_commit.message, 'chore(ci): remove format fixer') }}"
+    if: ${{ !startsWith(github.event.head_commit.message || '', 'chore(ci): apply Prettier formatting') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -47,8 +48,13 @@ jobs:
             echo "FORMAT_STATUS=ALREADY_CLEAN"
             exit 0
           fi
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore(ci): apply Prettier formatting"
+
+          # Reconcile any commit that landed while formatting was running.
+          git fetch origin genesis/builder-probe
+          git rebase origin/genesis/builder-probe
           git push origin HEAD:genesis/builder-probe
