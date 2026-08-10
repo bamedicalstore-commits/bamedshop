@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - "genesis/builder-probe"
+      - genesis/builder-probe
 
 permissions:
   contents: write
 
 concurrency:
-  group: genesis-builder-probe-${{ github.ref }}
+  group: genesis-format-fix-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -18,18 +18,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout branch
+      - name: Checkout latest branch state
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: genesis/builder-probe
-
-      - name: Sync branch before formatting
-        shell: bash
-        run: |
-          set -euo pipefail
-          git fetch origin genesis/builder-probe
-          git rebase origin/genesis/builder-probe
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -47,20 +40,18 @@ jobs:
       - name: Apply Prettier formatting
         run: bunx prettier --write .
 
-      - name: Commit formatting corrections
+      - name: Commit and push formatting corrections
         shell: bash
         run: |
           set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           if git diff --quiet; then
             echo "FORMAT_STATUS=ALREADY_CLEAN"
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "chore(ci): apply Prettier formatting"
-
-          git fetch origin genesis/builder-probe
-          git rebase origin/genesis/builder-probe
           git push origin HEAD:genesis/builder-probe
