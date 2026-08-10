@@ -16,7 +16,8 @@ export const Route = createFileRoute("/packs/$slug")({
     return { slug: p.slug };
   },
   head: ({ loaderData }) => {
-    if (!loaderData) return { meta: [{ title: "Pack introuvable" }, { name: "robots", content: "noindex" }] };
+    if (!loaderData)
+      return { meta: [{ title: "Pack introuvable" }, { name: "robots", content: "noindex" }] };
     const p = findPack(loaderData.slug)!;
     return {
       meta: [
@@ -28,8 +29,15 @@ export const Route = createFileRoute("/packs/$slug")({
   component: PackDetail,
   notFoundComponent: () => (
     <div className="container-page py-20">
-      <EmptyState icon={Package} title="Pack introuvable"
-        action={<Button asChild><Link to="/packs">Retour aux packs</Link></Button>} />
+      <EmptyState
+        icon={Package}
+        title="Pack introuvable"
+        action={
+          <Button asChild>
+            <Link to="/packs">Retour aux packs</Link>
+          </Button>
+        }
+      />
     </div>
   ),
 });
@@ -41,7 +49,10 @@ function PackDetail() {
 
   return (
     <div className="container-page py-10">
-      <Link to="/packs" className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary">
+      <Link
+        to="/packs"
+        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+      >
         <ArrowLeft className="size-4" aria-hidden="true" /> Tous les packs
       </Link>
 
@@ -69,7 +80,10 @@ function PackDetail() {
             <h2 className="mb-3 text-lg font-semibold">Ce pack inclut</h2>
             <ul className="grid gap-2 sm:grid-cols-2">
               {pack.categories.map((c) => (
-                <li key={c} className="flex items-center gap-2 rounded-lg border border-border bg-surface p-3 text-sm">
+                <li
+                  key={c}
+                  className="flex items-center gap-2 rounded-lg border border-border bg-surface p-3 text-sm"
+                >
                   <Check className="size-4 text-primary" aria-hidden="true" /> {c}
                 </li>
               ))}
@@ -80,7 +94,9 @@ function PackDetail() {
             <div>
               <h2 className="mb-4 text-lg font-semibold">Produits sélectionnés</h2>
               <div className="grid gap-4 sm:grid-cols-2">
-                {products.map((p) => <ProductCard key={p.id} product={p} />)}
+                {products.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
               </div>
             </div>
           )}
@@ -89,10 +105,16 @@ function PackDetail() {
         <aside className="lg:sticky lg:top-24 lg:self-start">
           <Card className="p-6">
             <h3 className="text-base font-semibold">Commander ce pack</h3>
-            <p className="mt-1 text-xs text-muted-foreground">Livraison 24-48h · Devis pro sur demande</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Livraison 24-48h · Devis pro sur demande
+            </p>
             <div className="mt-4 flex flex-col gap-2">
-              <Button size="lg"><ShoppingCart className="size-4" aria-hidden="true" /> Ajouter au panier</Button>
-              <Button variant="outline" asChild><Link to="/contact">Demander un devis</Link></Button>
+              <Button size="lg">
+                <ShoppingCart className="size-4" aria-hidden="true" /> Ajouter au panier
+              </Button>
+              <Button variant="outline" asChild>
+                <Link to="/contact">Demander un devis</Link>
+              </Button>
             </div>
             <ul className="mt-6 space-y-2 text-xs text-muted-foreground">
               <li>✓ Produits certifiés CE</li>

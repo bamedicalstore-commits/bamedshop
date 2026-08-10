@@ -30,8 +30,7 @@ export function FloatingWhatsApp({
     return () => window.clearTimeout(t);
   }, []);
 
-  const buildHref = () =>
-    `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  const buildHref = () => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
   return (
     <div
@@ -43,9 +42,7 @@ export function FloatingWhatsApp({
       {!open && !dismissed && (
         <div className="relative max-w-[220px] rounded-2xl border border-border bg-background p-3 pr-8 text-xs shadow-[var(--shadow-elevated)]">
           <p className="font-semibold">Besoin d'aide ?</p>
-          <p className="mt-0.5 text-muted-foreground">
-            Discutez avec un conseiller sur WhatsApp.
-          </p>
+          <p className="mt-0.5 text-muted-foreground">Discutez avec un conseiller sur WhatsApp.</p>
           <button
             onClick={() => setDismissed(true)}
             aria-label="Fermer l'invitation WhatsApp"
@@ -82,7 +79,9 @@ export function FloatingWhatsApp({
             <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-border bg-background p-3 text-xs text-foreground shadow-sm">
               Bonjour 👋, comment pouvons-nous vous aider ?
             </div>
-            <label htmlFor="wa-message" className="sr-only">Votre message</label>
+            <label htmlFor="wa-message" className="sr-only">
+              Votre message
+            </label>
             <textarea
               id="wa-message"
               value={message}

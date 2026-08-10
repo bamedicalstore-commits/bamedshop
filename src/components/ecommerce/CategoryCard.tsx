@@ -13,15 +13,11 @@ export function CategoryCard({ category }: { category: Category }) {
         <div className="space-y-1">
           <h3 className="text-base font-semibold text-foreground">{category.name}</h3>
           {category.description && (
-            <p className="line-clamp-2 text-sm text-muted-foreground">
-              {category.description}
-            </p>
+            <p className="line-clamp-2 text-sm text-muted-foreground">{category.description}</p>
           )}
         </div>
         <div className="mt-auto flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">
-            {category.productCount ?? 0} produits
-          </span>
+          <span className="text-muted-foreground">{category.productCount ?? 0} produits</span>
           <span className="inline-flex items-center gap-1 font-medium text-primary transition-transform group-hover:translate-x-0.5">
             Voir <ArrowRight className="size-3.5" aria-hidden="true" />
           </span>

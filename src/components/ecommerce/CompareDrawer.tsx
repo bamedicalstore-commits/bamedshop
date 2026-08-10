@@ -1,5 +1,11 @@
 import { Link } from "@tanstack/react-router";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PriceBlock } from "./PriceBlock";
@@ -17,14 +23,19 @@ export function CompareDrawer() {
   return (
     <Sheet
       open={open}
-      onOpenChange={(o) => (o ? uiActions.openOverlay("compare") : uiActions.closeOverlay("compare"))}
+      onOpenChange={(o) =>
+        o ? uiActions.openOverlay("compare") : uiActions.closeOverlay("compare")
+      }
     >
       <SheetContent side="bottom" className="max-h-[90dvh] overflow-y-auto p-0">
         <SheetHeader className="flex-row items-center justify-between border-b border-border p-5">
           <div>
             <SheetTitle className="flex items-center gap-2">
               <Scale className="size-5 text-primary" aria-hidden="true" />
-              Comparer <Badge variant="soft">{items.length}/{COMPARE_LIMIT}</Badge>
+              Comparer{" "}
+              <Badge variant="soft">
+                {items.length}/{COMPARE_LIMIT}
+              </Badge>
             </SheetTitle>
             <SheetDescription>
               Comparez jusqu'à {COMPARE_LIMIT} produits côte à côte.
@@ -52,7 +63,9 @@ export function CompareDrawer() {
               style={{ gridTemplateColumns: `160px repeat(${items.length}, minmax(220px, 1fr))` }}
             >
               <RowLabel>Produit</RowLabel>
-              {items.map((p) => <CompareHeader key={p.id} product={p} />)}
+              {items.map((p) => (
+                <CompareHeader key={p.id} product={p} />
+              ))}
 
               <RowLabel>Prix</RowLabel>
               {items.map((p) => (
@@ -91,7 +104,10 @@ export function CompareDrawer() {
 
               <RowLabel>Référence</RowLabel>
               {items.map((p) => (
-                <div key={p.id} className="border-t border-border py-3 text-sm text-muted-foreground">
+                <div
+                  key={p.id}
+                  className="border-t border-border py-3 text-sm text-muted-foreground"
+                >
                   {p.reference ?? "—"}
                 </div>
               ))}
@@ -167,7 +183,10 @@ export function CompareFab() {
       >
         <Scale className="size-4" aria-hidden="true" />
         Comparer
-        <Badge variant="default" className="border-primary-foreground/30 bg-primary-foreground/20 text-primary-foreground">
+        <Badge
+          variant="default"
+          className="border-primary-foreground/30 bg-primary-foreground/20 text-primary-foreground"
+        >
           {count}
         </Badge>
       </Button>

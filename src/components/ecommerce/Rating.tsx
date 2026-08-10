@@ -32,12 +32,8 @@ export function Rating({ value, count, size = "sm", showValue, className }: Rati
           />
         ))}
       </div>
-      {showValue && (
-        <span className="text-xs font-medium text-foreground">{value.toFixed(1)}</span>
-      )}
-      {count !== undefined && (
-        <span className="text-xs text-muted-foreground">({count})</span>
-      )}
+      {showValue && <span className="text-xs font-medium text-foreground">{value.toFixed(1)}</span>}
+      {count !== undefined && <span className="text-xs text-muted-foreground">({count})</span>}
     </div>
   );
 }
