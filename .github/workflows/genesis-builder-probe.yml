@@ -17,7 +17,7 @@ jobs:
   preflight-build:
     name: Preflight + Build
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout exact revision
@@ -65,6 +65,42 @@ jobs:
 
       - name: Build
         run: bun run build
+
+      - name: Runtime smoke
+        shell: bash
+        run: |
+          set -euo pipefail
+          PORT=4173
+          bun run preview --host 127.0.0.1 --port "${PORT}" > /tmp/genesis-preview.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "${SERVER_PID}" 2>/dev/null || true' EXIT
+
+          for i in {1..30}; do
+            if curl -fsS "http://127.0.0.1:${PORT}/" >/dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          pages=(
+            "/"
+            "/catalogue"
+            "/cart"
+            "/checkout"
+            "/account"
+            "/search"
+            "/compare"
+            "/contact"
+            "/faq"
+          )
+
+          for path in "${pages[@]}"; do
+            status=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:${PORT}${path}")
+            echo "${status} ${path}"
+            test "${status}" -lt 500
+          done
+
+          echo "RUNTIME_SMOKE=PASS"
 
       - name: Builder artifact manifest
         shell: bash
