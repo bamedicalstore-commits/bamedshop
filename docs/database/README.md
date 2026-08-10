@@ -30,17 +30,17 @@ Toute divergence future doit être résolue en faveur du SQL.
 
 ## 1. Principes directeurs
 
-| Principe | Application |
-|---|---|
-| **Sécurité par défaut** | RLS activé sur toutes les tables `public.*`. Rôles applicatifs (`anon`, `authenticated`, `service_role`) + rôles métier (`admin`, `staff`, `b2b`, `customer`) via table `user_roles`. **Jamais** de rôle stocké sur `profiles`. |
-| **Traçabilité totale** | `created_at`, `updated_at`, `deleted_at` (soft delete) sur toutes les tables métier. Table `audit_logs` immuable pour événements sensibles. |
-| **Immutabilité comptable** | `orders`, `payments`, `invoices`, `stock_movements` sont **append-only** après finalisation ; corrections via nouvelles lignes. |
-| **Multi-devise / multi-unité** | Prix stockés en **minor units** (`bigint`) + code ISO (`currency_code`). Poids/dimensions en unités SI. |
-| **i18n natif** | Champs traduisibles isolés dans `*_translations (locale, entity_id)`. Locale par défaut : `fr-TN`. |
-| **Extensibilité IA** | Tables `embeddings`, `recommendations`, `events` prêtes ; extension `pgvector` prévue mais activée seulement quand utilisée. |
-| **Performance** | Index composites orientés requêtes catalogue, FTS `tsvector` sur produits/blog, partitionnement futur sur `events` et `stock_movements`. |
-| **Sans surprises** | Contraintes `CHECK`, `NOT NULL`, `FOREIGN KEY ON DELETE` explicites partout. Enums PostgreSQL pour les statuts. |
-| **GDPR/DPO** | PII isolée dans `customers`/`addresses`. `deleted_at` + procédure d'anonymisation documentée. |
+| Principe                       | Application                                                                                                                                                                                                                     |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Sécurité par défaut**        | RLS activé sur toutes les tables `public.*`. Rôles applicatifs (`anon`, `authenticated`, `service_role`) + rôles métier (`admin`, `staff`, `b2b`, `customer`) via table `user_roles`. **Jamais** de rôle stocké sur `profiles`. |
+| **Traçabilité totale**         | `created_at`, `updated_at`, `deleted_at` (soft delete) sur toutes les tables métier. Table `audit_logs` immuable pour événements sensibles.                                                                                     |
+| **Immutabilité comptable**     | `orders`, `payments`, `invoices`, `stock_movements` sont **append-only** après finalisation ; corrections via nouvelles lignes.                                                                                                 |
+| **Multi-devise / multi-unité** | Prix stockés en **minor units** (`bigint`) + code ISO (`currency_code`). Poids/dimensions en unités SI.                                                                                                                         |
+| **i18n natif**                 | Champs traduisibles isolés dans `*_translations (locale, entity_id)`. Locale par défaut : `fr-TN`.                                                                                                                              |
+| **Extensibilité IA**           | Tables `embeddings`, `recommendations`, `events` prêtes ; extension `pgvector` prévue mais activée seulement quand utilisée.                                                                                                    |
+| **Performance**                | Index composites orientés requêtes catalogue, FTS `tsvector` sur produits/blog, partitionnement futur sur `events` et `stock_movements`.                                                                                        |
+| **Sans surprises**             | Contraintes `CHECK`, `NOT NULL`, `FOREIGN KEY ON DELETE` explicites partout. Enums PostgreSQL pour les statuts.                                                                                                                 |
+| **GDPR/DPO**                   | PII isolée dans `customers`/`addresses`. `deleted_at` + procédure d'anonymisation documentée.                                                                                                                                   |
 
 ---
 
@@ -115,17 +115,17 @@ create type audit_action     as enum ('create','update','delete','login','role_g
 
 ## 5. Livrables (fichiers de ce dossier)
 
-| Fichier | Rôle |
-|---|---|
-| `docs/database/README.md` | Vue d'ensemble (ce fichier). |
-| `docs/database/schema.sql` | **Source de vérité** — DDL PostgreSQL complet, RLS incluse. |
-| `docs/database/schema.prisma` | Représentation ORM de référence (non appliquée). |
-| `docs/database/adr/0001-postgres-supabase.md` | ADR — pourquoi Postgres/Supabase et pas Prisma en source. |
-| `docs/database/adr/0002-money-and-i18n.md` | ADR — minor units, i18n via tables séparées. |
-| `docs/database/adr/0003-rls-and-rbac.md` | ADR — RLS + `has_role()` SECURITY DEFINER. |
-| `docs/database/adr/0004-inventory-and-lots.md` | ADR — stock, lots, mouvements append-only. |
-| `docs/database/adr/0005-ai-recommendations.md` | ADR — embeddings, recommandations, events. |
-| `docs/database/migrations-strategy.md` | Nommage, ordering, rollback, seed, environnements. |
+| Fichier                                        | Rôle                                                        |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| `docs/database/README.md`                      | Vue d'ensemble (ce fichier).                                |
+| `docs/database/schema.sql`                     | **Source de vérité** — DDL PostgreSQL complet, RLS incluse. |
+| `docs/database/schema.prisma`                  | Représentation ORM de référence (non appliquée).            |
+| `docs/database/adr/0001-postgres-supabase.md`  | ADR — pourquoi Postgres/Supabase et pas Prisma en source.   |
+| `docs/database/adr/0002-money-and-i18n.md`     | ADR — minor units, i18n via tables séparées.                |
+| `docs/database/adr/0003-rls-and-rbac.md`       | ADR — RLS + `has_role()` SECURITY DEFINER.                  |
+| `docs/database/adr/0004-inventory-and-lots.md` | ADR — stock, lots, mouvements append-only.                  |
+| `docs/database/adr/0005-ai-recommendations.md` | ADR — embeddings, recommandations, events.                  |
+| `docs/database/migrations-strategy.md`         | Nommage, ordering, rollback, seed, environnements.          |
 
 ---
 

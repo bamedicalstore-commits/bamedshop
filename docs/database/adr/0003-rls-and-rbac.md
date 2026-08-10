@@ -29,17 +29,17 @@
 
 ## Modèle de politiques (matrice)
 
-| Table                | anon | customer (self) | staff | admin |
-|----------------------|:----:|:---------------:|:-----:|:-----:|
-| products, categories, brands, blog_posts (published) | R | R | RW | RW |
-| media_library         | R    | R               | RW    | RW    |
-| profiles              | —    | RW (self)       | R     | RW    |
-| addresses, wishlists  | —    | RW (self)       | R     | RW    |
-| orders, payments, invoices | — | R (self) / W insert | RW | RW |
-| stock_items, movements | —   | —               | RW    | RW    |
-| audit_logs            | —    | —               | R     | R     |
-| settings              | R (public keys) | R | R | RW |
-| user_roles            | —    | R (self)        | R     | RW    |
+| Table                                                |      anon       |   customer (self)   | staff | admin |
+| ---------------------------------------------------- | :-------------: | :-----------------: | :---: | :---: |
+| products, categories, brands, blog_posts (published) |        R        |          R          |  RW   |  RW   |
+| media_library                                        |        R        |          R          |  RW   |  RW   |
+| profiles                                             |        —        |      RW (self)      |   R   |  RW   |
+| addresses, wishlists                                 |        —        |      RW (self)      |   R   |  RW   |
+| orders, payments, invoices                           |        —        | R (self) / W insert |  RW   |  RW   |
+| stock_items, movements                               |        —        |          —          |  RW   |  RW   |
+| audit_logs                                           |        —        |          —          |   R   |   R   |
+| settings                                             | R (public keys) |          R          |   R   |  RW   |
+| user_roles                                           |        —        |      R (self)       |   R   |  RW   |
 
 R = SELECT · W = INSERT/UPDATE/DELETE.
 
@@ -48,5 +48,5 @@ R = SELECT · W = INSERT/UPDATE/DELETE.
 - Chaque migration doit décrire ses policies. Les revues bloquent
   toute table sans RLS explicite.
 - Les tests d'accès sont écrits en SQL (`set role authenticated; set
-  request.jwt.claims ...; select ...`) et intégrés en CI dès que le
+request.jwt.claims ...; select ...`) et intégrés en CI dès que le
   backend commence.

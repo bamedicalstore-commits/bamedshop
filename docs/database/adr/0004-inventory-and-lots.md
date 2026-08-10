@@ -5,7 +5,7 @@
 ## Décision
 
 1. **`stock_items`** stocke l'état courant `(warehouse, product,
-   variant)` : `quantity_on_hand`, `quantity_reserved`, seuils de
+variant)` : `quantity_on_hand`, `quantity_reserved`, seuils de
    réapprovisionnement. Unique `(warehouse_id, product_id, variant_id)`.
 2. **`product_lots`** trace chaque lot reçu (numéro de lot,
    série, date de fabrication, **date de péremption**, fournisseur).
@@ -34,5 +34,5 @@
 - Un job de réconciliation hebdomadaire compare l'état matérialisé à
   la somme des mouvements et alerte en cas d'écart.
 - Les rappels de lots (recall) sont triviaux : `SELECT ... FROM
-  product_lots WHERE lot_number = ...` puis remontée aux
+product_lots WHERE lot_number = ...` puis remontée aux
   commandes via `stock_movements.reference_id`.

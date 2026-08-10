@@ -8,13 +8,13 @@
 
 ## 1. Arbitrages préalables (5 conflits détectés, 3 résolus, 2 déclassés)
 
-| # | Conflit | Décision utilisateur | Impact |
-|---|---|---|---|
-| 1 | `public.users` avec `password_hash` incompatible avec `auth.users` de Lovable Cloud | ✅ Remplacer par `profiles` + `auth.users`, supprimer tables auth maison | 4 tables supprimées, 25 FK réécrites |
-| 2 | Colonne `role` sur `users` = risque d'escalade | ✅ Externaliser dans `user_roles` + `has_role()` | Enum `app_role` + fonction sécurité |
-| 3 | 0 policy RLS, 0 GRANT dans `schema.sql` | ✅ Écrire matrice RLS depuis `CONVENTIONS.md` | 45+ policies dérivées |
-| 4 | Frontend MOCK vs shapes DB | Adapters `src/lib/mappers` | Composants intacts |
-| 5 | Volume total ingérable en un tour | Découpage en 5 sprints B1→B5 | Ce sprint = B1 étendu |
+| #   | Conflit                                                                             | Décision utilisateur                                                     | Impact                               |
+| --- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------ |
+| 1   | `public.users` avec `password_hash` incompatible avec `auth.users` de Lovable Cloud | ✅ Remplacer par `profiles` + `auth.users`, supprimer tables auth maison | 4 tables supprimées, 25 FK réécrites |
+| 2   | Colonne `role` sur `users` = risque d'escalade                                      | ✅ Externaliser dans `user_roles` + `has_role()`                         | Enum `app_role` + fonction sécurité  |
+| 3   | 0 policy RLS, 0 GRANT dans `schema.sql`                                             | ✅ Écrire matrice RLS depuis `CONVENTIONS.md`                            | 45+ policies dérivées                |
+| 4   | Frontend MOCK vs shapes DB                                                          | Adapters `src/lib/mappers`                                               | Composants intacts                   |
+| 5   | Volume total ingérable en un tour                                                   | Découpage en 5 sprints B1→B5                                             | Ce sprint = B1 étendu                |
 
 ---
 
@@ -27,16 +27,16 @@
 
 ### 2.2 Domaines couverts (29 tables)
 
-| Domaine | Tables |
-|---|---|
-| Identité | `profiles`, `user_roles`, `notification_preferences` |
-| Catalogue | `categories`, `brands`, `suppliers`, `products`, `product_documents`, `product_media`, `packs`, `pack_products`, `product_relations` |
-| Client — Adresses | `addresses` |
-| Panier | `carts`, `cart_items` |
-| Promotions | `coupons`, `promotions`, `promotion_categories` |
-| Commandes | `orders`, `order_items`, `payments`, `shipments`, `order_picking_items` |
-| Client (post-achat) | `wishlist_items`, `warranties`, `client_documents`, `notifications` |
-| Abonnements BA Medical+ | `subscription_plans`, `subscriptions` |
+| Domaine                 | Tables                                                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Identité                | `profiles`, `user_roles`, `notification_preferences`                                                                                 |
+| Catalogue               | `categories`, `brands`, `suppliers`, `products`, `product_documents`, `product_media`, `packs`, `pack_products`, `product_relations` |
+| Client — Adresses       | `addresses`                                                                                                                          |
+| Panier                  | `carts`, `cart_items`                                                                                                                |
+| Promotions              | `coupons`, `promotions`, `promotion_categories`                                                                                      |
+| Commandes               | `orders`, `order_items`, `payments`, `shipments`, `order_picking_items`                                                              |
+| Client (post-achat)     | `wishlist_items`, `warranties`, `client_documents`, `notifications`                                                                  |
+| Abonnements BA Medical+ | `subscription_plans`, `subscriptions`                                                                                                |
 
 ### 2.3 Fonctions & triggers
 
@@ -68,10 +68,10 @@
 
 ## 3. Sécurité — état du linter
 
-| Alerte | Statut |
-|---|---|
-| Extension in Public (pgcrypto, citext) | ✅ Corrigé (schéma `extensions`) |
-| SECURITY DEFINER `handle_new_user` accessible | ✅ Corrigé (`service_role` + `supabase_auth_admin` uniquement) |
+| Alerte                                                                  | Statut                                                                                                                                                |
+| ----------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Extension in Public (pgcrypto, citext)                                  | ✅ Corrigé (schéma `extensions`)                                                                                                                      |
+| SECURITY DEFINER `handle_new_user` accessible                           | ✅ Corrigé (`service_role` + `supabase_auth_admin` uniquement)                                                                                        |
 | SECURITY DEFINER `has_role` / `is_staff` accessible aux `authenticated` | 🟢 Accepté par conception — documenté dans `@security-memory` (indispensable aux policies RBAC ; ne retourne qu'un `boolean` sans exposer de données) |
 
 **Aucune alerte de niveau ERROR. Zéro donnée personnelle exposée à `anon`.**
@@ -101,6 +101,7 @@
 ## 6. Prochaine étape recommandée — Sprint B2
 
 **Périmètre proposé :**
+
 1. Server Functions Auth (`/auth/register`, `/auth/login`, `/auth/refresh`, `/auth/forgot-password`, `/auth/reset-password`, `/auth/me`) — wrappers Supabase Auth conformes au contrat OpenAPI.
 2. Server Functions Catalogue publiques (`GET /products`, `GET /products/{slug}`, `GET /categories`, `GET /categories/{slug}`, `GET /brands`, `GET /brands/{slug}`, `GET /packs`) — accès via client publishable server-side + adapters.
 3. Server Functions Client authentifiées (`/cart/*`, `/wishlist/*`) — `requireSupabaseAuth`.
