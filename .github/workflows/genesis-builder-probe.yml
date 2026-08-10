@@ -71,16 +71,46 @@ jobs:
         run: |
           set -euo pipefail
           PORT=4173
-          bun run preview --host 127.0.0.1 --port "${PORT}" > /tmp/genesis-preview.log 2>&1 &
+          HOST=127.0.0.1
+          LOG_FILE="/tmp/genesis-runtime.log"
+
+          test -f ".output/server/index.mjs" || {
+            echo "RUNTIME_START_FAIL: .output/server/index.mjs is missing"
+            find .output -maxdepth 3 -type f -print | sort | head -200 || true
+            exit 1
+          }
+
+          PORT="${PORT}" HOST="${HOST}" NODE_ENV=production \
+            node .output/server/index.mjs >"${LOG_FILE}" 2>&1 &
           SERVER_PID=$!
           trap 'kill "${SERVER_PID}" 2>/dev/null || true' EXIT
 
+          echo "SERVER_PID=${SERVER_PID}"
+
+          ready=0
           for i in {1..30}; do
-            if curl -fsS "http://127.0.0.1:${PORT}/" >/dev/null; then
+            if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+              echo "RUNTIME_START_FAIL: server exited before becoming ready"
+              cat "${LOG_FILE}" || true
+              exit 1
+            fi
+
+            if curl -fsS --max-time 2 "http://${HOST}:${PORT}/" >/tmp/genesis-runtime-root.html 2>/tmp/genesis-runtime-curl.err; then
+              ready=1
+              echo "SERVER_READY after ${i}s"
               break
             fi
             sleep 1
           done
+
+          if [ "${ready}" -ne 1 ]; then
+            echo "RUNTIME_START_FAIL: server did not become HTTP-ready on ${HOST}:${PORT}"
+            echo "--- server log ---"
+            cat "${LOG_FILE}" || true
+            echo "--- curl diagnostic ---"
+            cat /tmp/genesis-runtime-curl.err || true
+            exit 1
+          fi
 
           pages=(
             "/"
@@ -94,11 +124,21 @@ jobs:
             "/faq"
           )
 
+          failures=0
           for path in "${pages[@]}"; do
-            status=$(curl -sS -o /dev/null -w '%{http_code}' "http://127.0.0.1:${PORT}${path}")
+            status=$(curl -sS --max-time 10 -o /tmp/genesis-runtime-response.html -w '%{http_code}' "http://${HOST}:${PORT}${path}" || true)
             echo "${status} ${path}"
-            test "${status}" -lt 500
+            if [ "${status}" -ge 500 ] || [ "${status}" = "000" ]; then
+              failures=$((failures + 1))
+            fi
           done
+
+          if [ "${failures}" -ne 0 ]; then
+            echo "RUNTIME_SMOKE=FAIL (${failures} route failures)"
+            echo "--- server log ---"
+            cat "${LOG_FILE}" || true
+            exit 1
+          fi
 
           echo "RUNTIME_SMOKE=PASS"
 
