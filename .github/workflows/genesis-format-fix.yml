@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   format-fix:
-    if: ${{ !startsWith(github.event.head_commit.message, 'chore(ci): apply Prettier formatting') && !startsWith(github.event.head_commit.message, 'chore(ci): remove format fixer') }}
+    if: "${{ !startsWith(github.event.head_commit.message, 'chore(ci): apply Prettier formatting') && !startsWith(github.event.head_commit.message, 'chore(ci): remove format fixer') }}"
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
