@@ -10,6 +10,7 @@ Tailwind CSS v4 · shadcn/ui · React Hook Form · Zod · Lucide Icons.
 ## Design System
 
 Tokens dans `src/styles.css` (oklch, `@theme inline`) :
+
 - `--primary` Vert Santé (#2E8B57), `--primary-hover`, `--primary-soft`
 - `--secondary` bleu discret pour actions secondaires
 - `--success` / `--warning` / `--info` / `--destructive` + variantes soft
@@ -70,6 +71,7 @@ Administration : `/admin` (layout dédié) → tableau de bord, `/admin/b2b`.
 ## Prochaines étapes (Backend Agent)
 
 Le Frontend attend :
+
 - Modèles catalogue → `MOCK_PRODUCTS` dans `src/constants/navigation.ts`
   sera remplacé par un query loader Cloud
 - Auth Cloud → brancher `/auth` sur `supabase.auth.*` (client publishable)

@@ -17,25 +17,26 @@ Plateforme e-commerce tunisienne de matériel médical (lancement catalogue **Ph
 
 ## 2. Stack — 100% Lovable-native
 
-| Couche | Technologie officielle Lovable | Rôle |
-|---|---|---|
-| Framework | **TanStack Start v1** (React 19, TypeScript strict) | SSR, streaming, file-based routing |
-| Build | **Vite 7** | Bundler unique |
-| Runtime serveur | **Cloudflare Workers** (nodejs_compat) | Edge, faible latence |
-| Styling | **Tailwind CSS v4** (via `src/styles.css`) | Design tokens |
-| Composants | **shadcn/ui** (customisés via variants) | UI system |
-| Backend applicatif | **Server Functions** (`createServerFn`) | RPC typé client↔serveur |
-| Backend HTTP public | **Server Routes** (`src/routes/api/public/*`) | Webhooks, cron, APIs externes |
-| Database | **Lovable Cloud** (Postgres managé + RLS) | Données, auth, storage |
-| Auth | **Lovable Cloud Auth** (email, magic link, OAuth Google/Apple) | Sessions, RBAC |
-| Storage | **Lovable Cloud Storage** (buckets) | Images produits, docs |
-| IA | **Lovable AI Gateway** (`LOVABLE_API_KEY`) | Chat, embeddings, image gen |
-| Email transactionnel | **Lovable Email** (Seamless Emails via connectors) | Confirmations, resets |
-| Connecteurs externes | **Standard Connectors** (Stripe, Resend, etc.) | Paiement, SMS |
-| Déploiement | **Lovable Publish** | Preview + prod stables |
-| Observabilité | **Lovable runtime errors** + `reportLovableError` | Erreurs SSR & client |
+| Couche               | Technologie officielle Lovable                                 | Rôle                               |
+| -------------------- | -------------------------------------------------------------- | ---------------------------------- |
+| Framework            | **TanStack Start v1** (React 19, TypeScript strict)            | SSR, streaming, file-based routing |
+| Build                | **Vite 7**                                                     | Bundler unique                     |
+| Runtime serveur      | **Cloudflare Workers** (nodejs_compat)                         | Edge, faible latence               |
+| Styling              | **Tailwind CSS v4** (via `src/styles.css`)                     | Design tokens                      |
+| Composants           | **shadcn/ui** (customisés via variants)                        | UI system                          |
+| Backend applicatif   | **Server Functions** (`createServerFn`)                        | RPC typé client↔serveur            |
+| Backend HTTP public  | **Server Routes** (`src/routes/api/public/*`)                  | Webhooks, cron, APIs externes      |
+| Database             | **Lovable Cloud** (Postgres managé + RLS)                      | Données, auth, storage             |
+| Auth                 | **Lovable Cloud Auth** (email, magic link, OAuth Google/Apple) | Sessions, RBAC                     |
+| Storage              | **Lovable Cloud Storage** (buckets)                            | Images produits, docs              |
+| IA                   | **Lovable AI Gateway** (`LOVABLE_API_KEY`)                     | Chat, embeddings, image gen        |
+| Email transactionnel | **Lovable Email** (Seamless Emails via connectors)             | Confirmations, resets              |
+| Connecteurs externes | **Standard Connectors** (Stripe, Resend, etc.)                 | Paiement, SMS                      |
+| Déploiement          | **Lovable Publish**                                            | Preview + prod stables             |
+| Observabilité        | **Lovable runtime errors** + `reportLovableError`              | Erreurs SSR & client               |
 
 **Ce qu'on N'utilise PAS** (et pourquoi) :
+
 - ❌ Next.js / Remix / Nuxt → non natifs Lovable.
 - ❌ Prisma → Lovable Cloud fournit un client Supabase généré et des migrations SQL.
 - ❌ Redis / BullMQ / NATS → workers Cloudflare non compatibles ; on utilise pg_cron + Postgres queue + Server Routes webhooks.
@@ -163,6 +164,7 @@ ba-medical-store/
 ```
 
 **Règle d'or** : `src/domains/<A>` n'importe jamais `src/domains/<B>`. La communication passe par :
+
 1. Events (Postgres outbox + consumers) — §7.
 2. Types partagés dans `src/domains/<A>/types.ts` importés en lecture seule.
 3. Vues DB dédiées (read-models).
@@ -187,17 +189,17 @@ ba-medical-store/
 └──────────────┘    └──────────────┘    └──────────────┘
 ```
 
-| Domaine | Sous-modules | Responsabilité |
-|---|---|---|
-| **Public** | Home, Catalogue, Product, Search, Categories, Brands, Blog, Contact, FAQ | Rendu SSR/SEO, JSON-LD, sitemap |
-| **Customer** | Auth, Profile, Orders (vues), Wishlist, Medical Cabinet, BA Medical+, Addresses, Notifications | Compte & données patient |
-| **Commerce** | Cart, Checkout, Coupons, Payments, Shipping, Returns, Refunds | Cycle transactionnel |
-| **Catalog** | Products, Categories, Brands, Attributes, Variants, Images, Documents | Fiche produit, taxonomie |
-| **Inventory** | Warehouses, Stock, Stock Movements, Suppliers, POs, Expiration Dates, Batches | Stock multi-entrepôts |
-| **CRM** | Customers, Leads, Companies, Notes, Activities | Pipeline B2B/B2C |
-| **Marketing** | Promotions, Discounts, Email, WhatsApp, Blog édition, Landing Pages | Acquisition & rétention |
-| **AI** | Assistant, Smart Search, Recommendations, Description Generator, SEO Generator | Couche IA (Lovable AI Gateway) |
-| **Admin** | Dashboard, Users, Roles, Permissions, Logs, Settings | Back-office transverse |
+| Domaine       | Sous-modules                                                                                   | Responsabilité                  |
+| ------------- | ---------------------------------------------------------------------------------------------- | ------------------------------- |
+| **Public**    | Home, Catalogue, Product, Search, Categories, Brands, Blog, Contact, FAQ                       | Rendu SSR/SEO, JSON-LD, sitemap |
+| **Customer**  | Auth, Profile, Orders (vues), Wishlist, Medical Cabinet, BA Medical+, Addresses, Notifications | Compte & données patient        |
+| **Commerce**  | Cart, Checkout, Coupons, Payments, Shipping, Returns, Refunds                                  | Cycle transactionnel            |
+| **Catalog**   | Products, Categories, Brands, Attributes, Variants, Images, Documents                          | Fiche produit, taxonomie        |
+| **Inventory** | Warehouses, Stock, Stock Movements, Suppliers, POs, Expiration Dates, Batches                  | Stock multi-entrepôts           |
+| **CRM**       | Customers, Leads, Companies, Notes, Activities                                                 | Pipeline B2B/B2C                |
+| **Marketing** | Promotions, Discounts, Email, WhatsApp, Blog édition, Landing Pages                            | Acquisition & rétention         |
+| **AI**        | Assistant, Smart Search, Recommendations, Description Generator, SEO Generator                 | Couche IA (Lovable AI Gateway)  |
+| **Admin**     | Dashboard, Users, Roles, Permissions, Logs, Settings                                           | Back-office transverse          |
 
 ---
 
@@ -255,16 +257,16 @@ Le frontend suit la structure §3. Règles :
 - **Data fetching canonique** :
   ```ts
   // domains/catalog/queries/product.ts
-  export const productQuery = (slug: string) => queryOptions({
-    queryKey: ['product', slug],
-    queryFn: () => getProduct({ data: { slug } }),
-  });
+  export const productQuery = (slug: string) =>
+    queryOptions({
+      queryKey: ["product", slug],
+      queryFn: () => getProduct({ data: { slug } }),
+    });
   ```
   ```tsx
   // routes/product.$slug.tsx
-  export const Route = createFileRoute('/product/$slug')({
-    loader: ({ context, params }) =>
-      context.queryClient.ensureQueryData(productQuery(params.slug)),
+  export const Route = createFileRoute("/product/$slug")({
+    loader: ({ context, params }) => context.queryClient.ensureQueryData(productQuery(params.slug)),
     component: () => {
       const { slug } = Route.useParams();
       const { data } = useSuspenseQuery(productQuery(slug));
@@ -287,21 +289,22 @@ Le frontend suit la structure §3. Règles :
 
 ### 7.1 Trois surfaces serveur, trois usages
 
-| Surface | Fichier | Utilisation |
-|---|---|---|
-| **Server Function** | `src/domains/**/functions/*.functions.ts` | Toute logique appelée depuis le client (RPC typé) |
-| **Server Route** | `src/routes/api/public/*.ts` | Webhooks externes (Stripe, Konnect), cron, APIs publiques |
-| **Server-only helper** | `src/domains/**/server/*.server.ts` | Modules privilégiés (supabaseAdmin) importés par les deux ci-dessus |
+| Surface                | Fichier                                   | Utilisation                                                         |
+| ---------------------- | ----------------------------------------- | ------------------------------------------------------------------- |
+| **Server Function**    | `src/domains/**/functions/*.functions.ts` | Toute logique appelée depuis le client (RPC typé)                   |
+| **Server Route**       | `src/routes/api/public/*.ts`              | Webhooks externes (Stripe, Konnect), cron, APIs publiques           |
+| **Server-only helper** | `src/domains/**/server/*.server.ts`       | Modules privilégiés (supabaseAdmin) importés par les deux ci-dessus |
 
 ### 7.2 Trois clients Supabase — usage strict
 
-| Client | Import | Quand |
-|---|---|---|
-| Browser | `@/integrations/supabase/client` | Auth flows, realtime, listeners — **client uniquement** |
-| Middleware auth | `requireSupabaseAuth` | Server fn nécessitant l'utilisateur (RLS applique) |
-| Admin | `supabaseAdmin` (via `.server.ts`, lazy `await import`) | Webhooks vérifiés, jobs, maintenance — bypass RLS |
+| Client          | Import                                                  | Quand                                                   |
+| --------------- | ------------------------------------------------------- | ------------------------------------------------------- |
+| Browser         | `@/integrations/supabase/client`                        | Auth flows, realtime, listeners — **client uniquement** |
+| Middleware auth | `requireSupabaseAuth`                                   | Server fn nécessitant l'utilisateur (RLS applique)      |
+| Admin           | `supabaseAdmin` (via `.server.ts`, lazy `await import`) | Webhooks vérifiés, jobs, maintenance — bypass RLS       |
 
 **Interdictions absolues :**
+
 - `supabaseAdmin` en top-level import dans un fichier route ou `*.functions.ts` → il fuiterait côté client.
 - Server function sans middleware auth pour opérations privilégiées → endpoint public.
 - `process.env.*` lu au top-level → **toujours** dans `.handler()`.
@@ -335,18 +338,18 @@ Route / Server Route
 
 ### 8.1 Domaines & tables
 
-| Domaine | Tables |
-|---|---|
-| Identity | `profiles`, `user_roles` |
-| Catalog | `products`, `product_variants`, `product_images`, `product_documents`, `categories`, `brands`, `attributes`, `attribute_values`, `variant_attributes` |
-| Inventory | `warehouses`, `stock_items`, `stock_movements`, `batches`, `suppliers`, `purchase_orders`, `po_lines` |
-| Commerce | `carts`, `cart_items`, `orders`, `order_items`, `order_status_history`, `payments`, `invoices`, `shipments`, `returns`, `refunds`, `coupons`, `coupon_redemptions` |
-| Customer | `addresses`, `wishlists`, `wishlist_items`, `medical_cabinets`, `subscriptions` |
-| CRM | `companies`, `contacts`, `leads`, `notes`, `activities` |
-| Marketing | `promotions`, `discounts`, `campaigns`, `blog_posts`, `blog_categories`, `landing_pages`, `email_logs`, `whatsapp_logs` |
-| Reviews | `reviews`, `review_media`, `review_votes` |
-| Support | `tickets`, `ticket_messages` |
-| System | `notifications`, `audit_logs`, `settings`, `media`, `feature_flags`, `event_outbox` |
+| Domaine   | Tables                                                                                                                                                             |
+| --------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Identity  | `profiles`, `user_roles`                                                                                                                                           |
+| Catalog   | `products`, `product_variants`, `product_images`, `product_documents`, `categories`, `brands`, `attributes`, `attribute_values`, `variant_attributes`              |
+| Inventory | `warehouses`, `stock_items`, `stock_movements`, `batches`, `suppliers`, `purchase_orders`, `po_lines`                                                              |
+| Commerce  | `carts`, `cart_items`, `orders`, `order_items`, `order_status_history`, `payments`, `invoices`, `shipments`, `returns`, `refunds`, `coupons`, `coupon_redemptions` |
+| Customer  | `addresses`, `wishlists`, `wishlist_items`, `medical_cabinets`, `subscriptions`                                                                                    |
+| CRM       | `companies`, `contacts`, `leads`, `notes`, `activities`                                                                                                            |
+| Marketing | `promotions`, `discounts`, `campaigns`, `blog_posts`, `blog_categories`, `landing_pages`, `email_logs`, `whatsapp_logs`                                            |
+| Reviews   | `reviews`, `review_media`, `review_votes`                                                                                                                          |
+| Support   | `tickets`, `ticket_messages`                                                                                                                                       |
+| System    | `notifications`, `audit_logs`, `settings`, `media`, `feature_flags`, `event_outbox`                                                                                |
 
 ### 8.2 Conventions non négociables
 
@@ -390,20 +393,20 @@ Route / Server Route
 
 ### 9.2 Événements v1
 
-| Event | Émetteur | Consommateurs |
-|---|---|---|
-| `customer.registered` | Customer | Email welcome, CRM |
-| `order.created` | Commerce | Email, WhatsApp, CRM, AI |
-| `order.paid` | Commerce | Inventory (final deduct), Invoicing, Email |
-| `order.shipped` | Commerce | Email, WhatsApp, CRM |
-| `order.delivered` | Commerce | Reviews invite |
-| `order.refunded` | Commerce | Inventory, Finance |
-| `stock.updated` | Inventory | Search reindex |
-| `stock.low` | Inventory | Admin alert, Auto-PO draft |
-| `product.published` | Catalog | Search, Sitemap tag revalidate |
-| `subscription.renewed` | Customer (BA+) | Billing, Email |
-| `review.published` | Reviews | Product rating recompute |
-| `cart.abandoned` | Commerce | Marketing relance |
+| Event                  | Émetteur       | Consommateurs                              |
+| ---------------------- | -------------- | ------------------------------------------ |
+| `customer.registered`  | Customer       | Email welcome, CRM                         |
+| `order.created`        | Commerce       | Email, WhatsApp, CRM, AI                   |
+| `order.paid`           | Commerce       | Inventory (final deduct), Invoicing, Email |
+| `order.shipped`        | Commerce       | Email, WhatsApp, CRM                       |
+| `order.delivered`      | Commerce       | Reviews invite                             |
+| `order.refunded`       | Commerce       | Inventory, Finance                         |
+| `stock.updated`        | Inventory      | Search reindex                             |
+| `stock.low`            | Inventory      | Admin alert, Auto-PO draft                 |
+| `product.published`    | Catalog        | Search, Sitemap tag revalidate             |
+| `subscription.renewed` | Customer (BA+) | Billing, Email                             |
+| `review.published`     | Reviews        | Product rating recompute                   |
+| `cart.abandoned`       | Commerce       | Marketing relance                          |
 
 Schéma type `{ id, name, version, occurredAt, actor, payload, correlationId? }`.
 
@@ -423,17 +426,17 @@ Schéma type `{ id, name, version, occurredAt, actor, payload, correlationId? }`
 
 ### 10.2 Sécurité (OWASP)
 
-| Contrôle | Mesure |
-|---|---|
-| Access control | RBAC 3 couches + RLS |
-| Crypto | TLS géré Lovable, `pgcrypto` sur colonnes PII médicales |
-| Injection | Client Supabase paramétré + Zod strict |
-| Auth | Lovable Cloud Auth + MFA staff |
-| Webhooks | Vérif signature HMAC dans `/api/public/webhooks.*` |
-| Rate limit | Middleware server fn + colonne `rate_limits` (fenêtre glissante) |
-| Audit | `audit_logs` append-only, hash chain |
-| Secrets | `LOVABLE_API_KEY` auto-provisionné ; jamais côté client ; jamais `VITE_*` |
-| PII santé | `medical_cabinets` chiffré colonne + accès loggé + rétention |
+| Contrôle       | Mesure                                                                    |
+| -------------- | ------------------------------------------------------------------------- |
+| Access control | RBAC 3 couches + RLS                                                      |
+| Crypto         | TLS géré Lovable, `pgcrypto` sur colonnes PII médicales                   |
+| Injection      | Client Supabase paramétré + Zod strict                                    |
+| Auth           | Lovable Cloud Auth + MFA staff                                            |
+| Webhooks       | Vérif signature HMAC dans `/api/public/webhooks.*`                        |
+| Rate limit     | Middleware server fn + colonne `rate_limits` (fenêtre glissante)          |
+| Audit          | `audit_logs` append-only, hash chain                                      |
+| Secrets        | `LOVABLE_API_KEY` auto-provisionné ; jamais côté client ; jamais `VITE_*` |
+| PII santé      | `medical_cabinets` chiffré colonne + accès loggé + rétention              |
 
 ### 10.3 Observabilité
 
@@ -451,6 +454,7 @@ Schéma type `{ id, name, version, occurredAt, actor, payload, correlationId? }`
 ### 10.5 IA (Lovable AI Gateway)
 
 Toujours via `LOVABLE_API_KEY` lu **dans le handler d'une server fn**. Cas d'usage :
+
 - Description produit (fallback génération).
 - SEO meta generator.
 - Assistant recherche sémantique (embeddings `pgvector` + reranking).
@@ -460,21 +464,21 @@ Toujours via `LOVABLE_API_KEY` lu **dans le handler d'une server fn**. Cas d'usa
 
 ## 11. Conventions de nommage
 
-| Élément | Convention | Exemple |
-|---|---|---|
-| Composants React | PascalCase | `ProductCard.tsx` |
-| Hooks | `useX.ts` camelCase | `useCartTotals.ts` |
-| Server Functions | `verb.functions.ts` | `placeOrder.functions.ts` |
-| Server-only helpers | `X.server.ts` | `pricing.server.ts` |
-| Services | PascalCase + `Service` | `PlaceOrderService.ts` |
-| Repositories | PascalCase + `Repository` | `OrderRepository.ts` |
-| Query options | `xQuery` | `productQuery` |
-| Events | `<domain>.<verbe_passé>` | `order.created` |
-| Tables SQL | snake_case pluriel | `order_items` |
-| Colonnes SQL | snake_case | `created_at` |
-| Routes URL | kebab-case | `/medical-cabinet` |
-| Env server | SCREAMING_SNAKE | `KONNECT_SECRET` |
-| Env client | `VITE_...` | `VITE_APP_NAME` |
+| Élément             | Convention                | Exemple                   |
+| ------------------- | ------------------------- | ------------------------- |
+| Composants React    | PascalCase                | `ProductCard.tsx`         |
+| Hooks               | `useX.ts` camelCase       | `useCartTotals.ts`        |
+| Server Functions    | `verb.functions.ts`       | `placeOrder.functions.ts` |
+| Server-only helpers | `X.server.ts`             | `pricing.server.ts`       |
+| Services            | PascalCase + `Service`    | `PlaceOrderService.ts`    |
+| Repositories        | PascalCase + `Repository` | `OrderRepository.ts`      |
+| Query options       | `xQuery`                  | `productQuery`            |
+| Events              | `<domain>.<verbe_passé>`  | `order.created`           |
+| Tables SQL          | snake_case pluriel        | `order_items`             |
+| Colonnes SQL        | snake_case                | `created_at`              |
+| Routes URL          | kebab-case                | `/medical-cabinet`        |
+| Env server          | SCREAMING_SNAKE           | `KONNECT_SECRET`          |
+| Env client          | `VITE_...`                | `VITE_APP_NAME`           |
 
 ---
 
@@ -484,16 +488,27 @@ Chaque `src/domains/<domain>/README.md` suit :
 
 ```markdown
 # <Domain>
+
 ## Objectif
+
 ## Responsabilités
+
 ## Dépendances (packages, autres domaines via events uniquement, services externes)
+
 ## API exposée (server functions, events publiés)
+
 ## API consommée (events souscrits, services)
+
 ## Permissions RBAC
+
 ## Modèle de données (tables, index, RLS)
+
 ## Risques & mitigations
+
 ## Tests requis
+
 ## Évolutions futures
+
 ## ADR liés
 ```
 
@@ -517,24 +532,25 @@ Chaque `src/domains/<domain>/README.md` suit :
 
 ## 14. Points d'extension (10 ans)
 
-| Besoin futur | Extension prévue |
-|---|---|
-| Marketplace multi-fournisseurs | `suppliers` + `product_supplier` + POs par fournisseur dès v1 |
-| Multi-entrepôts | `warehouses` + `stock_items(warehouse_id)` dès v1 |
-| Multi-devises | `money = {amount, currency}` — jamais `float` seul |
-| Multi-pays | `addresses.country`, `tax_rules` par juridiction |
-| App mobile | Server functions réutilisables via un client TanStack Query mobile |
-| B2B avancé | `companies`, `credit_terms`, `quotes` déjà prévus |
-| Téléconsultation | Nouveau bounded context, consomme events `customer.*` |
-| Moteur de recherche dédié | Swap adapter `SearchProvider` (Meilisearch/Typesense) |
-| Broker événements | Swap dispatcher outbox → NATS/Kafka sans toucher aux domaines |
-| Nouveau LLM | Nouveau adapter dans `domains/ai/` — `LOVABLE_API_KEY` unifié |
+| Besoin futur                   | Extension prévue                                                   |
+| ------------------------------ | ------------------------------------------------------------------ |
+| Marketplace multi-fournisseurs | `suppliers` + `product_supplier` + POs par fournisseur dès v1      |
+| Multi-entrepôts                | `warehouses` + `stock_items(warehouse_id)` dès v1                  |
+| Multi-devises                  | `money = {amount, currency}` — jamais `float` seul                 |
+| Multi-pays                     | `addresses.country`, `tax_rules` par juridiction                   |
+| App mobile                     | Server functions réutilisables via un client TanStack Query mobile |
+| B2B avancé                     | `companies`, `credit_terms`, `quotes` déjà prévus                  |
+| Téléconsultation               | Nouveau bounded context, consomme events `customer.*`              |
+| Moteur de recherche dédié      | Swap adapter `SearchProvider` (Meilisearch/Typesense)              |
+| Broker événements              | Swap dispatcher outbox → NATS/Kafka sans toucher aux domaines      |
+| Nouveau LLM                    | Nouveau adapter dans `domains/ai/` — `LOVABLE_API_KEY` unifié      |
 
 ---
 
 ## 15. Livrables & suite
 
 **Ce document livre :**
+
 1. Architecture complète (100% Lovable-native). ✔
 2. Structure des dossiers. ✔
 3. 9 domaines métier. ✔
@@ -545,6 +561,7 @@ Chaque `src/domains/<domain>/README.md` suit :
 8. ADR justifiés. ✔
 
 **Prochaines étapes par agent spécialisé :**
+
 - **Database Agent** — migrations SQL Lovable Cloud (tables + `GRANT` + RLS + `has_role` + triggers + outbox + pg_cron).
 - **Backend Agent** — server functions par domaine, services, repositories, dispatcher outbox.
 - **Frontend Agent** — design system (tokens oklch + variants shadcn), routes, features.

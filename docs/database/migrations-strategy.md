@@ -43,11 +43,11 @@ Ne jamais séparer table et grants/policies dans deux migrations.
 
 ## Environnements
 
-| Env | Objectif | Reset autorisé ? |
-|---|---|---|
-| dev | Playground, fixtures riches | Oui |
-| staging | Miroir prod, données anonymisées | Non |
-| prod | Réel | Jamais |
+| Env     | Objectif                         | Reset autorisé ? |
+| ------- | -------------------------------- | ---------------- |
+| dev     | Playground, fixtures riches      | Oui              |
+| staging | Miroir prod, données anonymisées | Non              |
+| prod    | Réel                             | Jamais           |
 
 ## Vérifications avant merge
 
