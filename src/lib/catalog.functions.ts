@@ -1,15 +1,25 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import type { Database } from "@/integrations/supabase/types";
 
-const PRODUCT_COLUMNS =
-  "id, slug, name, short_description, description, price, compare_at_price, currency, stock, active, featured, brand_id, category_id, image_url, images, sku, created_at, updated_at";
+/**
+ * Public catalogue read path (read-only).
+ * Uses the publishable key + the existing `products_public_read_active`
+ * RLS policy (anon, active products only). No writes, no admin client.
+ */
+const PRODUCT_COLUMNS = `
+  id, name, slug, description, sku, category_id, brand_id, supplier_id,
+  price, professional_price, currency, ce_certified, warranty_months,
+  technical_specs, active, created_at, updated_at,
+  brand:brands ( name, slug ),
+  category:categories ( name, slug ),
+  media:product_media ( url, position ),
+  documents:product_documents ( label, url )
+` as const;
 
 function createPublicClient() {
-  const url = import.meta.env.VITE_SUPABASE_URL;
-  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) throw new Error("Supabase public environment is not configured");
-
-  return createClient(url, key, {
+  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
+  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
@@ -62,7 +72,7 @@ export const getPublicProductBySlug = createServerFn({ method: "GET" })
 
     if (error) {
       console.error("getPublicProductBySlug failed:", error.message);
-      return { product: null, error: "Produit temporairement indisponible" as string | null };
+      return { product: null, error: "Catalogue temporairement indisponible" as string | null };
     }
     return { product: row ?? null, error: null as string | null };
   });
