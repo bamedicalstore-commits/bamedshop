@@ -1,25 +1,15 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
-import type { Database } from "@/integrations/supabase/types";
 
-/**
- * Public catalogue read path (read-only).
- * Uses the publishable key + the existing `products_public_read_active`
- * RLS policy (anon, active products only). No writes, no admin client.
- */
-const PRODUCT_COLUMNS = `
-  id, name, slug, description, sku, category_id, brand_id, supplier_id,
-  price, professional_price, currency, ce_certified, warranty_months,
-  technical_specs, active, created_at, updated_at,
-  brand:brands ( name, slug ),
-  category:categories ( name, slug ),
-  media:product_media ( url, position ),
-  documents:product_documents ( label, url )
-` as const;
+const PRODUCT_COLUMNS =
+  "id, slug, name, short_description, description, price, compare_at_price, currency, stock, active, featured, brand_id, category_id, image_url, images, sku, created_at, updated_at";
 
 function createPublicClient() {
-  const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
-  return createClient<Database>(process.env["SUPABASE_URL"]!, key, {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const key = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) throw new Error("Supabase public environment is not configured");
+
+  return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
     global: {
       fetch: (input, init) => {
@@ -35,7 +25,7 @@ function createPublicClient() {
 }
 
 export const listPublicProducts = createServerFn({ method: "GET" })
-  .inputValidator((input?: { limit?: number; offset?: number }) => ({
+  .validator((input?: { limit?: number; offset?: number }) => ({
     limit: Math.min(Math.max(input?.limit ?? 24, 1), 100),
     offset: Math.max(input?.offset ?? 0, 0),
   }))
@@ -56,7 +46,7 @@ export const listPublicProducts = createServerFn({ method: "GET" })
   });
 
 export const getPublicProductBySlug = createServerFn({ method: "GET" })
-  .inputValidator((input: { slug: string }) => {
+  .validator((input: { slug: string }) => {
     const slug = String(input?.slug ?? "").trim();
     if (!slug || slug.length > 200) throw new Error("Invalid slug");
     return { slug };
@@ -72,7 +62,7 @@ export const getPublicProductBySlug = createServerFn({ method: "GET" })
 
     if (error) {
       console.error("getPublicProductBySlug failed:", error.message);
-      return { product: null, error: "Catalogue temporairement indisponible" as string | null };
+      return { product: null, error: "Produit temporairement indisponible" as string | null };
     }
     return { product: row ?? null, error: null as string | null };
   });
