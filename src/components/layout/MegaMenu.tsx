@@ -21,7 +21,11 @@ export function MegaMenu() {
       <NavigationMenuList className="gap-1">
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }}>
+            <Link
+              to="/"
+              activeOptions={{ exact: true }}
+              activeProps={{ className: "text-primary" }}
+            >
               Accueil
             </Link>
           </NavigationMenuLink>
@@ -45,7 +49,9 @@ export function MegaMenu() {
                             {c.name}
                           </span>
                           {c.productCount && (
-                            <span className="text-[11px] text-muted-foreground">{c.productCount}</span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {c.productCount}
+                            </span>
                           )}
                         </div>
                         {c.description && (
