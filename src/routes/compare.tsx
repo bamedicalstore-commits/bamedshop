@@ -29,11 +29,7 @@ function ComparePage() {
   const handleShare = async () => {
     const url = typeof window !== "undefined" ? window.location.href : "";
     if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: "Comparaison produits", url });
-      } catch {
-        /* cancelled */
-      }
+      try { await navigator.share({ title: "Comparaison produits", url }); } catch { /* cancelled */ }
     } else {
       await navigator.clipboard?.writeText(url);
       setCopied(true);
@@ -56,8 +52,7 @@ function ComparePage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Comparaison</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {items.length} produit{items.length > 1 ? "s" : ""} sélectionné
-            {items.length > 1 ? "s" : ""}
+            {items.length} produit{items.length > 1 ? "s" : ""} sélectionné{items.length > 1 ? "s" : ""}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -71,77 +66,44 @@ function ComparePage() {
             <Share2 className="size-4" aria-hidden="true" /> Partager
           </Button>
           <Button variant="outline" size="sm" onClick={handleCopyLink}>
-            {copied ? (
-              <Check className="size-4 text-success" aria-hidden="true" />
-            ) : (
-              <Link2 className="size-4" aria-hidden="true" />
-            )}
+            {copied ? <Check className="size-4 text-success" aria-hidden="true" /> : <Link2 className="size-4" aria-hidden="true" />}
             {copied ? "Copié" : "Lien"}
           </Button>
         </div>
       </header>
 
       {items.length === 0 ? (
-        <EmptyState
-          icon={Scale}
-          title="Aucun produit à comparer"
-          description="Ajoutez des produits via le bouton Comparer sur les fiches produit."
-        />
+        <EmptyState icon={Scale} title="Aucun produit à comparer"
+          description="Ajoutez des produits via le bouton Comparer sur les fiches produit." />
       ) : (
         <Card className="overflow-x-auto p-6">
-          <div
-            className="grid gap-4"
-            style={{ gridTemplateColumns: `180px repeat(${items.length}, minmax(220px, 1fr))` }}
-          >
+          <div className="grid gap-4" style={{ gridTemplateColumns: `180px repeat(${items.length}, minmax(220px, 1fr))` }}>
             <Cell head>Produit</Cell>
             {items.map((p) => (
-              <Cell key={p.id} className="font-semibold">
-                {p.name}
-              </Cell>
+              <Cell key={p.id} className="font-semibold">{p.name}</Cell>
             ))}
             <Cell head>Marque</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>{p.brand}</Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}>{p.brand}</Cell>)}
             <Cell head>Prix</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>
-                <PriceBlock price={p.price} compareAtPrice={p.compareAtPrice} />
-              </Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}><PriceBlock price={p.price} compareAtPrice={p.compareAtPrice} /></Cell>)}
             <Cell head>Disponibilité</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>
-                <AvailabilityBadge status={p.availability} />
-              </Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}><AvailabilityBadge status={p.availability} /></Cell>)}
             <Cell head>Note</Cell>
             {items.map((p) => (
-              <Cell key={p.id}>
-                {p.rating ? <Rating value={p.rating} count={p.ratingCount} size="sm" /> : "—"}
-              </Cell>
+              <Cell key={p.id}>{p.rating ? <Rating value={p.rating} count={p.ratingCount} size="sm" /> : "—"}</Cell>
             ))}
             <Cell head>Garantie</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>{p.warrantyMonths ? `${p.warrantyMonths} mois` : "—"}</Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}>{p.warrantyMonths ? `${p.warrantyMonths} mois` : "—"}</Cell>)}
             <Cell head>Livraison</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>{p.deliveryEta ?? "—"}</Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}>{p.deliveryEta ?? "—"}</Cell>)}
             <Cell head>Ordonnance</Cell>
-            {items.map((p) => (
-              <Cell key={p.id}>{p.prescriptionRequired ? "Requise" : "Non"}</Cell>
-            ))}
+            {items.map((p) => <Cell key={p.id}>{p.prescriptionRequired ? "Requise" : "Non"}</Cell>)}
             <Cell head />
             {items.map((p) => (
               <Cell key={p.id}>
-                <Button
-                  size="sm"
-                  className="w-full print:hidden"
+                <Button size="sm" className="w-full print:hidden"
                   onClick={() => uiActions.addToCart(p)}
-                  disabled={p.availability === "out_of_stock"}
-                >
+                  disabled={p.availability === "out_of_stock"}>
                   Ajouter
                 </Button>
               </Cell>
@@ -153,19 +115,9 @@ function ComparePage() {
   );
 }
 
-function Cell({
-  children,
-  head,
-  className = "",
-}: {
-  children?: React.ReactNode;
-  head?: boolean;
-  className?: string;
-}) {
+function Cell({ children, head, className = "" }: { children?: React.ReactNode; head?: boolean; className?: string }) {
   return (
-    <div
-      className={`border-t border-border py-3 text-sm ${head ? "sticky left-0 bg-background text-xs font-semibold uppercase tracking-wide text-muted-foreground" : ""} ${className}`}
-    >
+    <div className={`border-t border-border py-3 text-sm ${head ? "sticky left-0 bg-background text-xs font-semibold uppercase tracking-wide text-muted-foreground" : ""} ${className}`}>
       {children}
     </div>
   );

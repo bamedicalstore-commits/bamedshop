@@ -49,16 +49,11 @@ function DashboardPage() {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Activité récente</h2>
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/account/notifications">Tout voir</Link>
-            </Button>
+            <Button variant="ghost" size="sm" asChild><Link to="/account/notifications">Tout voir</Link></Button>
           </div>
           <ul className="space-y-3">
             {ACTIVITY.map((a, i) => (
-              <li
-                key={i}
-                className="flex items-start gap-3 border-b border-border pb-3 last:border-0 last:pb-0"
-              >
+              <li key={i} className="flex items-start gap-3 border-b border-border pb-3 last:border-0 last:pb-0">
                 <span className="grid size-8 shrink-0 place-items-center rounded-md bg-accent text-muted-foreground">
                   <a.icon className="size-4" aria-hidden="true" />
                 </span>
@@ -73,18 +68,12 @@ function DashboardPage() {
 
         <Card className="p-6">
           <h2 className="text-lg font-semibold">Recommandations</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Basées sur votre historique et votre profil.
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">Basées sur votre historique et votre profil.</p>
           <div className="mt-4 space-y-3">
             <Badge variant="soft">BA Medical+</Badge>
-            <p className="text-sm">
-              Économisez 15% en activant un abonnement sur vos consommables récurrents.
-            </p>
+            <p className="text-sm">Économisez 15% en activant un abonnement sur vos consommables récurrents.</p>
             <Button asChild size="sm">
-              <Link to="/account/subscriptions">
-                Découvrir <ArrowRight className="size-4" aria-hidden="true" />
-              </Link>
+              <Link to="/account/subscriptions">Découvrir <ArrowRight className="size-4" aria-hidden="true" /></Link>
             </Button>
           </div>
         </Card>

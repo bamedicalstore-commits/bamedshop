@@ -128,25 +128,10 @@ function Step({ n, label, active }: { n: number; label: string; active?: boolean
   );
 }
 
-function Field({
-  id,
-  label,
-  type = "text",
-  required,
-  className,
-}: {
-  id: string;
-  label: string;
-  type?: string;
-  required?: boolean;
-  className?: string;
-}) {
+function Field({ id, label, type = "text", required, className }: { id: string; label: string; type?: string; required?: boolean; className?: string }) {
   return (
     <div className={className}>
-      <Label htmlFor={id}>
-        {label}
-        {required && <span className="text-destructive"> *</span>}
-      </Label>
+      <Label htmlFor={id}>{label}{required && <span className="text-destructive"> *</span>}</Label>
       <Input id={id} type={type} required={required} className="mt-2" />
     </div>
   );
@@ -154,10 +139,7 @@ function Field({
 
 function ShippingOption({ id, label, price }: { id: string; label: string; price: string }) {
   return (
-    <Label
-      htmlFor={id}
-      className="flex cursor-pointer items-center gap-3 rounded-md border border-input p-4 hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary-soft"
-    >
+    <Label htmlFor={id} className="flex cursor-pointer items-center gap-3 rounded-md border border-input p-4 hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary-soft">
       <RadioGroupItem value={id} id={id} />
       <span className="flex-1 font-medium">{label}</span>
       <span className="text-sm font-semibold">{price}</span>
@@ -167,10 +149,7 @@ function ShippingOption({ id, label, price }: { id: string; label: string; price
 
 function PayOption({ id, label }: { id: string; label: string }) {
   return (
-    <Label
-      htmlFor={id}
-      className="flex cursor-pointer items-center gap-3 rounded-md border border-input p-4 hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary-soft"
-    >
+    <Label htmlFor={id} className="flex cursor-pointer items-center gap-3 rounded-md border border-input p-4 hover:bg-accent has-[:checked]:border-primary has-[:checked]:bg-primary-soft">
       <RadioGroupItem value={id} id={id} />
       <span className="font-medium">{label}</span>
     </Label>

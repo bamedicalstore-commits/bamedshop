@@ -47,12 +47,8 @@ export function MedicalProductFinder({ className }: { className?: string }) {
       )}
       aria-labelledby="finder-heading"
     >
-      <div
-        className="pointer-events-none absolute inset-0 opacity-40"
-        aria-hidden="true"
-        style={{
-          background: "radial-gradient(circle at 100% 0%, var(--primary-soft), transparent 60%)",
-        }}
+      <div className="pointer-events-none absolute inset-0 opacity-40" aria-hidden="true"
+        style={{ background: "radial-gradient(circle at 100% 0%, var(--primary-soft), transparent 60%)" }}
       />
       <div className="relative">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -74,10 +70,7 @@ export function MedicalProductFinder({ className }: { className?: string }) {
 
         <div className="min-h-[280px]">
           {step === 0 && (
-            <StepBlock
-              title="Vous êtes…"
-              description="Sélectionnez votre profil pour des recommandations pertinentes."
-            >
+            <StepBlock title="Vous êtes…" description="Sélectionnez votre profil pour des recommandations pertinentes.">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {PROFESSIONAL_PROFILES.map((p) => (
                   <ChoiceCard
@@ -93,10 +86,7 @@ export function MedicalProductFinder({ className }: { className?: string }) {
           )}
 
           {step === 1 && (
-            <StepBlock
-              title="Quel type de matériel cherchez-vous ?"
-              description="Choisissez la catégorie principale."
-            >
+            <StepBlock title="Quel type de matériel cherchez-vous ?" description="Choisissez la catégorie principale.">
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {CATEGORIES.map((c) => (
                   <ChoiceCard
@@ -112,15 +102,10 @@ export function MedicalProductFinder({ className }: { className?: string }) {
           )}
 
           {step === 2 && (
-            <StepBlock
-              title="Votre budget indicatif"
-              description="Nous filtrerons les produits en conséquence."
-            >
+            <StepBlock title="Votre budget indicatif" description="Nous filtrerons les produits en conséquence.">
               <div className="mx-auto max-w-lg space-y-6 pt-4">
                 <div className="rounded-2xl border border-border bg-surface p-6 text-center">
-                  <p className="text-xs uppercase tracking-widest text-muted-foreground">
-                    Budget max
-                  </p>
+                  <p className="text-xs uppercase tracking-widest text-muted-foreground">Budget max</p>
                   <p className="mt-2 text-4xl font-bold text-primary">
                     {state.budget} <span className="text-lg font-semibold">DT</span>
                   </p>
@@ -148,8 +133,7 @@ export function MedicalProductFinder({ className }: { className?: string }) {
             >
               {matches.length === 0 ? (
                 <div className="rounded-xl border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-                  Aucun produit ne correspond exactement. Essayez d'élargir votre budget ou de
-                  changer de catégorie.
+                  Aucun produit ne correspond exactement. Essayez d'élargir votre budget ou de changer de catégorie.
                 </div>
               ) : (
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

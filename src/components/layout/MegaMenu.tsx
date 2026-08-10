@@ -21,18 +21,16 @@ export function MegaMenu() {
       <NavigationMenuList className="gap-1">
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link
-              to="/"
-              activeOptions={{ exact: true }}
-              activeProps={{ className: "text-primary" }}
-            >
+            <Link to="/" activeOptions={{ exact: true }} activeProps={{ className: "text-primary" }}>
               Accueil
             </Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Catégories</NavigationMenuTrigger>
+          <NavigationMenuTrigger>
+            Catégories
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="grid w-[720px] gap-6 p-6 md:grid-cols-[1fr_240px]">
               <ul className="grid grid-cols-2 gap-2" role="list">
@@ -82,7 +80,9 @@ export function MegaMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger>Marques</NavigationMenuTrigger>
+          <NavigationMenuTrigger>
+            Marques
+          </NavigationMenuTrigger>
           <NavigationMenuContent>
             <ul className="grid w-[520px] grid-cols-2 gap-2 p-4" role="list">
               {BRANDS.map((b) => (
@@ -95,7 +95,9 @@ export function MegaMenu() {
                     >
                       <span className="text-sm font-medium">{b.name}</span>
                       {b.productCount && (
-                        <span className="text-[11px] text-muted-foreground">{b.productCount}</span>
+                        <span className="text-[11px] text-muted-foreground">
+                          {b.productCount}
+                        </span>
                       )}
                     </Link>
                   </NavigationMenuLink>

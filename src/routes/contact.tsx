@@ -11,11 +11,7 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Contact — BA Medical Store" },
-      {
-        name: "description",
-        content:
-          "Contactez notre équipe pour toute question sur nos produits, un devis pro ou un partenariat.",
-      },
+      { name: "description", content: "Contactez notre équipe pour toute question sur nos produits, un devis pro ou un partenariat." },
       { property: "og:title", content: "Contact — BA Medical Store" },
       { property: "og:description", content: "Notre équipe répond sous 24h ouvrées." },
     ],
@@ -62,9 +58,7 @@ function ContactPage() {
                 <Textarea id="c-message" rows={6} required className="mt-2" />
               </div>
               <div className="sm:col-span-2">
-                <Button type="submit" size="lg">
-                  Envoyer
-                </Button>
+                <Button type="submit" size="lg">Envoyer</Button>
               </div>
             </form>
           </Card>
@@ -77,23 +71,15 @@ function ContactPage() {
               <ul className="mt-4 space-y-3 text-sm">
                 <li className="flex items-start gap-3">
                   <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div>
-                    Tunis, Tunisie
-                    <br />
-                    <span className="text-muted-foreground">Ouvert Lun-Ven 9h-18h</span>
-                  </div>
+                  <div>Tunis, Tunisie<br /><span className="text-muted-foreground">Ouvert Lun-Ven 9h-18h</span></div>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href="tel:+21671000000" className="hover:text-primary">
-                    +216 71 000 000
-                  </a>
+                  <a href="tel:+21671000000" className="hover:text-primary">+216 71 000 000</a>
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href="mailto:contact@bamedical.tn" className="hover:text-primary">
-                    contact@bamedical.tn
-                  </a>
+                  <a href="mailto:contact@bamedical.tn" className="hover:text-primary">contact@bamedical.tn</a>
                 </li>
               </ul>
             </Card>

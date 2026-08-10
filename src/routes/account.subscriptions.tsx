@@ -25,9 +25,7 @@ function SubscriptionsPage() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline">Modifier</Button>
-            <Button variant="ghost" className="text-destructive hover:text-destructive">
-              Annuler
-            </Button>
+            <Button variant="ghost" className="text-destructive hover:text-destructive">Annuler</Button>
           </div>
         </div>
       </Card>

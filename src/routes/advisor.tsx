@@ -7,11 +7,7 @@ export const Route = createFileRoute("/advisor")({
   head: () => ({
     meta: [
       { title: "Medical Advisor — BA Medical Store" },
-      {
-        name: "description",
-        content:
-          "Assistant personnalisé pour matériel médical selon votre profil : particulier, médecin, infirmier, clinique, pharmacie.",
-      },
+      { name: "description", content: "Assistant personnalisé pour matériel médical selon votre profil : particulier, médecin, infirmier, clinique, pharmacie." },
     ],
   }),
   component: AdvisorPage,
@@ -24,8 +20,7 @@ function AdvisorPage() {
         <header>
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Medical Advisor</h1>
           <p className="mt-2 max-w-2xl text-muted-foreground">
-            Indiquez votre profil pour recevoir des recommandations personnalisées. Vos préférences
-            sont mémorisées sur votre navigateur.
+            Indiquez votre profil pour recevoir des recommandations personnalisées. Vos préférences sont mémorisées sur votre navigateur.
           </p>
         </header>
         <MedicalAdvisor />

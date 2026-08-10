@@ -20,7 +20,10 @@ interface Props {
 }
 
 export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODUCTS }: Props) {
-  const suggestions = useMemo(() => frequentlyBoughtTogether(product, pool, 3), [product, pool]);
+  const suggestions = useMemo(
+    () => frequentlyBoughtTogether(product, pool, 3),
+    [product, pool],
+  );
   const items = useMemo(() => [product, ...suggestions], [product, suggestions]);
   const [selected, setSelected] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(items.map((p) => [p.id, true])),
@@ -41,10 +44,7 @@ export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODU
 
   return (
     <section
-      className={cn(
-        "rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]",
-        className,
-      )}
+      className={cn("rounded-2xl border border-border bg-card p-6 shadow-[var(--shadow-soft)]", className)}
       aria-labelledby="fbt-heading"
     >
       <SectionHeader
@@ -53,9 +53,7 @@ export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODU
         description="Complétez votre équipement — nos clients achètent souvent ces produits ensemble."
         className="mb-6"
       />
-      <h3 id="fbt-heading" className="sr-only">
-        Suggestions bundle
-      </h3>
+      <h3 id="fbt-heading" className="sr-only">Suggestions bundle</h3>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-wrap items-stretch gap-3">
@@ -101,8 +99,7 @@ export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODU
               {(total / 1000).toFixed(3)} <span className="text-sm font-semibold">DT</span>
             </p>
             <p className="mt-1 text-xs text-muted-foreground">
-              {chosen.length} produit{chosen.length > 1 ? "s" : ""} sélectionné
-              {chosen.length > 1 ? "s" : ""}
+              {chosen.length} produit{chosen.length > 1 ? "s" : ""} sélectionné{chosen.length > 1 ? "s" : ""}
             </p>
           </div>
           <Button onClick={addBundle} disabled={chosen.length === 0} size="lg">

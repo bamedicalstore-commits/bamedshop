@@ -25,12 +25,7 @@ const PERKS = [
 export function MedicalPlusCard({ variant = "hero", className }: MedicalPlusCardProps) {
   if (variant === "compact") {
     return (
-      <Card
-        className={cn(
-          "relative overflow-hidden border-primary/30 bg-gradient-to-br from-primary-soft to-info-soft p-5",
-          className,
-        )}
-      >
+      <Card className={cn("relative overflow-hidden border-primary/30 bg-gradient-to-br from-primary-soft to-info-soft p-5", className)}>
         <Badge variant="default" className="mb-3 w-fit gap-1">
           <Crown className="size-3" aria-hidden="true" /> BA Medical+
         </Badge>
@@ -52,21 +47,12 @@ export function MedicalPlusCard({ variant = "hero", className }: MedicalPlusCard
         className,
       )}
     >
-      <div
-        className="absolute -right-16 -top-16 size-72 rounded-full bg-primary-foreground/10 blur-2xl"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute -bottom-24 -left-16 size-72 rounded-full bg-info/30 blur-3xl"
-        aria-hidden="true"
-      />
+      <div className="absolute -right-16 -top-16 size-72 rounded-full bg-primary-foreground/10 blur-2xl" aria-hidden="true" />
+      <div className="absolute -bottom-24 -left-16 size-72 rounded-full bg-info/30 blur-3xl" aria-hidden="true" />
 
       <div className="relative grid gap-10 md:grid-cols-[1.2fr_1fr] md:items-center">
         <div>
-          <Badge
-            variant="default"
-            className="mb-4 gap-1 border-primary-foreground/40 bg-primary-foreground/15 text-primary-foreground backdrop-blur"
-          >
+          <Badge variant="default" className="mb-4 gap-1 border-primary-foreground/40 bg-primary-foreground/15 text-primary-foreground backdrop-blur">
             <Crown className="size-3" aria-hidden="true" />
             Abonnement Premium
           </Badge>
@@ -74,8 +60,8 @@ export function MedicalPlusCard({ variant = "hero", className }: MedicalPlusCard
             BA Medical<span className="text-primary-foreground/80">+</span>
           </h2>
           <p className="mt-3 max-w-md text-sm text-primary-foreground/85 sm:text-base">
-            L'abonnement des professionnels de santé. Économisez sur chaque commande, débloquez la
-            livraison offerte et un support prioritaire.
+            L'abonnement des professionnels de santé. Économisez sur chaque commande,
+            débloquez la livraison offerte et un support prioritaire.
           </p>
 
           <ul className="mt-6 grid gap-2.5" role="list">
@@ -111,8 +97,8 @@ export function MedicalPlusCard({ variant = "hero", className }: MedicalPlusCard
           </p>
           <p className="mt-1 text-4xl font-bold">— 480 DT</p>
           <p className="mt-3 text-xs text-primary-foreground/80">
-            Basé sur une consommation moyenne d'un cabinet médical. Résiliable à tout moment, sans
-            engagement.
+            Basé sur une consommation moyenne d'un cabinet médical.
+            Résiliable à tout moment, sans engagement.
           </p>
         </div>
       </div>
