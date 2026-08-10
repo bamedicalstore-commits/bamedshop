@@ -86,6 +86,7 @@ jobs:
             exit 1
           }
 
+          echo "Starting the Cloudflare-module production artifact with Wrangler workerd"
           npx --yes wrangler@4.114.0 dev \
             --config .output/server/wrangler.json \
             --local \
@@ -101,6 +102,11 @@ jobs:
           for i in {1..30}; do
             if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
               echo "RUNTIME_START_FAIL: Wrangler/Workerd exited before becoming ready"
+              echo "--- runtime log ---"
+              cat "${LOG_FILE}" || true
+              exit 1
+            fi
+
               cat "${LOG_FILE}" || true
               exit 1
             fi
@@ -114,6 +120,9 @@ jobs:
 
           if [ "${ready}" -ne 1 ]; then
             echo "RUNTIME_START_FAIL: Cloudflare runtime did not become HTTP-ready on ${HOST}:${PORT}"
+            echo "--- runtime log ---"
+            cat "${LOG_FILE}" || true
+            echo "--- curl diagnostic ---"
             cat "${LOG_FILE}" || true
             cat /tmp/genesis-runtime-curl.err || true
             exit 1
@@ -142,6 +151,7 @@ jobs:
 
           if [ "${failures}" -ne 0 ]; then
             echo "RUNTIME_SMOKE=FAIL (${failures} route failures)"
+            echo "--- runtime log ---"
             cat "${LOG_FILE}" || true
             exit 1
           fi

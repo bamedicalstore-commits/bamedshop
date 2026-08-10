@@ -35,7 +35,7 @@ function createPublicClient() {
 }
 
 export const listPublicProducts = createServerFn({ method: "GET" })
-  .inputValidator((input?: { limit?: number; offset?: number }) => ({
+  .validator((input?: { limit?: number; offset?: number }) => ({
     limit: Math.min(Math.max(input?.limit ?? 24, 1), 100),
     offset: Math.max(input?.offset ?? 0, 0),
   }))
@@ -56,7 +56,7 @@ export const listPublicProducts = createServerFn({ method: "GET" })
   });
 
 export const getPublicProductBySlug = createServerFn({ method: "GET" })
-  .inputValidator((input: { slug: string }) => {
+  .validator((input: { slug: string }) => {
     const slug = String(input?.slug ?? "").trim();
     if (!slug || slug.length > 200) throw new Error("Invalid slug");
     return { slug };

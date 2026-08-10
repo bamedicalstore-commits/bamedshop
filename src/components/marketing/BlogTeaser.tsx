@@ -4,9 +4,27 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { ArrowRight, Newspaper } from "lucide-react";
 
 const POSTS = [
-  { slug: "controler-tension-domicile", title: "Comment bien contrôler sa tension à domicile", excerpt: "5 règles simples pour des mesures fiables et éviter les erreurs les plus courantes.", category: "Prévention", readTime: "4 min" },
-  { slug: "equiper-cabinet-neuf", title: "Équiper un cabinet médical neuf : la checklist", excerpt: "L'inventaire complet pour ouvrir un cabinet en 2026, matériel et budget indicatif.", category: "Pro", readTime: "8 min" },
-  { slug: "hygiene-mains-soignants", title: "Hygiène des mains : le geste vital", excerpt: "Protocoles OMS, produits recommandés et bonnes pratiques quotidiennes.", category: "Hygiène", readTime: "3 min" },
+  {
+    slug: "controler-tension-domicile",
+    title: "Comment bien contrôler sa tension à domicile",
+    excerpt: "5 règles simples pour des mesures fiables et éviter les erreurs les plus courantes.",
+    category: "Prévention",
+    readTime: "4 min",
+  },
+  {
+    slug: "equiper-cabinet-neuf",
+    title: "Équiper un cabinet médical neuf : la checklist",
+    excerpt: "L'inventaire complet pour ouvrir un cabinet en 2026, matériel et budget indicatif.",
+    category: "Pro",
+    readTime: "8 min",
+  },
+  {
+    slug: "hygiene-mains-soignants",
+    title: "Hygiène des mains : le geste vital",
+    excerpt: "Protocoles OMS, produits recommandés et bonnes pratiques quotidiennes.",
+    category: "Hygiène",
+    readTime: "3 min",
+  },
 ];
 
 export function BlogTeaser() {
@@ -31,7 +49,9 @@ export function BlogTeaser() {
                 <span>{p.readTime}</span>
               </div>
               <h3 className="text-base font-semibold group-hover:text-primary">
-                <Link to="/blog/$slug" params={{ slug: p.slug }}>{p.title}</Link>
+                <Link to="/blog/$slug" params={{ slug: p.slug }}>
+                  {p.title}
+                </Link>
               </h3>
               <p className="text-sm text-muted-foreground">{p.excerpt}</p>
               <Link

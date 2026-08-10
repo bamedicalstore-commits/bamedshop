@@ -19,7 +19,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
@@ -30,12 +37,15 @@ import type { Product } from "@/types/product";
 import type { MedicalBadgeKind } from "@/components/ecommerce/MedicalBadges";
 import { cn } from "@/lib/utils";
 
-
 export const Route = createFileRoute("/catalogue")({
   head: () => ({
     meta: [
       { title: "Catalogue matériel médical — BA Medical Store" },
-      { name: "description", content: "Parcourez notre catalogue complet de matériel médical : diagnostic, consommables, mobilier, orthopédie, premiers secours. Filtres : catégorie, marque, prix, marquage CE, garantie." },
+      {
+        name: "description",
+        content:
+          "Parcourez notre catalogue complet de matériel médical : diagnostic, consommables, mobilier, orthopédie, premiers secours. Filtres : catégorie, marque, prix, marquage CE, garantie.",
+      },
       { property: "og:title", content: "Catalogue matériel médical" },
       { property: "og:description", content: "Notre gamme complète de matériel médical certifié." },
     ],
@@ -75,13 +85,7 @@ function CataloguePage() {
     queryFn: () => fetchProducts({ data: { limit: 100 } }),
   });
 
-  const products = useMemo(
-    () =>
-      (data?.products ?? []).map((row) =>
-        toProduct(row),
-      ),
-    [data],
-  );
+  const products = useMemo(() => (data?.products ?? []).map((row) => toProduct(row)), [data]);
 
   const filtered = useMemo(() => applyFilters(products, filters, sort), [products, filters, sort]);
   const activeCount = countActive(filters);
@@ -91,9 +95,13 @@ function CataloguePage() {
       <div className="container-page py-6">
         <Breadcrumb>
           <BreadcrumbList>
-            <BreadcrumbItem><BreadcrumbLink href="/">Accueil</BreadcrumbLink></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Accueil</BreadcrumbLink>
+            </BreadcrumbItem>
             <BreadcrumbSeparator />
-            <BreadcrumbItem><BreadcrumbPage>Catalogue</BreadcrumbPage></BreadcrumbItem>
+            <BreadcrumbItem>
+              <BreadcrumbPage>Catalogue</BreadcrumbPage>
+            </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
@@ -192,7 +200,9 @@ function CataloguePage() {
               title="Aucun produit ne correspond à vos filtres"
               description="Essayez d'élargir votre recherche ou de réinitialiser les filtres."
               action={
-                <Button onClick={() => setFilters(DEFAULT_FILTERS)}>Réinitialiser les filtres</Button>
+                <Button onClick={() => setFilters(DEFAULT_FILTERS)}>
+                  Réinitialiser les filtres
+                </Button>
               }
             />
           ) : (
@@ -223,7 +233,10 @@ function FiltersPanel({
   const set = <K extends keyof Filters>(key: K, value: Filters[K]) =>
     setFilters({ ...filters, [key]: value });
 
-  const toggleArr = <T extends string>(key: "categories" | "brands" | "certifications", value: T) => {
+  const toggleArr = <T extends string>(
+    key: "categories" | "brands" | "certifications",
+    value: T,
+  ) => {
     const arr = filters[key] as unknown as T[];
     const next = arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value];
     setFilters({ ...filters, [key]: next as Filters[typeof key] });
@@ -331,7 +344,8 @@ function ActiveChips({
     if (!c) return;
     chips.push({
       label: c.name,
-      remove: () => setFilters({ ...filters, categories: filters.categories.filter((s) => s !== slug) }),
+      remove: () =>
+        setFilters({ ...filters, categories: filters.categories.filter((s) => s !== slug) }),
     });
   });
   filters.brands.forEach((slug) => {
@@ -345,7 +359,8 @@ function ActiveChips({
   filters.certifications.forEach((c) => {
     chips.push({
       label: c,
-      remove: () => setFilters({ ...filters, certifications: filters.certifications.filter((v) => v !== c) }),
+      remove: () =>
+        setFilters({ ...filters, certifications: filters.certifications.filter((v) => v !== c) }),
     });
   });
   if (filters.warrantyMinMonths > 0) {
@@ -411,7 +426,8 @@ function sortProducts(list: Product[], sort: string): Product[] {
       return arr.sort((a, b) => Number(!!b.isNew) - Number(!!a.isNew));
     default:
       return arr.sort(
-        (a, b) => Number(!!b.isBestSeller) - Number(!!a.isBestSeller) || (b.rating ?? 0) - (a.rating ?? 0),
+        (a, b) =>
+          Number(!!b.isBestSeller) - Number(!!a.isBestSeller) || (b.rating ?? 0) - (a.rating ?? 0),
       );
   }
 }

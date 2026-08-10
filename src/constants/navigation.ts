@@ -1,14 +1,62 @@
 import type { Category, Brand, Product, ProfessionalProfile } from "@/types/product";
 
 export const CATEGORIES: Category[] = [
-  { id: "1", slug: "diagnostic", name: "Diagnostic", productCount: 128, description: "Tensiomètres, oxymètres, thermomètres" },
-  { id: "2", slug: "consommables", name: "Consommables", productCount: 342, description: "Seringues, gants, compresses" },
-  { id: "3", slug: "mobilier-medical", name: "Mobilier médical", productCount: 56, description: "Tables, chaises, chariots" },
-  { id: "4", slug: "orthopedie", name: "Orthopédie", productCount: 94, description: "Attelles, orthèses, cannes" },
-  { id: "5", slug: "premiers-secours", name: "Premiers secours", productCount: 71, description: "Trousses, défibrillateurs" },
-  { id: "6", slug: "hygiene", name: "Hygiène & désinfection", productCount: 89, description: "Antiseptiques, savons, EPI" },
-  { id: "7", slug: "laboratoire", name: "Laboratoire", productCount: 45, description: "Réactifs, microscopie" },
-  { id: "8", slug: "reeducation", name: "Rééducation & kiné", productCount: 63, description: "Matériel de kinésithérapie" },
+  {
+    id: "1",
+    slug: "diagnostic",
+    name: "Diagnostic",
+    productCount: 128,
+    description: "Tensiomètres, oxymètres, thermomètres",
+  },
+  {
+    id: "2",
+    slug: "consommables",
+    name: "Consommables",
+    productCount: 342,
+    description: "Seringues, gants, compresses",
+  },
+  {
+    id: "3",
+    slug: "mobilier-medical",
+    name: "Mobilier médical",
+    productCount: 56,
+    description: "Tables, chaises, chariots",
+  },
+  {
+    id: "4",
+    slug: "orthopedie",
+    name: "Orthopédie",
+    productCount: 94,
+    description: "Attelles, orthèses, cannes",
+  },
+  {
+    id: "5",
+    slug: "premiers-secours",
+    name: "Premiers secours",
+    productCount: 71,
+    description: "Trousses, défibrillateurs",
+  },
+  {
+    id: "6",
+    slug: "hygiene",
+    name: "Hygiène & désinfection",
+    productCount: 89,
+    description: "Antiseptiques, savons, EPI",
+  },
+  {
+    id: "7",
+    slug: "laboratoire",
+    name: "Laboratoire",
+    productCount: 45,
+    description: "Réactifs, microscopie",
+  },
+  {
+    id: "8",
+    slug: "reeducation",
+    name: "Rééducation & kiné",
+    productCount: 63,
+    description: "Matériel de kinésithérapie",
+  },
 ];
 
 export const BRANDS: Brand[] = [
@@ -145,7 +193,14 @@ export const MOCK_PRODUCTS: Product[] = [
     availability: "in_stock",
     certifications: ["ce", "latex-free", "single-use"],
     usage: "both",
-    professionalProfiles: ["particulier", "infirmier", "medecin", "cabinet", "clinique", "pharmacie"],
+    professionalProfiles: [
+      "particulier",
+      "infirmier",
+      "medecin",
+      "cabinet",
+      "clinique",
+      "pharmacie",
+    ],
     subscriptionEligible: true,
     deliveryEta: "24h",
     tags: ["protection", "epi"],

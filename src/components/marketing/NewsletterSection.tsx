@@ -18,18 +18,25 @@ export function NewsletterSection() {
             Newsletter santé & offres pros
           </h2>
           <p className="mt-2 text-sm opacity-90">
-            Conseils d'experts, nouveautés produits et promotions exclusives. Un email par mois, zéro spam.
+            Conseils d'experts, nouveautés produits et promotions exclusives. Un email par mois,
+            zéro spam.
           </p>
           {sent ? (
             <div className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary-foreground/15 px-4 py-2 text-sm">
-              <Check className="size-4" aria-hidden="true" /> Merci ! Confirmez votre inscription par email.
+              <Check className="size-4" aria-hidden="true" /> Merci ! Confirmez votre inscription
+              par email.
             </div>
           ) : (
             <form
-              onSubmit={(e) => { e.preventDefault(); if (email) setSent(true); }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (email) setSent(true);
+              }}
               className="mx-auto mt-6 flex max-w-md flex-col gap-2 sm:flex-row"
             >
-              <label htmlFor="nl-email" className="sr-only">Votre email</label>
+              <label htmlFor="nl-email" className="sr-only">
+                Votre email
+              </label>
               <Input
                 id="nl-email"
                 type="email"
@@ -39,7 +46,9 @@ export function NewsletterSection() {
                 onChange={(e) => setEmail(e.target.value)}
                 className="bg-primary-foreground text-foreground"
               />
-              <Button type="submit" variant="secondary" className="shrink-0">S'inscrire</Button>
+              <Button type="submit" variant="secondary" className="shrink-0">
+                S'inscrire
+              </Button>
             </form>
           )}
           <p className="mt-3 text-xs opacity-75">Vous pouvez vous désinscrire à tout moment.</p>

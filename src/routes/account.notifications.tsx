@@ -11,20 +11,44 @@ export const Route = createFileRoute("/account/notifications")({
 });
 
 const NOTIFS = [
-  { icon: Package, text: "Votre commande CMD-2026-00147 est en cours de livraison.", date: "Il y a 1h", unread: true },
-  { icon: Tag, text: "Promo -20% sur les consommables Pharmatec jusqu'au 30 juillet.", date: "Hier", unread: true },
-  { icon: Newspaper, text: "Nouvel article sur le blog : comment bien contrôler sa tension.", date: "Il y a 3j", unread: false },
+  {
+    icon: Package,
+    text: "Votre commande CMD-2026-00147 est en cours de livraison.",
+    date: "Il y a 1h",
+    unread: true,
+  },
+  {
+    icon: Tag,
+    text: "Promo -20% sur les consommables Pharmatec jusqu'au 30 juillet.",
+    date: "Hier",
+    unread: true,
+  },
+  {
+    icon: Newspaper,
+    text: "Nouvel article sur le blog : comment bien contrôler sa tension.",
+    date: "Il y a 3j",
+    unread: false,
+  },
 ];
 
 const PREFS = [
-  { key: "orders", label: "Commandes & livraisons", description: "Confirmations, expéditions, livraisons" },
+  {
+    key: "orders",
+    label: "Commandes & livraisons",
+    description: "Confirmations, expéditions, livraisons",
+  },
   { key: "promos", label: "Offres & promotions", description: "Réductions, ventes flash, packs" },
   { key: "newsletter", label: "Newsletter santé", description: "Articles blog et conseils" },
   { key: "reminders", label: "Rappels abonnement", description: "Renouvellement BA Medical+" },
 ];
 
 function NotificationsPage() {
-  const [prefs, setPrefs] = useState<Record<string, boolean>>({ orders: true, promos: true, newsletter: false, reminders: true });
+  const [prefs, setPrefs] = useState<Record<string, boolean>>({
+    orders: true,
+    promos: true,
+    newsletter: false,
+    reminders: true,
+  });
   return (
     <div className="space-y-6">
       <Card className="p-6">

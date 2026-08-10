@@ -2,9 +2,21 @@ import { ShieldCheck, Sparkles, Users } from "lucide-react";
 import { SectionHeader } from "@/components/common/SectionHeader";
 
 const PILLARS = [
-  { icon: ShieldCheck, title: "Qualité médicale", text: "Sourcing exclusif chez fabricants certifiés CE, ISO 13485 et FDA." },
-  { icon: Sparkles, title: "Innovation continue", text: "Veille technologique permanente pour rester à la pointe du matériel médical." },
-  { icon: Users, title: "Proximité humaine", text: "Une équipe de conseillers médicaux à votre écoute, du particulier à la clinique." },
+  {
+    icon: ShieldCheck,
+    title: "Qualité médicale",
+    text: "Sourcing exclusif chez fabricants certifiés CE, ISO 13485 et FDA.",
+  },
+  {
+    icon: Sparkles,
+    title: "Innovation continue",
+    text: "Veille technologique permanente pour rester à la pointe du matériel médical.",
+  },
+  {
+    icon: Users,
+    title: "Proximité humaine",
+    text: "Une équipe de conseillers médicaux à votre écoute, du particulier à la clinique.",
+  },
 ];
 
 export function BrandStory() {

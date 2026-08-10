@@ -2,7 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { Package } from "lucide-react";
 
@@ -25,7 +32,9 @@ const STATUS_MAP = {
 function OrdersPage() {
   return (
     <Card className="overflow-hidden p-0">
-      <div className="border-b p-6"><h2 className="text-lg font-semibold">Mes commandes</h2></div>
+      <div className="border-b p-6">
+        <h2 className="text-lg font-semibold">Mes commandes</h2>
+      </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
@@ -45,9 +54,13 @@ function OrdersPage() {
                   <TableCell className="font-medium">{o.id}</TableCell>
                   <TableCell>{o.date}</TableCell>
                   <TableCell>{o.total}</TableCell>
-                  <TableCell><Badge variant={s.variant}>{s.label}</Badge></TableCell>
+                  <TableCell>
+                    <Badge variant={s.variant}>{s.label}</Badge>
+                  </TableCell>
                   <TableCell className="text-right">
-                    <Button variant="outline" size="sm">Détails</Button>
+                    <Button variant="outline" size="sm">
+                      Détails
+                    </Button>
                   </TableCell>
                 </TableRow>
               );

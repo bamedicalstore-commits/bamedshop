@@ -19,7 +19,9 @@ function DocumentsPage() {
   return (
     <Card className="p-6">
       <h2 className="text-lg font-semibold">Mes documents</h2>
-      <p className="mt-1 text-sm text-muted-foreground">Factures, bons de livraison, certificats.</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Factures, bons de livraison, certificats.
+      </p>
       <ul className="mt-6 divide-y divide-border">
         {DOCS.map((d) => (
           <li key={d.name} className="flex flex-wrap items-center justify-between gap-3 py-3">
@@ -29,7 +31,9 @@ function DocumentsPage() {
               </span>
               <div>
                 <p className="text-sm font-medium">{d.name}</p>
-                <p className="text-xs text-muted-foreground">{d.type} · {d.date} · {d.size}</p>
+                <p className="text-xs text-muted-foreground">
+                  {d.type} · {d.date} · {d.size}
+                </p>
               </div>
             </div>
             <Button variant="outline" size="sm">
