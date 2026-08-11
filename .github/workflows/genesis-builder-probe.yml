@@ -73,6 +73,7 @@ jobs:
           PORT=4173
           HOST=127.0.0.1
           LOG_FILE="/tmp/genesis-runtime.log"
+          WRANGLER_VERSION="4.121.0"
 
           test -f ".output/server/index.mjs" || {
             echo "RUNTIME_START_FAIL: .output/server/index.mjs is missing"
@@ -87,7 +88,9 @@ jobs:
           }
 
           echo "Starting the Cloudflare-module production artifact with Wrangler workerd"
-          npx --yes wrangler@4.120.1 dev \
+          echo "WRANGLER_VERSION=${WRANGLER_VERSION}"
+          npx --yes "wrangler@${WRANGLER_VERSION}" --version
+          npx --yes "wrangler@${WRANGLER_VERSION}" dev \
             --config .output/server/wrangler.json \
             --local \
             --ip "${HOST}" \
