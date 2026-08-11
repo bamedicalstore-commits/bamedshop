@@ -36,7 +36,10 @@ function SearchPage() {
     queryFn: () => fetchProducts({ data: { limit: 100 } }),
   });
 
-  const products = useMemo(() => (data?.products ?? []).map((row) => toProduct(row)), [data]);
+  const products = useMemo(
+    () => (data?.products ?? []).map((row) => toProduct(row)),
+    [data],
+  );
 
   const results = useMemo(() => {
     const term = q.trim().toLowerCase();
@@ -95,7 +98,8 @@ function SearchPage() {
           ) : results.length ? (
             <>
               <p className="mb-4 text-sm text-muted-foreground">
-                {results.length} résultat{results.length > 1 ? "s" : ""} pour « {q} »
+                {results.length} résultat{results.length > 1 ? "s" : ""} pour«
+                {q} »
               </p>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {results.map((p) => (

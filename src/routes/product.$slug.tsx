@@ -1,6 +1,12 @@
 import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { ShieldCheck, Truck, RotateCcw, Pill, Award } from "lucide-react";
+import {
+  ShieldCheck,
+  Truck,
+  RotateCcw,
+  Pill,
+  Award,
+} from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,7 +43,12 @@ export const Route = createFileRoute("/product/$slug")({
   },
   head: ({ loaderData }) => {
     if (!loaderData)
-      return { meta: [{ title: "Produit introuvable" }, { name: "robots", content: "noindex" }] };
+      return {
+        meta: [
+          { title: "Produit introuvable" },
+          { name: "robots", content: "noindex" },
+        ],
+      };
     const p = MOCK_PRODUCTS.find((x) => x.slug === loaderData.slug)!;
     const desc = p.shortDescription ?? `${p.name} — ${p.brand}`;
     return {
@@ -93,18 +104,29 @@ function ProductPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="soft">{product.brand}</Badge>
             {product.isNew && <Badge variant="info">Nouveau</Badge>}
-            {product.isBestSeller && <Badge variant="warning">Best-seller</Badge>}
+            {product.isBestSeller && (
+              <Badge variant="warning">Best-seller</Badge>
+            )}
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{product.name}</h1>
+            <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+              {product.name}
+            </h1>
             {product.reference && (
-              <p className="mt-1 text-xs text-muted-foreground">Réf. {product.reference}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Réf. {product.reference}
+              </p>
             )}
           </div>
 
           {product.rating && (
-            <Rating value={product.rating} count={product.ratingCount} size="md" showValue />
+            <Rating
+              value={product.rating}
+              count={product.ratingCount}
+              size="md"
+              showValue
+            />
           )}
 
           <PriceBlock
@@ -113,7 +135,9 @@ function ProductPage() {
             size="xl"
             layout="col"
           />
-          <p className="text-xs text-muted-foreground">TVA incluse — Hors frais de livraison</p>
+          <p className="text-xs text-muted-foreground">
+            TVA incluse — Hors frais de livraison
+          </p>
 
           <div className="flex flex-wrap items-center gap-2">
             <AvailabilityBadge status={product.availability} />
@@ -136,14 +160,22 @@ function ProductPage() {
           </div>
 
           {product.shortDescription && (
-            <p className="text-sm text-muted-foreground">{product.shortDescription}</p>
+            <p className="text-sm text-muted-foreground">
+              {product.shortDescription}
+            </p>
           )}
 
           <ul className="grid gap-2 rounded-lg border border-border bg-surface p-4 text-sm">
-            <FeatureLine icon={ShieldCheck}>Produit certifié CE, traçabilité garantie</FeatureLine>
-            <FeatureLine icon={Truck}>Livraison sous 24-48h · offerte dès 200 DT</FeatureLine>
+            <FeatureLine icon={ShieldCheck}>
+              Produit certifié CE, traçabilité garantie
+            </FeatureLine>
+            <FeatureLine icon={Truck}>
+              Livraison sous 24-48h · offerte dès 200 DT
+            </FeatureLine>
             <FeatureLine icon={RotateCcw}>Retour sous 14 jours</FeatureLine>
-            <FeatureLine icon={Award}>Support pro dédié aux professionnels de santé</FeatureLine>
+            <FeatureLine icon={Award}>
+              Support pro dédié aux professionnels de santé
+            </FeatureLine>
           </ul>
         </div>
       </article>
@@ -174,7 +206,10 @@ function FeatureLine({
 }) {
   return (
     <li className="flex items-center gap-3">
-      <Icon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+      <Icon
+        className="size-4 shrink-0 text-primary"
+        aria-hidden="true"
+      />
       <span className="text-foreground">{children}</span>
     </li>
   );

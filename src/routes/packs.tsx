@@ -24,9 +24,12 @@ function PacksLayout() {
       {isRoot ? (
         <>
           <header className="container-page pt-10">
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Packs santé</h1>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              Packs santé
+            </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground">
-              Nos ensembles thématiques, sélectionnés par nos experts, à prix packagé.
+              Nos ensembles thématiques, sélectionnés par nos experts, à prix
+              packagé.
             </p>
           </header>
           <HealthPacksGrid />
