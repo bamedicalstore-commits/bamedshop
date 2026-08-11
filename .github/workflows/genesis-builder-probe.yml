@@ -106,10 +106,6 @@ jobs:
               cat "${LOG_FILE}" || true
               exit 1
             fi
-
-              cat "${LOG_FILE}" || true
-              exit 1
-            fi
             if curl -fsS --max-time 2 "http://${HOST}:${PORT}/" >/tmp/genesis-runtime-root.html 2>/tmp/genesis-runtime-curl.err; then
               ready=1
               echo "SERVER_READY after ${i}s"
