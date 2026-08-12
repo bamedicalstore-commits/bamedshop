@@ -8,14 +8,7 @@ import type { Product } from "@/types/product";
 
 type OverlayKey = "search" | "miniCart" | "compare" | "quickView";
 
-interface CartLine {
-  productId: string;
-  product: Product;
-  quantity: number;
-}
-
 interface UiState {
-  cart: CartLine[];
   compare: Product[];
   wishlist: string[];
   overlays: Record<OverlayKey, boolean>;
@@ -29,7 +22,6 @@ const isBrowser = typeof window !== "undefined";
 
 function load(): UiState {
   const empty: UiState = {
-    cart: [],
     compare: [],
     wishlist: [],
     overlays: { search: false, miniCart: false, compare: false, quickView: false },
@@ -42,7 +34,6 @@ function load(): UiState {
     const parsed = JSON.parse(raw) as Partial<UiState>;
     return {
       ...empty,
-      cart: parsed.cart ?? [],
       compare: parsed.compare ?? [],
       wishlist: parsed.wishlist ?? [],
     };
@@ -52,7 +43,6 @@ function load(): UiState {
 }
 
 let state: UiState = {
-  cart: [],
   compare: [],
   wishlist: [],
   overlays: { search: false, miniCart: false, compare: false, quickView: false },
@@ -67,7 +57,7 @@ function persist() {
   try {
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ cart: state.cart, compare: state.compare, wishlist: state.wishlist }),
+      JSON.stringify({ compare: state.compare, wishlist: state.wishlist }),
     );
   } catch {
     /* ignore */
@@ -122,28 +112,6 @@ export const uiActions = {
     setState({ overlays: { ...state.overlays, [key]: !state.overlays[key] } });
   },
 
-  addToCart(product: Product, quantity = 1) {
-    const existing = state.cart.find((l) => l.productId === product.id);
-    const cart = existing
-      ? state.cart.map((l) =>
-          l.productId === product.id ? { ...l, quantity: l.quantity + quantity } : l,
-        )
-      : [...state.cart, { productId: product.id, product, quantity }];
-    setState({ cart, overlays: { ...state.overlays, miniCart: true } });
-  },
-  updateCartQty(productId: string, quantity: number) {
-    const cart =
-      quantity <= 0
-        ? state.cart.filter((l) => l.productId !== productId)
-        : state.cart.map((l) => (l.productId === productId ? { ...l, quantity } : l));
-    setState({ cart });
-  },
-  removeFromCart(productId: string) {
-    setState({ cart: state.cart.filter((l) => l.productId !== productId) });
-  },
-  clearCart() {
-    setState({ cart: [] });
-  },
 
   toggleWishlist(productId: string) {
     const active = state.wishlist.includes(productId);
@@ -188,9 +156,6 @@ export const uiActions = {
 
 // Selectors
 export const selectors = {
-  cartCount: (s: UiState) => s.cart.reduce((sum, l) => sum + l.quantity, 0),
-  cartSubtotalMinor: (s: UiState) =>
-    s.cart.reduce((sum, l) => sum + l.product.price.amount * l.quantity, 0),
   compareCount: (s: UiState) => s.compare.length,
   isInCompare: (id: string) => (s: UiState) => s.compare.some((p) => p.id === id),
   isInWishlist: (id: string) => (s: UiState) => s.wishlist.includes(id),
