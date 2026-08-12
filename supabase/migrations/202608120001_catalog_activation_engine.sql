@@ -97,6 +97,10 @@ declare
   decision record;
   previous_status public.catalog_activation_status;
 begin
+  if not (public.has_role('admin'::public.app_role, auth.uid()) or public.has_role('super_admin'::public.app_role, auth.uid())) then
+    raise exception 'catalog_activation_forbidden';
+  end if;
+
   select p.catalog_activation_status
     into previous_status
   from public.products p
@@ -155,6 +159,10 @@ as $$
 declare
   previous_status public.catalog_activation_status;
 begin
+  if not (public.has_role('admin'::public.app_role, auth.uid()) or public.has_role('super_admin'::public.app_role, auth.uid())) then
+    raise exception 'catalog_activation_forbidden';
+  end if;
+
   select p.catalog_activation_status
     into previous_status
   from public.products p
@@ -181,7 +189,9 @@ begin
 end;
 $$;
 
-create or replace view public.retail_catalog as
+create or replace view public.retail_catalog
+with (security_invoker = true)
+as
 select p.*
 from public.products p
 where p.active = true
@@ -189,12 +199,19 @@ where p.active = true
 
 alter table public.catalog_activation_events enable row level security;
 
--- The RPC is deliberately security-invoker: existing product/admin RLS remains the authorization boundary.
--- Customer-facing reads are represented by the retail_catalog view and must be backed by product RLS.
+drop policy if exists "catalog activation events staff read" on public.catalog_activation_events;
+create policy "catalog activation events staff read"
+on public.catalog_activation_events
+for select
+to authenticated
+using (
+  public.has_role('admin'::public.app_role, auth.uid())
+  or public.has_role('super_admin'::public.app_role, auth.uid())
+);
 
 comment on table public.catalog_activation_events is
   'Append-only audit trail for BA Medical Store retail catalog activation decisions.';
 comment on function public.activate_catalog_product(uuid) is
-  'Final fail-closed database boundary for retail activation.';
+  'Final fail-closed database boundary for retail activation. Admin/super_admin only.';
 comment on view public.retail_catalog is
   'Customer-facing product projection: ACTIVE and non-archived products only.';
