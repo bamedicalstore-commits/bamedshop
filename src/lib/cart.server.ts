@@ -6,6 +6,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import { PRODUCT_COLUMNS } from "./product-select";
+import type { ProductJoined } from "./mappers";
 
 export type AuthedClient = SupabaseClient<Database>;
 
@@ -47,7 +48,7 @@ export type CartLineDTO = {
   quantity: number;
   /** Prix unitaire TND tel que persisté en DB (autorité serveur). */
   unitPrice: number;
-  product: unknown;
+  product: ProductJoined;
 };
 
 export type CartDTO = {
@@ -76,7 +77,7 @@ export async function readCart(supabase: AuthedClient, userId: string): Promise<
         productId: row.product_id,
         quantity: row.quantity,
         unitPrice: Number(row.unit_price),
-        product: row.product,
+        product: row.product as unknown as ProductJoined,
       })),
   };
 }
