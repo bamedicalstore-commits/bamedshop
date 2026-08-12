@@ -1,7 +1,7 @@
 /**
  * Tiny module-level UI store shared across ecommerce components.
  * Uses useSyncExternalStore — no external dependencies.
- * Persists cart / wishlist / compare to localStorage.
+ * Persists wishlist / compare to localStorage.
  */
 import { useSyncExternalStore } from "react";
 import type { Product } from "@/types/product";
