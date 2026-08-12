@@ -4,9 +4,6 @@
 -- IMPORTANT: imported rows are intentionally INACTIVE. The source prices are supplier/PV HT
 -- values, not validated BA Medical Store public retail prices. No fabricated retail price is used.
 
--- -----------------------------------------------------------------------------
--- Reference entities
--- -----------------------------------------------------------------------------
 INSERT INTO public.suppliers (name, country)
 VALUES ('Pharmatec', 'Tunisie'), ('Rossmax', 'Suisse')
 ON CONFLICT DO NOTHING;
@@ -32,10 +29,7 @@ VALUES
   ('Maternité & allaitement', 'maternite-allaitement')
 ON CONFLICT (slug) DO NOTHING;
 
--- -----------------------------------------------------------------------------
--- Rossmax source catalogue
--- Source: LISTE DES PRIX ROSSMAX (1).pdf
--- -----------------------------------------------------------------------------
+-- Rossmax source catalogue: LISTE DES PRIX ROSSMAX (1).pdf
 INSERT INTO public.products
   (name, slug, description, sku, category_id, brand_id, supplier_id, price, currency,
    ce_certified, warranty_months, technical_specs, active)
@@ -87,13 +81,10 @@ FROM (VALUES
 ) AS v(label, slug, name, sku, category_slug, source_price_ht, source_vat)
 JOIN public.categories c ON c.slug = v.category_slug
 JOIN public.brands b ON b.slug = 'rossmax'
-JOIN public.suppliers s ON s.name = 'Pharmatec'
+JOIN public.suppliers s ON s.name = 'Rossmax'
 ON CONFLICT (sku) DO NOTHING;
 
--- -----------------------------------------------------------------------------
--- Pharmatec source catalogue
--- Source: LISTE DES PRIX PHARMATEC_ (2).pdf — MAJ AOUT 2024
--- -----------------------------------------------------------------------------
+-- Pharmatec source catalogue: LISTE DES PRIX PHARMATEC_ (2).pdf — MAJ AOUT 2024
 INSERT INTO public.products
   (name, slug, description, sku, category_id, brand_id, supplier_id, price, currency,
    ce_certified, warranty_months, technical_specs, active)
