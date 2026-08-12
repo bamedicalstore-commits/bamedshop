@@ -89,9 +89,6 @@ export function useCart() {
     removeItem,
     clearCart,
     isMutating:
-      addItem.isPending ||
-      updateItem.isPending ||
-      removeItem.isPending ||
-      clearCart.isPending,
+      addItem.isPending || updateItem.isPending || removeItem.isPending || clearCart.isPending,
   };
 }

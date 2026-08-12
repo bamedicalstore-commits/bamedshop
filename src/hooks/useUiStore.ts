@@ -112,7 +112,6 @@ export const uiActions = {
     setState({ overlays: { ...state.overlays, [key]: !state.overlays[key] } });
   },
 
-
   toggleWishlist(productId: string) {
     const active = state.wishlist.includes(productId);
     setState({
