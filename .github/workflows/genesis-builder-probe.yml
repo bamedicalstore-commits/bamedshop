@@ -8,6 +8,7 @@ on:
       - "fix/genesis-runtime-compatibility-fallback"
       - "fix/security-env-hygiene"
       - "main"
+      - "feat/catalog-activation-engine-v1"
 
 permissions:
   contents: read
