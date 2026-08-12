@@ -62,18 +62,31 @@ function AdminLayout() {
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-border bg-background/90 px-4 backdrop-blur sm:px-6">
           <div className="relative hidden max-w-sm flex-1 md:block">
-            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
+            <Search
+              className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+              aria-hidden="true"
+            />
             <Input placeholder="Rechercher…" className="pl-10" />
           </div>
           <div className="ml-auto flex items-center gap-2">
             <Button variant="ghost" size="icon" aria-label="Notifications" className="relative">
               <Bell />
-              <Badge variant="destructive" size="sm" className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1">3</Badge>
+              <Badge
+                variant="destructive"
+                size="sm"
+                className="absolute -right-1 -top-1 h-4 min-w-4 justify-center px-1"
+              >
+                3
+              </Badge>
             </Button>
-            <Button asChild variant="outline" size="sm"><Link to="/">Voir le site</Link></Button>
+            <Button asChild variant="outline" size="sm">
+              <Link to="/">Voir le site</Link>
+            </Button>
           </div>
         </header>
-        <main className="flex-1 p-4 sm:p-6 lg:p-8"><Outlet /></main>
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
