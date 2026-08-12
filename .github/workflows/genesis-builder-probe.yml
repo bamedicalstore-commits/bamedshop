@@ -6,6 +6,7 @@ on:
     branches:
       - "genesis/builder-probe"
       - "fix/genesis-runtime-compatibility-fallback"
+      - "fix/security-env-hygiene"
       - "main"
 
 permissions:
