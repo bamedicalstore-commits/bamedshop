@@ -2,6 +2,9 @@ name: GENESIS Builder Probe
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - "main"
   push:
     branches:
       - "genesis/builder-probe"
