@@ -8,10 +8,11 @@ import { cn } from "@/lib/utils";
 import { SmartSearchTrigger, SmartSearchIconTrigger } from "@/components/ecommerce/SmartSearch";
 import { MegaMenu } from "./MegaMenu";
 import { uiActions, useUiStore, selectors } from "@/hooks/useUiStore";
+import { useCart } from "@/hooks/useCart";
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
-  const cartCount = useUiStore(selectors.cartCount);
+  const { count: cartCount } = useCart();
   const compareCount = useUiStore(selectors.compareCount);
 
   return (

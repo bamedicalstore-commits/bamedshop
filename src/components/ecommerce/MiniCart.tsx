@@ -10,18 +10,28 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { QuantitySelector } from "./QuantitySelector";
-import { ShoppingCart, X, Pill, ArrowRight, Truck } from "lucide-react";
-import { uiActions, useUiStore, selectors } from "@/hooks/useUiStore";
+import { ShoppingCart, X, Pill, ArrowRight, Truck, LogIn } from "lucide-react";
+import { uiActions, useUiStore } from "@/hooks/useUiStore";
+import { useCart } from "@/hooks/useCart";
 import { formatMoney } from "@/lib/format";
 
 const FREE_SHIPPING_MINOR = 200_000; // 200 DT (3 decimals)
 
 export function MiniCart() {
   const open = useUiStore((s) => s.overlays.miniCart);
-  const lines = useUiStore((s) => s.cart);
-  const subtotal = useUiStore(selectors.cartSubtotalMinor);
-  const count = useUiStore(selectors.cartCount);
+  const {
+    isAuthenticated,
+    lines,
+    subtotal,
+    count,
+    isLoading,
+    isError,
+    updateItem,
+    removeItem,
+    isMutating,
+  } = useCart();
 
   const remaining = Math.max(0, FREE_SHIPPING_MINOR - subtotal);
   const progress = Math.min(100, Math.round((subtotal / FREE_SHIPPING_MINOR) * 100));
@@ -77,7 +87,28 @@ export function MiniCart() {
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto p-5">
-          {lines.length === 0 ? (
+          {!isAuthenticated ? (
+            <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+              <LogIn className="size-10 text-muted-foreground/50" aria-hidden="true" />
+              <h3 className="font-semibold">Connectez-vous pour votre panier</h3>
+              <p className="max-w-xs text-sm text-muted-foreground">
+                Votre panier est enregistré sur votre compte BA Medical Store.
+              </p>
+              <Button asChild size="sm" onClick={() => uiActions.closeOverlay("miniCart")}>
+                <Link to="/auth">Se connecter</Link>
+              </Button>
+            </div>
+          ) : isLoading ? (
+            <div className="space-y-3">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} className="h-20 w-full rounded-md" />
+              ))}
+            </div>
+          ) : isError ? (
+            <div className="py-16 text-center text-sm text-muted-foreground" role="alert">
+              Panier temporairement indisponible.
+            </div>
+          ) : lines.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
               <ShoppingCart className="size-10 text-muted-foreground/50" aria-hidden="true" />
               <h3 className="font-semibold">Votre panier est vide</h3>
@@ -91,9 +122,18 @@ export function MiniCart() {
           ) : (
             <ul className="divide-y divide-border">
               {lines.map((line) => (
-                <li key={line.productId} className="flex gap-3 py-4">
+                <li key={line.id} className="flex gap-3 py-4">
                   <div className="grid size-20 shrink-0 place-items-center overflow-hidden rounded-md bg-surface-muted text-muted-foreground/40">
-                    <Pill className="size-6" aria-hidden="true" />
+                    {line.product.images?.[0] ? (
+                      <img
+                        src={line.product.images[0]}
+                        alt={line.product.name}
+                        loading="lazy"
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <Pill className="size-6" aria-hidden="true" />
+                    )}
                   </div>
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex items-start justify-between gap-2">
@@ -106,9 +146,10 @@ export function MiniCart() {
                         {line.product.name}
                       </Link>
                       <button
-                        onClick={() => uiActions.removeFromCart(line.productId)}
+                        onClick={() => removeItem.mutate({ productId: line.productId })}
+                        disabled={isMutating}
                         aria-label={`Retirer ${line.product.name} du panier`}
-                        className="rounded-full p-1 text-muted-foreground hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                        className="rounded-full p-1 text-muted-foreground hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
                       >
                         <X className="size-4" aria-hidden="true" />
                       </button>
@@ -117,15 +158,13 @@ export function MiniCart() {
                     <div className="mt-1 flex items-center justify-between gap-2">
                       <QuantitySelector
                         value={line.quantity}
-                        onChange={(q) => uiActions.updateCartQty(line.productId, q)}
+                        onChange={(q) => {
+                          if (isMutating) return;
+                          updateItem.mutate({ productId: line.productId, quantity: q });
+                        }}
                         size="sm"
                       />
-                      <span className="text-sm font-semibold">
-                        {formatMoney({
-                          amount: line.product.price.amount * line.quantity,
-                          currency: line.product.price.currency,
-                        })}
-                      </span>
+                      <span className="text-sm font-semibold">{formatMoney(line.lineTotal)}</span>
                     </div>
                   </div>
                 </li>

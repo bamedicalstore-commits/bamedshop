@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ShoppingBag, Trash2, Pill } from "lucide-react";
+import { ShoppingBag, Trash2, Pill, LogIn } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { QuantitySelector } from "@/components/ecommerce/QuantitySelector";
 import { EmptyState } from "@/components/feedback/EmptyState";
+import { ErrorState } from "@/components/feedback/ErrorState";
 import { PriceBlock } from "@/components/ecommerce/PriceBlock";
-import { MOCK_PRODUCTS } from "@/constants/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCart } from "@/hooks/useCart";
 import { formatMoney } from "@/lib/format";
-import { useState } from "react";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -24,16 +25,78 @@ export const Route = createFileRoute("/cart")({
 });
 
 function CartPage() {
-  // Mock cart state (UI only). Backend branchera le vrai panier.
-  const [items, setItems] = useState(
-    MOCK_PRODUCTS.slice(0, 2).map((p) => ({ product: p, qty: 1 })),
-  );
+  const {
+    isAuthenticated,
+    authLoading,
+    lines,
+    subtotal,
+    isLoading,
+    isError,
+    refetch,
+    updateItem,
+    removeItem,
+    isMutating,
+  } = useCart();
 
-  const subtotal = items.reduce((sum, i) => sum + i.product.price.amount * i.qty, 0);
   const shipping = subtotal > 200000 ? 0 : 8000;
   const total = subtotal + shipping;
 
-  if (items.length === 0) {
+  if (isLoading || authLoading) {
+    return (
+      <SiteLayout>
+        <div className="container-page py-10">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Mon panier</h1>
+          <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
+            <div className="space-y-3">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} className="h-28 w-full rounded-lg" />
+              ))}
+            </div>
+            <Skeleton className="h-72 w-full rounded-lg" />
+          </div>
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <SiteLayout>
+        <div className="container-page py-16">
+          <EmptyState
+            icon={LogIn}
+            title="Connectez-vous pour accéder à votre panier"
+            description="Votre panier est enregistré sur votre compte BA Medical Store."
+            action={
+              <Button asChild>
+                <Link to="/auth">Se connecter</Link>
+              </Button>
+            }
+          />
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  if (isError) {
+    return (
+      <SiteLayout>
+        <div className="container-page py-16">
+          <ErrorState
+            title="Panier indisponible"
+            description="Impossible de charger votre panier pour le moment."
+            action={
+              <Button variant="outline" onClick={() => void refetch()}>
+                Réessayer
+              </Button>
+            }
+          />
+        </div>
+      </SiteLayout>
+    );
+  }
+
+  if (lines.length === 0) {
     return (
       <SiteLayout>
         <div className="container-page py-16">
@@ -57,16 +120,25 @@ function CartPage() {
       <div className="container-page py-10">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Mon panier</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {items.length} article{items.length > 1 ? "s" : ""}
+          {lines.length} article{lines.length > 1 ? "s" : ""}
         </p>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px]">
           <ul className="space-y-3">
-            {items.map((item, idx) => (
-              <li key={item.product.id}>
+            {lines.map((item) => (
+              <li key={item.id}>
                 <Card className="grid grid-cols-[80px_minmax(0,1fr)_auto] items-center gap-4 p-4 sm:grid-cols-[96px_minmax(0,1fr)_auto_auto]">
-                  <div className="grid size-20 place-items-center rounded-md bg-surface-muted text-muted-foreground/40 sm:size-24">
-                    <Pill className="size-8" aria-hidden="true" />
+                  <div className="grid size-20 place-items-center overflow-hidden rounded-md bg-surface-muted text-muted-foreground/40 sm:size-24">
+                    {item.product.images?.[0] ? (
+                      <img
+                        src={item.product.images[0]}
+                        alt={item.product.name}
+                        loading="lazy"
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <Pill className="size-8" aria-hidden="true" />
+                    )}
                   </div>
                   <div className="min-w-0">
                     <p className="text-xs uppercase text-muted-foreground">{item.product.brand}</p>
@@ -78,41 +150,39 @@ function CartPage() {
                       {item.product.name}
                     </Link>
                     <div className="mt-1 sm:hidden">
-                      <PriceBlock price={item.product.price} />
+                      <PriceBlock price={item.unitPrice} />
                     </div>
                   </div>
                   <div className="hidden sm:block">
                     <QuantitySelector
-                      value={item.qty}
-                      onChange={(v) =>
-                        setItems((prev) => prev.map((p, i) => (i === idx ? { ...p, qty: v } : p)))
-                      }
+                      value={item.quantity}
+                      onChange={(v) => {
+                        if (isMutating) return;
+                        updateItem.mutate({ productId: item.productId, quantity: v });
+                      }}
                     />
                   </div>
                   <div className="flex flex-col items-end gap-2">
                     <div className="hidden sm:block">
-                      <PriceBlock
-                        price={{
-                          ...item.product.price,
-                          amount: item.product.price.amount * item.qty,
-                        }}
-                      />
+                      <PriceBlock price={item.lineTotal} />
                     </div>
                     <Button
                       variant="ghost"
                       size="icon-sm"
                       aria-label={`Retirer ${item.product.name}`}
-                      onClick={() => setItems((prev) => prev.filter((_, i) => i !== idx))}
+                      disabled={isMutating}
+                      onClick={() => removeItem.mutate({ productId: item.productId })}
                     >
                       <Trash2 />
                     </Button>
                   </div>
                   <div className="col-span-3 sm:hidden">
                     <QuantitySelector
-                      value={item.qty}
-                      onChange={(v) =>
-                        setItems((prev) => prev.map((p, i) => (i === idx ? { ...p, qty: v } : p)))
-                      }
+                      value={item.quantity}
+                      onChange={(v) => {
+                        if (isMutating) return;
+                        updateItem.mutate({ productId: item.productId, quantity: v });
+                      }}
                     />
                   </div>
                 </Card>

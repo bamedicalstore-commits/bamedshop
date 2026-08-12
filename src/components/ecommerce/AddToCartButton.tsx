@@ -1,7 +1,6 @@
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Loader2 } from "lucide-react";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { toast } from "sonner";
-import { uiActions } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import type { Product } from "@/types/product";
 
 interface AddToCartButtonProps extends Omit<ButtonProps, "children"> {
@@ -18,21 +17,29 @@ export function AddToCartButton({
   label = "Ajouter au panier",
   silent = false,
   onClick,
+  disabled,
   ...rest
 }: AddToCartButtonProps) {
+  const { addToCart, isPending, authLoading } = useAddToCart();
+
   const handle: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    uiActions.addToCart(product, quantity);
-    if (!silent) {
-      toast.success(`${product.name} ajouté au panier`, {
-        description: `${quantity} article${quantity > 1 ? "s" : ""}`,
-      });
-    }
+    addToCart(product, quantity, { silent });
   };
+
   return (
-    <Button onClick={handle} data-product-id={product.id} {...rest}>
-      <ShoppingCart aria-hidden="true" />
+    <Button
+      onClick={handle}
+      data-product-id={product.id}
+      disabled={disabled || authLoading || isPending}
+      {...rest}
+    >
+      {isPending ? (
+        <Loader2 className="animate-spin" aria-hidden="true" />
+      ) : (
+        <ShoppingCart aria-hidden="true" />
+      )}
       <span>{label}</span>
     </Button>
   );

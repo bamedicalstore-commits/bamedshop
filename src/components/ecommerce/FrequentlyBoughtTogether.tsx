@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/common/SectionHeader";
 import { PriceBlock } from "./PriceBlock";
 import { toast } from "sonner";
 import { uiActions } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import { frequentlyBoughtTogether, bundleTotalMinor } from "@/lib/recommendations";
 import { MOCK_PRODUCTS } from "@/constants/navigation";
 import type { Product } from "@/types/product";
@@ -20,6 +21,7 @@ interface Props {
 }
 
 export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODUCTS }: Props) {
+  const { addToCart } = useAddToCart();
   const suggestions = useMemo(() => frequentlyBoughtTogether(product, pool, 3), [product, pool]);
   const items = useMemo(() => [product, ...suggestions], [product, suggestions]);
   const [selected, setSelected] = useState<Record<string, boolean>>(() =>
@@ -33,7 +35,7 @@ export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODU
 
   const addBundle = () => {
     if (chosen.length === 0) return;
-    chosen.forEach((p) => uiActions.addToCart(p, 1));
+    chosen.forEach((p) => addToCart(p, 1, { silent: true }));
     toast.success(`Bundle ajouté (${chosen.length} produits)`, {
       description: "Retrouvez-les dans votre panier.",
     });
