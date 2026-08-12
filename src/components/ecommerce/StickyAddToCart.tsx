@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { QuantitySelector } from "./QuantitySelector";
 import { Pill, ShoppingCart } from "lucide-react";
 import { uiActions } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types/product";
@@ -18,6 +19,7 @@ interface StickyAddToCartProps {
  * WCAG: role=region, uses safe-area padding, tap targets ≥44px.
  */
 export function StickyAddToCart({ product, triggerRef }: StickyAddToCartProps) {
+  const { addToCart } = useAddToCart();
   const [visible, setVisible] = useState(!triggerRef);
   const [qty, setQty] = useState(1);
 

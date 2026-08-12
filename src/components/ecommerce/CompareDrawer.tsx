@@ -13,10 +13,12 @@ import { AvailabilityBadge } from "./AvailabilityBadge";
 import { Rating } from "./Rating";
 import { X, Pill, Scale, GitCompareArrows } from "lucide-react";
 import { uiActions, useUiStore, COMPARE_LIMIT } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 import { cn } from "@/lib/utils";
 import type { Product } from "@/types/product";
 
 export function CompareDrawer() {
+  const { addToCart } = useAddToCart();
   const open = useUiStore((s) => s.overlays.compare);
   const items = useUiStore((s) => s.compare);
 

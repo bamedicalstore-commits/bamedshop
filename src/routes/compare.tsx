@@ -9,6 +9,7 @@ import { AvailabilityBadge } from "@/components/ecommerce/AvailabilityBadge";
 import { Rating } from "@/components/ecommerce/Rating";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { useUiStore, uiActions } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 
 export const Route = createFileRoute("/compare")({
   head: () => ({
@@ -21,6 +22,7 @@ export const Route = createFileRoute("/compare")({
 });
 
 function ComparePage() {
+  const { addToCart } = useAddToCart();
   const items = useUiStore((s) => s.compare);
   const [copied, setCopied] = useState(false);
 

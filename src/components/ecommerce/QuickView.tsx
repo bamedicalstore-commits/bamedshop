@@ -16,8 +16,10 @@ import { QuantitySelector } from "./QuantitySelector";
 import { WishlistButton } from "./WishlistButton";
 import { Pill, ArrowRight, ShoppingCart } from "lucide-react";
 import { uiActions, useUiStore } from "@/hooks/useUiStore";
+import { useAddToCart } from "@/hooks/useAddToCart";
 
 export function QuickView() {
+  const { addToCart } = useAddToCart();
   const open = useUiStore((s) => s.overlays.quickView);
   const product = useUiStore((s) => s.quickViewProduct);
   const [qty, setQty] = useState(1);
