@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, HeartPulse, Bell, Search } from "lucide-react";
+import { LayoutDashboard, Building2, HeartPulse, Bell, Search, ShieldCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,12 +13,13 @@ export const Route = createFileRoute("/admin")({
 });
 
 const NAV: ReadonlyArray<{
-  to: "/admin" | "/admin/b2b";
+  to: "/admin" | "/admin/b2b" | "/admin/catalog";
   label: string;
   icon: typeof LayoutDashboard;
   exact?: boolean;
 }> = [
   { to: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
+  { to: "/admin/catalog", label: "Activation catalogue", icon: ShieldCheck },
   { to: "/admin/b2b", label: "Comptes B2B", icon: Building2 },
 ];
 
