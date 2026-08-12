@@ -35,7 +35,7 @@ INSERT INTO public.products
    ce_certified, warranty_months, technical_specs, active)
 SELECT v.name,
        v.slug,
-       v.description,
+       v.name,
        v.sku,
        c.id,
        b.id,
@@ -90,7 +90,7 @@ INSERT INTO public.products
    ce_certified, warranty_months, technical_specs, active)
 SELECT v.name,
        v.slug,
-       v.description,
+       v.name,
        v.sku,
        c.id,
        CASE WHEN v.brand_slug IS NULL THEN NULL ELSE b.id END,
