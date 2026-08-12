@@ -1,5 +1,6 @@
 export type ActivationReadiness = {
   retailPriceTnd: number | null;
+  retailPriceApproved: boolean;
   mediaApproved: boolean;
   copyApproved: boolean;
 };
@@ -8,7 +9,11 @@ export type ActivationDecision =
   | { ok: true; reason: "ready" }
   | {
       ok: false;
-      reason: "missing_retail_price" | "media_not_approved" | "copy_not_approved";
+      reason:
+        | "missing_retail_price"
+        | "retail_price_not_approved"
+        | "media_not_approved"
+        | "copy_not_approved";
     };
 
 /**
@@ -16,6 +21,7 @@ export type ActivationDecision =
  *
  * Supplier/list prices are never accepted as an input to this gate. The only
  * price accepted here is an explicitly approved BA Medical Store retail price.
+ * A numeric value alone is not proof of approval.
  */
 export function evaluateProductActivation(readiness: ActivationReadiness): ActivationDecision {
   if (
@@ -24,6 +30,10 @@ export function evaluateProductActivation(readiness: ActivationReadiness): Activ
     readiness.retailPriceTnd <= 0
   ) {
     return { ok: false, reason: "missing_retail_price" };
+  }
+
+  if (!readiness.retailPriceApproved) {
+    return { ok: false, reason: "retail_price_not_approved" };
   }
 
   if (!readiness.mediaApproved) {
