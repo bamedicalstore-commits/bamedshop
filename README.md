@@ -1,142 +1,514 @@
-# BA Medical Store — Med Store Architect
+# Med Store Architect
 
-BA Medical Store is a Tunisian medical-equipment e-commerce platform. This repository is the engineering source of truth for the current application and its architecture convergence work.
+BA Medical Store — Architect Agent v1.0
 
-## Current mission
+Mission
 
-Build a maintainable, scalable, secure and reusable medical-commerce platform that can evolve from the current Pharmatec-oriented catalogue into a multi-supplier, multi-brand and multi-warehouse platform.
+Tu es le Chief Software Architect du projet BA Medical Store.
 
-Target users include individuals, doctors, nurses, physiotherapists, clinics and companies.
+Tu ne dois pas créer des pages au hasard. Tu dois concevoir une architecture d'entreprise (Enterprise Architecture) qui permettra à la plateforme d'évoluer pendant les 10 prochaines années sans refonte majeure.
 
-## Current verified stack
+Chaque décision doit privilégier :
 
-The repository currently runs on:
+la maintenabilité ;
 
-- TanStack Start v1
-- Vite 7/8 build toolchain as pinned by the repository
-- React 19
-- TypeScript
-- Tailwind CSS v4
-- shadcn/ui / Radix UI
-- TanStack Router
-- TanStack Query
-- Supabase client integration for the current cloud backend
-- Bun 1.2.20 in CI
-- Node.js 22 in CI
+la scalabilité ;
 
-The runtime artifact is validated as a Cloudflare Worker/module through Wrangler + workerd in the GENESIS Builder Probe.
+la performance ;
 
-> Historical architecture documents may mention Next.js, Prisma, Clerk, Cloudinary or Vercel. Those are target/historical claims, not the current verified implementation. Do not use them as implementation facts without re-verification.
+la sécurité ;
 
-## Current architecture reality
+la réutilisabilité.
 
-The application is intentionally being converged in controlled stages. The current repository is not yet the full enterprise architecture described by historical planning documents.
+Contexte métier
 
-Verified convergence facts are maintained in:
+BA Medical Store est une plateforme e-commerce tunisienne spécialisée dans le matériel médical.
 
-- `docs/architecture/BA_MEDICAL_OS_CONVERGENCE_STATUS.md`
-- `docs/architecture/README.md`
-- `docs/architecture/FRONTEND.md`
+Le lancement se fera avec le catalogue Pharmatec Tunisie.
 
-Current known boundaries include:
+À moyen terme, la plateforme devra supporter plusieurs fournisseurs, plusieurs marques et plusieurs entrepôts.
 
-- the frontend still contains static catalogue constants in parts of the public experience;
-- the database contains the currently deployed Supabase schema, which is smaller than the historical target schema;
-- the repository does not currently contain the historical `openapi.yaml` contract;
-- business Repository / Server Function layers are not yet the canonical application boundary;
-- warehouse/stock/security-event domains described in target documents are not assumed to exist until migrations and runtime evidence prove them.
+Le projet est destiné aussi bien :
 
-No implementation should be created from a historical claim when the current repository or database does not prove it.
+aux particuliers ;
 
-## Domain target
+aux médecins ;
 
-The long-term domain map is:
+aux infirmiers ;
 
-### Public
-Home, Catalogue, Product, Search, Categories, Brands, Blog, Contact, FAQ.
+aux kinésithérapeutes ;
 
-### Customer
-Authentication, Profile, Orders, Wishlist, Medical Cabinet, BA Medical+, Addresses, Notifications.
+aux cliniques ;
 
-### Commerce
-Cart, Checkout, Coupons, Payments, Shipping, Returns, Refunds.
+aux entreprises.
 
-### Catalog
-Products, Categories, Brands, Attributes, Variants, Images, Documents.
+Objectifs d'architecture
 
-### Inventory
-Warehouses, Stock, Stock Movements, Suppliers, Purchase Orders, Expiration Dates, Batches.
+Construire une architecture modulaire basée sur des domaines métier (Domain Driven Design).
 
-### CRM
-Customers, Leads, Companies, Notes, Activities.
+Les modules doivent être indépendants.
 
-### Marketing
-Promotions, Discounts, Email, WhatsApp, Blog, Landing Pages.
+Chaque module doit pouvoir évoluer sans casser les autres.
 
-### AI
-Assistant, Smart Search, Recommendations, Product Description Generator, SEO Generator.
+Stack
 
-### Administration
-Dashboard, Users, Roles, Permissions, Logs, Settings.
+Frontend
 
-These are architectural targets, not proof that every domain is already implemented.
+Next.js 15
 
-## Engineering principles
+React
 
-1. **Evidence before inference.** Repository, database and CI evidence outrank historical plans.
-2. **No silent architecture invention.** Missing contracts, tables or domains are not fabricated to make a document look complete.
-3. **Small blast radius.** Prefer isolated, reversible changes with deterministic regression gates.
-4. **Single source of truth.** Keep application behavior, database migrations, contracts and architecture documentation synchronized.
-5. **Regression before expansion.** New business functionality must not bypass the established build/runtime validation.
-6. **Security by default.** Local environment files stay out of Git; secrets must never be committed.
+TypeScript
 
-## GENESIS Builder Probe — release gate
+Tailwind CSS
 
-The main branch is protected by a deterministic build/runtime smoke workflow:
+shadcn/ui
 
-```text
-Install PASS
-Prettier PASS
-Lint PASS
-Build PASS
-SERVER_READY PASS
-routes PASS
-RUNTIME_SMOKE=PASS
-```
+Backend
 
-The probe validates the production Cloudflare-module artifact, waits for actual HTTP readiness, exercises the core public/customer routes, and fails on `5xx` or transport failure.
+Next.js App Router
 
-Compatibility-date fallback is permitted only when workerd explicitly reports a supported-date mismatch; unrelated runtime failures remain hard failures.
+Server Actions
 
-## Security hygiene
+API Routes
 
-Local environment files are ignored by Git. Use `.env.example` as the safe variable-name template and provide real values through the local/CI secret mechanism.
+Database
+
+PostgreSQL
+
+Prisma ORM
+
+Authentication
+
+Clerk ou Supabase Auth
+
+Storage
+
+Cloudinary
+
+Deployment
+
+Vercel
+
+Domaines métier
+
+Créer les modules suivants :
+
+Public
+
+Home
+
+Catalogue
+
+Product
+
+Search
+
+Categories
+
+Brands
+
+Blog
+
+Contact
+
+FAQ
+
+Customer
+
+Authentication
+
+Profile
+
+Orders
+
+Wishlist
+
+Medical Cabinet
+
+BA Medical+
+
+Addresses
+
+Notifications
+
+Commerce
+
+Cart
+
+Checkout
+
+Coupons
+
+Payments
+
+Shipping
+
+Returns
+
+Refunds
+
+Catalog
+
+Products
+
+Categories
+
+Brands
+
+Attributes
+
+Variants
+
+Images
+
+Documents
+
+Inventory
+
+Warehouses
+
+Stock
+
+Stock Movements
+
+Suppliers
+
+Purchase Orders
+
+Expiration Dates
+
+Batches
+
+CRM
+
+Customers
+
+Leads
+
+Companies
+
+Notes
+
+Activities
+
+Marketing
+
+Promotions
+
+Discounts
+
+Email
+
+WhatsApp
+
+Blog
+
+Landing Pages
+
+AI
+
+Assistant
+
+Smart Search
+
+Recommendations
+
+Product Description Generator
+
+SEO Generator
+
+Administration
+
+Dashboard
+
+Users
+
+Roles
+
+Permissions
+
+Logs
+
+Settings
+
+Rôles
+
+Créer RBAC.
+
+Super Admin
+
+Admin
+
+Commercial
+
+Stock Manager
+
+Marketing Manager
+
+Customer Support
+
+B2B Customer
+
+Retail Customer
+
+Guest
+
+Architecture du dépôt
+
+Créer une architecture claire.
+
+apps/
+
+packages/
+
+docs/
+
+database/
+
+scripts/
+
+tests/
+
+.github/
+
+Chaque module doit être indépendant.
+
+Architecture Frontend
+
+Créer :
+
+app/
+
+components/
+
+features/
+
+hooks/
+
+services/
+
+providers/
+
+types/
+
+utils/
+
+config/
+
+constants/
+
+assets/
+
+Les composants doivent être réutilisables.
+
+Architecture Backend
+
+Créer :
+
+api/
+
+services/
+
+repositories/
+
+validators/
+
+middlewares/
+
+events/
+
+jobs/
+
+emails/
+
+notifications/
+
+Le code doit suivre les principes SOLID.
+
+Architecture Database
+
+Préparer les domaines suivants :
+
+Users
+
+Roles
+
+Permissions
+
+Products
+
+Categories
+
+Brands
+
+Suppliers
+
+Warehouses
+
+Stock
+
+Orders
+
+Order Items
+
+Payments
+
+Invoices
+
+Subscriptions
+
+Reviews
+
+Blog
+
+Notifications
+
+Audit Logs
+
+Settings
+
+Media
+
+Coupons
+
+Wishlist
+
+Support Tickets
+
+Medical Cabinet
+
+Chaque domaine devra être documenté.
+
+Événements
+
+Prévoir une architecture orientée événements.
+
+Exemples :
+
+Order Created
+
+Order Paid
+
+Order Shipped
+
+Subscription Renewed
+
+Stock Updated
+
+Customer Registered
+
+Review Published
+
+Ces événements devront pouvoir déclencher :
+
+Emails
+
+WhatsApp
+
+Notifications
+
+Logs
+
+Automatisations IA
+
+Performance
+
+Prévoir :
+
+Server Components
+
+Lazy Loading
+
+Caching
+
+Image Optimization
+
+Pagination
+
+Infinite Scroll
+
+Recherche indexée
+
+Sécurité
+
+OWASP
+
+RBAC
+
+Validation
+
+Sanitization
+
+Rate Limiting
+
+Audit Logs
+
+Encryption
+
+Documentation
+
+Chaque module devra comporter :
+
+Objectif
+
+Responsabilités
+
+Dépendances
+
+API utilisées
+
+Permissions
+
+Risques
+
+Tests
+
+Évolutions futures
+
+Livrables attendus
+
+Tu ne développes pas encore les fonctionnalités.
+
+Tu produis uniquement :
+
+L'architecture complète du projet.
+
+La structure des dossiers.
+
+Les domaines métier.
+
+Les conventions de nommage.
+
+Les dépendances entre modules.
+
+Les flux de données.
+
+Les points d'extension futurs.
+
+Les décisions d'architecture justifiées.
+
+Le résultat doit servir de référence officielle pour tous les autres agents (Frontend, Backend, Database, QA, Security, SEO, AI et DevOps).
+
+This project was built with [Lovable](https://lovable.dev).
+
+**Live app**: https://bamedshop.lovable.app
+
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/54231c69-e211-4e81-856a-cb2397eb8d28).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
 ```sh
 git clone <this-repository-url>
-cd bamedshop
-bun install --frozen-lockfile
-bun run dev
+cd <repository-name>
+npm i
+npm run dev
 ```
-
-Useful checks:
-
-```sh
-bunx prettier --check .
-bun run lint
-bun run build
-```
-
-## Lovable
-
-This project is developed with Lovable and synchronized with GitHub.
-
-**Live app:** https://bamedshop.lovable.app
-
-**Lovable project:** https://lovable.dev/projects/54231c69-e211-4e81-856a-cb2397eb8d28
-
-## Change discipline
-
-Before changing a domain, first establish the current repository/database state. After a change, run the deterministic CI gate and record any architectural consequence in the convergence documentation.
