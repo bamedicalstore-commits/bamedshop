@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { CheckCircle2, CircleAlert, Loader2, LockKeyhole, RefreshCw, ShieldCheck } from "lucide-react";
+import {
+  CheckCircle2,
+  CircleAlert,
+  Loader2,
+  LockKeyhole,
+  RefreshCw,
+  ShieldCheck,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -14,12 +21,21 @@ import {
 
 export const Route = createFileRoute("/admin/catalog")({
   head: () => ({
-    meta: [{ title: "Activation catalogue — BA Medical Store" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "Activation catalogue — BA Medical Store" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: CatalogActivationAdmin,
 });
 
-const STATUS_ORDER: CatalogActivationStatus[] = ["BLOCKED", "DRAFT", "REVIEW", "APPROVED", "ACTIVE"];
+const STATUS_ORDER: CatalogActivationStatus[] = [
+  "BLOCKED",
+  "DRAFT",
+  "REVIEW",
+  "APPROVED",
+  "ACTIVE",
+];
 
 function CatalogActivationAdmin() {
   const [products, setProducts] = useState<CatalogActivationProduct[]>([]);
@@ -45,14 +61,19 @@ function CatalogActivationAdmin() {
   }, []);
 
   const filtered = useMemo(
-    () => (status === "ALL" ? products : products.filter((product) => product.catalog_activation_status === status)),
+    () =>
+      status === "ALL"
+        ? products
+        : products.filter((product) => product.catalog_activation_status === status),
     [products, status],
   );
 
   const counts = useMemo(
     () =>
       STATUS_ORDER.reduce<Record<string, number>>((acc, current) => {
-        acc[current] = products.filter((product) => product.catalog_activation_status === current).length;
+        acc[current] = products.filter(
+          (product) => product.catalog_activation_status === current,
+        ).length;
         return acc;
       }, {}),
     [products],
@@ -91,9 +112,12 @@ function CatalogActivationAdmin() {
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
             <ShieldCheck className="size-4" aria-hidden="true" /> Supabase authority
           </div>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">Activation catalogue</h1>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+            Activation catalogue
+          </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Aucun produit ne devient retail-visible par simple présence en base. L’activation finale est décidée côté Supabase.
+            Aucun produit ne devient retail-visible par simple présence en base. L’activation finale est
+            décidée côté Supabase.
           </p>
         </div>
         <Button variant="outline" onClick={() => void load()} disabled={loading}>
@@ -110,10 +134,14 @@ function CatalogActivationAdmin() {
               type="button"
               onClick={() => setStatus(item)}
               className={`rounded-xl border p-4 text-left transition-colors ${
-                status === item ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
+                status === item
+                  ? "border-primary bg-primary/5"
+                  : "border-border hover:bg-muted/50"
               }`}
             >
-              <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{item}</div>
+              <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                {item}
+              </div>
               <div className="mt-1 text-2xl font-bold">{count ?? 0}</div>
             </button>
           );
@@ -123,7 +151,10 @@ function CatalogActivationAdmin() {
       {error ? (
         <Card className="border-destructive/40 bg-destructive/5 p-4">
           <div className="flex gap-3 text-sm">
-            <CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
+            <CircleAlert
+              className="mt-0.5 size-4 shrink-0 text-destructive"
+              aria-hidden="true"
+            />
             <div>
               <p className="font-semibold">Action refusée</p>
               <p className="mt-1 text-muted-foreground">{error}</p>
@@ -147,7 +178,9 @@ function CatalogActivationAdmin() {
             <Loader2 className="size-4 animate-spin" /> Chargement Supabase…
           </div>
         ) : filtered.length === 0 ? (
-          <div className="flex min-h-48 items-center justify-center text-sm text-muted-foreground">Aucun produit dans cette vue.</div>
+          <div className="flex min-h-48 items-center justify-center text-sm text-muted-foreground">
+            Aucun produit dans cette vue.
+          </div>
         ) : (
           <div className="divide-y divide-border">
             {filtered.map((product) => (
@@ -192,20 +225,30 @@ function ActivationRow({
         <div className="flex items-center gap-2">
           <p className="truncate font-semibold">{product.name}</p>
           {product.catalog_activation_status === "ACTIVE" ? (
-            <CheckCircle2 className="size-4 shrink-0 text-success" aria-label="Actif" />
+            <CheckCircle2
+              className="size-4 shrink-0 text-success"
+              aria-label="Actif"
+            />
           ) : null}
         </div>
         <p className="mt-1 truncate text-xs text-muted-foreground">/{product.slug}</p>
         <p className="mt-2 text-xs text-muted-foreground">
-          {product.catalog_activation_reason ? `Motif: ${product.catalog_activation_reason}` : "Aucune décision enregistrée"}
+          {product.catalog_activation_reason
+            ? `Motif: ${product.catalog_activation_reason}`
+            : "Aucune décision enregistrée"}
         </p>
       </div>
 
-      <Gate label="Prix" ok={product.retail_price_tnd !== null && product.retail_price_tnd > 0} />
+      <Gate
+        label="Prix"
+        ok={product.retail_price_tnd !== null && product.retail_price_tnd > 0}
+      />
       <Gate label="Prix approuvé" ok={product.retail_price_approved} />
       <Gate label="Media" ok={product.media_approved} />
       <Gate label="Copy" ok={product.copy_approved} />
-      <Badge variant={statusVariant(product.catalog_activation_status)}>{product.catalog_activation_status}</Badge>
+      <Badge variant={statusVariant(product.catalog_activation_status)}>
+        {product.catalog_activation_status}
+      </Badge>
 
       <div className="flex gap-2 lg:justify-end">
         {product.catalog_activation_status === "ACTIVE" ? (
@@ -214,7 +257,12 @@ function ActivationRow({
             Bloquer
           </Button>
         ) : (
-          <Button size="sm" onClick={onActivate} disabled={busy || !ready} title={!ready ? "Les gates retail ne sont pas toutes validées." : undefined}>
+          <Button
+            size="sm"
+            onClick={onActivate}
+            disabled={busy || !ready}
+            title={!ready ? "Les gates retail ne sont pas toutes validées." : undefined}
+          >
             {busy ? <Loader2 className="animate-spin" /> : null}
             Activer
           </Button>
@@ -227,7 +275,10 @@ function ActivationRow({
 function Gate({ label, ok }: { label: string; ok: boolean }) {
   return (
     <div className="flex items-center gap-2 text-xs">
-      <span className={`size-2 rounded-full ${ok ? "bg-success" : "bg-destructive"}`} aria-hidden="true" />
+      <span
+        className={`size-2 rounded-full ${ok ? "bg-success" : "bg-destructive"}`}
+        aria-hidden="true"
+      />
       <span className={ok ? "text-foreground" : "text-muted-foreground"}>{label}</span>
     </div>
   );
