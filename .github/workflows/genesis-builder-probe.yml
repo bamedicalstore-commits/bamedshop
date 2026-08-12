@@ -9,6 +9,7 @@ on:
       - "fix/security-env-hygiene"
       - "main"
       - "feat/catalog-activation-engine-v1"
+      - "feat/catalog-supabase-activation-v1"
 
 permissions:
   contents: read
