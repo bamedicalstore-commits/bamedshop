@@ -85,7 +85,11 @@ function CartPage() {
           <ErrorState
             title="Panier indisponible"
             description="Impossible de charger votre panier pour le moment."
-            onRetry={() => void refetch()}
+            action={
+              <Button variant="outline" onClick={() => void refetch()}>
+                Réessayer
+              </Button>
+            }
           />
         </div>
       </SiteLayout>
@@ -152,10 +156,10 @@ function CartPage() {
                   <div className="hidden sm:block">
                     <QuantitySelector
                       value={item.quantity}
-                      disabled={isMutating}
-                      onChange={(v) =>
-                        updateItem.mutate({ productId: item.productId, quantity: v })
-                      }
+                      onChange={(v) => {
+                        if (isMutating) return;
+                        updateItem.mutate({ productId: item.productId, quantity: v });
+                      }}
                     />
                   </div>
                   <div className="flex flex-col items-end gap-2">
@@ -175,10 +179,10 @@ function CartPage() {
                   <div className="col-span-3 sm:hidden">
                     <QuantitySelector
                       value={item.quantity}
-                      disabled={isMutating}
-                      onChange={(v) =>
-                        updateItem.mutate({ productId: item.productId, quantity: v })
-                      }
+                      onChange={(v) => {
+                        if (isMutating) return;
+                        updateItem.mutate({ productId: item.productId, quantity: v });
+                      }}
                     />
                   </div>
                 </Card>
