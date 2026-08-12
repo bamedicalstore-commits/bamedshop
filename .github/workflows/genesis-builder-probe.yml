@@ -53,13 +53,6 @@ jobs:
           set -euo pipefail
           bun install --frozen-lockfile
           echo "Install PASS"
-      - name: Format diagnostic
-        shell: bash
-        run: |
-          set -euo pipefail
-          bunx prettier --write src/routes/admin.catalog.tsx
-          git diff -- src/routes/admin.catalog.tsx
-          exit 1
       - name: Format check
         shell: bash
         run: |
