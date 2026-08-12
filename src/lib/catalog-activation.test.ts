@@ -4,6 +4,7 @@ import { canActivateProduct, evaluateProductActivation } from "./catalog-activat
 describe("product retail activation gate", () => {
   const approved = {
     retailPriceTnd: 129.9,
+    retailPriceApproved: true,
     mediaApproved: true,
     copyApproved: true,
   };
@@ -21,6 +22,13 @@ describe("product retail activation gate", () => {
         reason: "missing_retail_price",
       });
     }
+  });
+
+  it("rejects a retail price that has not been explicitly approved", () => {
+    expect(evaluateProductActivation({ ...approved, retailPriceApproved: false })).toEqual({
+      ok: false,
+      reason: "retail_price_not_approved",
+    });
   });
 
   it("rejects products without approved media", () => {
@@ -41,6 +49,7 @@ describe("product retail activation gate", () => {
     expect(
       evaluateProductActivation({
         retailPriceTnd: null,
+        retailPriceApproved: false,
         mediaApproved: false,
         copyApproved: false,
       }),
