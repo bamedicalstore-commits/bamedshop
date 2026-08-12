@@ -63,7 +63,9 @@ export async function readCart(supabase: AuthedClient, userId: string): Promise<
 
   const items = await supabase
     .from("cart_items")
-    .select(`id, product_id, quantity, unit_price, created_at, product:products ( ${PRODUCT_COLUMNS} )`)
+    .select(
+      `id, product_id, quantity, unit_price, created_at, product:products ( ${PRODUCT_COLUMNS} )`,
+    )
     .eq("cart_id", cart.data.id)
     .order("created_at", { ascending: true });
   if (items.error) throw new Error(items.error.message);

@@ -3,6 +3,7 @@
 This migration records the real supplier product master currently available in the project references.
 
 Sources:
+
 - `LISTE DES PRIX PHARMATEC_ (2).pdf` — MAJ AOUT 2024 — `PU HT`.
 - `LISTE DES PRIX ROSSMAX (1).pdf` — `PV HT`.
 
@@ -11,6 +12,7 @@ Imported scope: 45 product rows (25 Rossmax + 20 Pharmatec), with explicit suppl
 All rows are intentionally `active = false` because the source values are supplier/PV HT prices, not validated BA Medical Store customer retail prices. The migration does not invent retail margins, stock, promotions, warranties or product media.
 
 Source provenance is retained in `products.technical_specs`:
+
 - `catalog_status = source_import_unpriced`
 - `source_document`
 - `source_price_type`
