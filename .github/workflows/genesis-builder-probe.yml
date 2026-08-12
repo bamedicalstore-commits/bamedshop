@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - "genesis/builder-probe"
+      - "fix/genesis-runtime-compatibility-fallback"
+      - "main"
 
 permissions:
   contents: read
@@ -55,16 +57,32 @@ jobs:
           python --version
 
       - name: Install locked dependencies
-        run: bun install --frozen-lockfile
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun install --frozen-lockfile
+          echo "Install PASS"
 
       - name: Format check
-        run: bunx prettier --check .
+        shell: bash
+        run: |
+          set -euo pipefail
+          bunx prettier --check .
+          echo "Prettier PASS"
 
       - name: Lint
-        run: bun run lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun run lint
+          echo "Lint PASS"
 
       - name: Build
-        run: bun run build
+        shell: bash
+        run: |
+          set -euo pipefail
+          bun run build
+          echo "Build PASS"
 
       - name: Runtime smoke
         shell: bash
@@ -73,7 +91,8 @@ jobs:
           PORT=4173
           HOST=127.0.0.1
           LOG_FILE="/tmp/genesis-runtime.log"
-          WRANGLER_VERSION="4.121.0"
+          FALLBACK_LOG_FILE="/tmp/genesis-runtime-fallback.log"
+          WRANGLER_VERSION="4.122.0"
 
           test -f ".output/server/index.mjs" || {
             echo "RUNTIME_START_FAIL: .output/server/index.mjs is missing"
@@ -90,41 +109,76 @@ jobs:
           echo "Starting the Cloudflare-module production artifact with Wrangler workerd"
           echo "WRANGLER_VERSION=${WRANGLER_VERSION}"
           npx --yes "wrangler@${WRANGLER_VERSION}" --version
-          npx --yes "wrangler@${WRANGLER_VERSION}" dev \
-            --config .output/server/wrangler.json \
-            --local \
-            --ip "${HOST}" \
-            --port "${PORT}" \
-            >"${LOG_FILE}" 2>&1 &
-          SERVER_PID=$!
-          trap 'kill "${SERVER_PID}" 2>/dev/null || true' EXIT
 
-          echo "SERVER_PID=${SERVER_PID}"
+          start_server() {
+            local log_file="$1"
+            shift
+            npx --yes "wrangler@${WRANGLER_VERSION}" dev \
+              --config .output/server/wrangler.json \
+              --local \
+              --ip "${HOST}" \
+              --port "${PORT}" \
+              "$@" \
+              >"${log_file}" 2>&1 &
+            SERVER_PID=$!
+            echo "SERVER_PID=${SERVER_PID}"
+          }
 
-          ready=0
-          for i in {1..30}; do
-            if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
-              echo "RUNTIME_START_FAIL: Wrangler/Workerd exited before becoming ready"
-              echo "--- runtime log ---"
-              cat "${LOG_FILE}" || true
+          wait_for_readiness() {
+            for i in {1..30}; do
+              if ! kill -0 "${SERVER_PID}" 2>/dev/null; then
+                echo "SERVER_EXITED"
+                return 1
+              fi
+              if curl -fsS --max-time 2 "http://${HOST}:${PORT}/" >/tmp/genesis-runtime-root.html 2>/tmp/genesis-runtime-curl.err; then
+                echo "SERVER_READY after ${i}s"
+                return 0
+              fi
+              sleep 1
+            done
+            echo "SERVER_NOT_READY"
+            return 1
+          }
+
+          trap 'kill "${SERVER_PID:-}" 2>/dev/null || true' EXIT
+
+          start_server "${LOG_FILE}"
+
+          if ! wait_for_readiness; then
+            kill "${SERVER_PID}" 2>/dev/null || true
+            wait "${SERVER_PID}" 2>/dev/null || true
+
+            echo "--- runtime log (first attempt) ---"
+            cat "${LOG_FILE}" || true
+
+            SUPPORTED_DATE="$(sed -nE 's/.*newest date supported by this server binary is "([0-9]{4}-[0-9]{2}-[0-9]{2})".*/\1/p' "${LOG_FILE}" | tail -1)"
+
+            if [ -z "${SUPPORTED_DATE}" ]; then
+              echo "RUNTIME_START_FAIL: Wrangler/Workerd failed without the explicit compatibility-date mismatch"
+              echo "--- curl diagnostic ---"
+              cat /tmp/genesis-runtime-curl.err || true
               exit 1
             fi
-            if curl -fsS --max-time 2 "http://${HOST}:${PORT}/" >/tmp/genesis-runtime-root.html 2>/tmp/genesis-runtime-curl.err; then
-              ready=1
-              echo "SERVER_READY after ${i}s"
-              break
-            fi
-            sleep 1
-          done
 
-          if [ "${ready}" -ne 1 ]; then
-            echo "RUNTIME_START_FAIL: Cloudflare runtime did not become HTTP-ready on ${HOST}:${PORT}"
-            echo "--- runtime log ---"
-            cat "${LOG_FILE}" || true
-            echo "--- curl diagnostic ---"
-            cat /tmp/genesis-runtime-curl.err || true
-            exit 1
+            echo "RUNTIME_COMPATIBILITY_FALLBACK=PASS"
+            echo "RUNTIME_COMPATIBILITY_FALLBACK_DATE=${SUPPORTED_DATE}"
+            echo "Retrying the local smoke test with the newest compatibility date supported by this bundled workerd."
+
+            start_server "${FALLBACK_LOG_FILE}" --compatibility-date "${SUPPORTED_DATE}"
+
+            if ! wait_for_readiness; then
+              kill "${SERVER_PID}" 2>/dev/null || true
+              wait "${SERVER_PID}" 2>/dev/null || true
+              echo "RUNTIME_START_FAIL: Cloudflare runtime did not become HTTP-ready even with supported compatibility date ${SUPPORTED_DATE}"
+              echo "--- runtime log (fallback) ---"
+              cat "${FALLBACK_LOG_FILE}" || true
+              echo "--- curl diagnostic ---"
+              cat /tmp/genesis-runtime-curl.err || true
+              exit 1
+            fi
           fi
+
+          echo "SERVER_READY PASS"
 
           pages=(
             "/"
@@ -148,12 +202,18 @@ jobs:
           done
 
           if [ "${failures}" -ne 0 ]; then
+            echo "routes FAIL (${failures} route failures)"
             echo "RUNTIME_SMOKE=FAIL (${failures} route failures)"
             echo "--- runtime log ---"
-            cat "${LOG_FILE}" || true
+            if [ -s "${FALLBACK_LOG_FILE}" ]; then
+              cat "${FALLBACK_LOG_FILE}" || true
+            else
+              cat "${LOG_FILE}" || true
+            fi
             exit 1
           fi
 
+          echo "routes PASS"
           echo "RUNTIME_SMOKE=PASS"
 
       - name: Builder artifact manifest
