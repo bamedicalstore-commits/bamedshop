@@ -17,9 +17,7 @@ export type ActivationDecision =
  * Supplier/list prices are never accepted as an input to this gate. The only
  * price accepted here is an explicitly approved BA Medical Store retail price.
  */
-export function evaluateProductActivation(
-  readiness: ActivationReadiness,
-): ActivationDecision {
+export function evaluateProductActivation(readiness: ActivationReadiness): ActivationDecision {
   if (
     readiness.retailPriceTnd === null ||
     !Number.isFinite(readiness.retailPriceTnd) ||
