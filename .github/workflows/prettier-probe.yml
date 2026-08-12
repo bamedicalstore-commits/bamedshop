@@ -1,0 +1,30 @@
+name: Temporary Prettier Probe
+
+on:
+  push:
+    branches:
+      - "fix/prettier-current-main"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.20"
+      - run: bun install --frozen-lockfile
+      - name: Format target files and print exact output
+        shell: bash
+        run: |
+          set -euo pipefail
+          bunx prettier --write src/lib/cart.server.ts docs/catalogue/authoritative-seed.md src/integrations/supabase/types.ts
+          echo '--- CART ---'
+          cat src/lib/cart.server.ts
+          echo '--- DOC ---'
+          cat docs/catalogue/authoritative-seed.md
+          echo '--- TYPES ---'
+          cat src/integrations/supabase/types.ts
