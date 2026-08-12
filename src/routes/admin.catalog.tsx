@@ -116,8 +116,8 @@ function CatalogActivationAdmin() {
             Activation catalogue
           </h1>
           <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
-            Aucun produit ne devient retail-visible par simple présence en base. L’activation finale est
-            décidée côté Supabase.
+            Aucun produit ne devient retail-visible par simple présence en base. L’activation finale
+            est décidée côté Supabase.
           </p>
         </div>
         <Button variant="outline" onClick={() => void load()} disabled={loading}>
@@ -134,9 +134,7 @@ function CatalogActivationAdmin() {
               type="button"
               onClick={() => setStatus(item)}
               className={`rounded-xl border p-4 text-left transition-colors ${
-                status === item
-                  ? "border-primary bg-primary/5"
-                  : "border-border hover:bg-muted/50"
+                status === item ? "border-primary bg-primary/5" : "border-border hover:bg-muted/50"
               }`}
             >
               <div className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
@@ -151,10 +149,7 @@ function CatalogActivationAdmin() {
       {error ? (
         <Card className="border-destructive/40 bg-destructive/5 p-4">
           <div className="flex gap-3 text-sm">
-            <CircleAlert
-              className="mt-0.5 size-4 shrink-0 text-destructive"
-              aria-hidden="true"
-            />
+            <CircleAlert className="mt-0.5 size-4 shrink-0 text-destructive" aria-hidden="true" />
             <div>
               <p className="font-semibold">Action refusée</p>
               <p className="mt-1 text-muted-foreground">{error}</p>
@@ -166,10 +161,12 @@ function CatalogActivationAdmin() {
       <Card className="overflow-hidden">
         <div className="border-b border-border px-5 py-4">
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <LockKeyhole className="size-4 text-primary" aria-hidden="true" /> File d’activation retail
+            <LockKeyhole className="size-4 text-primary" aria-hidden="true" /> File d’activation
+            retail
           </div>
           <p className="mt-1 text-xs text-muted-foreground">
-            Price + approval + media + copy + slug + produit actif sont vérifiés par la frontière database.
+            Price + approval + media + copy + slug + produit actif sont vérifiés par la frontière
+            database.
           </p>
         </div>
 
@@ -225,10 +222,7 @@ function ActivationRow({
         <div className="flex items-center gap-2">
           <p className="truncate font-semibold">{product.name}</p>
           {product.catalog_activation_status === "ACTIVE" ? (
-            <CheckCircle2
-              className="size-4 shrink-0 text-success"
-              aria-label="Actif"
-            />
+            <CheckCircle2 className="size-4 shrink-0 text-success" aria-label="Actif" />
           ) : null}
         </div>
         <p className="mt-1 truncate text-xs text-muted-foreground">/{product.slug}</p>
@@ -239,10 +233,7 @@ function ActivationRow({
         </p>
       </div>
 
-      <Gate
-        label="Prix"
-        ok={product.retail_price_tnd !== null && product.retail_price_tnd > 0}
-      />
+      <Gate label="Prix" ok={product.retail_price_tnd !== null && product.retail_price_tnd > 0} />
       <Gate label="Prix approuvé" ok={product.retail_price_approved} />
       <Gate label="Media" ok={product.media_approved} />
       <Gate label="Copy" ok={product.copy_approved} />
