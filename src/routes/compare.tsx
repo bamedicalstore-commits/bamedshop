@@ -139,7 +139,7 @@ function ComparePage() {
                 <Button
                   size="sm"
                   className="w-full print:hidden"
-                  onClick={() => uiActions.addToCart(p)}
+                  onClick={() => addToCart(p)}
                   disabled={p.availability === "out_of_stock"}
                 >
                   Ajouter

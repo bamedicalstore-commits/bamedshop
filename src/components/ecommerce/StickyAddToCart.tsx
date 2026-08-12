@@ -56,7 +56,7 @@ export function StickyAddToCart({ product, triggerRef }: StickyAddToCartProps) {
           size="lg"
           className="min-h-11 shrink-0"
           disabled={outOfStock}
-          onClick={() => uiActions.addToCart(product, qty)}
+          onClick={() => addToCart(product, qty)}
           aria-label={`Ajouter ${product.name} au panier`}
         >
           <ShoppingCart aria-hidden="true" />

@@ -68,7 +68,7 @@ export function QuickView() {
                 <QuantitySelector value={qty} onChange={setQty} />
                 <Button
                   onClick={() => {
-                    uiActions.addToCart(product, qty);
+                    addToCart(product, qty);
                     uiActions.closeQuickView();
                     setQty(1);
                   }}

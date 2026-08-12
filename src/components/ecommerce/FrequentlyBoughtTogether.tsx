@@ -33,7 +33,7 @@ export function FrequentlyBoughtTogether({ product, className, pool = MOCK_PRODU
 
   const addBundle = () => {
     if (chosen.length === 0) return;
-    chosen.forEach((p) => uiActions.addToCart(p, 1));
+    chosen.forEach((p) => addToCart(p, 1, { silent: true }));
     toast.success(`Bundle ajouté (${chosen.length} produits)`, {
       description: "Retrouvez-les dans votre panier.",
     });

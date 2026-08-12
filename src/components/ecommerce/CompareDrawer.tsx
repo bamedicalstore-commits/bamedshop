@@ -118,7 +118,7 @@ export function CompareDrawer() {
                   <Button
                     size="sm"
                     onClick={() => {
-                      uiActions.addToCart(p);
+                      addToCart(p);
                       uiActions.closeOverlay("compare");
                     }}
                     disabled={p.availability === "out_of_stock"}
