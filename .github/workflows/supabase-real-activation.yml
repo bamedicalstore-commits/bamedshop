@@ -98,18 +98,25 @@ jobs:
         run: |
           set -euo pipefail
           npx --yes supabase@latest db query --db-url "$SUPABASE_DB_URL_RUNTIME" <<'SQL'
-          select to_regclass('public.products') is not null as products_exists;
-          select to_regclass('public.catalog_activation_events') is not null as activation_events_exists;
-          select to_regprocedure('public.evaluate_catalog_activation(uuid)') is not null as evaluate_rpc_exists;
-          select to_regprocedure('public.activate_catalog_product(uuid)') is not null as activate_rpc_exists;
-          select to_regprocedure('public.deactivate_catalog_product(uuid,public.catalog_activation_reason)') is not null as deactivate_rpc_exists;
-          select to_regclass('public.retail_catalog') is not null as retail_projection_exists;
-          select c.relrowsecurity as activation_events_rls_enabled
-            from pg_class c join pg_namespace n on n.oid = c.relnamespace
-           where n.nspname = 'public' and c.relname = 'catalog_activation_events';
-          select count(*) as supplier_seed_products
-            from public.products
-           where technical_specs->>'catalog_status' = 'source_import_unpriced';
+          select
+            to_regclass('public.products') is not null as products_exists,
+            to_regclass('public.catalog_activation_events') is not null as activation_events_exists,
+            to_regprocedure('public.evaluate_catalog_activation(uuid)') is not null as evaluate_rpc_exists,
+            to_regprocedure('public.activate_catalog_product(uuid)') is not null as activate_rpc_exists,
+            to_regprocedure('public.deactivate_catalog_product(uuid,public.catalog_activation_reason)') is not null as deactivate_rpc_exists,
+            to_regclass('public.retail_catalog') is not null as retail_projection_exists,
+            coalesce((
+              select c.relrowsecurity
+              from pg_class c
+              join pg_namespace n on n.oid = c.relnamespace
+              where n.nspname = 'public'
+                and c.relname = 'catalog_activation_events'
+            ), false) as activation_events_rls_enabled,
+            (
+              select count(*)
+              from public.products
+              where technical_specs->>'catalog_status' = 'source_import_unpriced'
+            ) as supplier_seed_products;
           SQL
           echo "SUPABASE_BOUNDARY=PASS"
 
