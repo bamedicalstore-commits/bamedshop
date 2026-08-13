@@ -1,4 +1,5 @@
 import { describe, expect, it } from "bun:test";
+import { readFileSync } from "node:fs";
 import { canActivateProduct, evaluateProductActivation } from "./catalog-activation";
 
 describe("product retail activation gate", () => {
@@ -54,5 +55,19 @@ describe("product retail activation gate", () => {
         copyApproved: false,
       }),
     ).toEqual({ ok: false, reason: "missing_retail_price" });
+  });
+
+  it("keeps the database activation boundary fail-closed and admin-only", () => {
+    const migration = readFileSync(
+      "supabase/migrations/202608120001_catalog_activation_engine.sql",
+      "utf8",
+    );
+
+    expect(migration).toContain("create or replace function public.activate_catalog_product");
+    expect(migration).toContain("public.has_role('admin'::public.app_role, auth.uid())");
+    expect(migration).toContain("public.has_role('super_admin'::public.app_role, auth.uid())");
+    expect(migration).toContain("catalog_activation_forbidden");
+    expect(migration).toContain("catalog_activation_status = 'ACTIVE'");
+    expect(migration).toContain("create or replace view public.retail_catalog");
   });
 });
