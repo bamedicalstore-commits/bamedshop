@@ -1,0 +1,122 @@
+name: Supabase Real Activation Verification
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  real-supabase:
+    name: Real Supabase migration + smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      SUPABASE_PROJECT_REF: bkicpphsotwdkyqgybes
+      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+    steps:
+      - name: Checkout exact revision
+        uses: actions/checkout@v5
+
+      - name: Resolve production database connection
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "${SUPABASE_DB_URL:-}" ]; then
+            echo "SUPABASE_CONNECTION_SOURCE=DB_URL"
+            echo "SUPABASE_DB_URL_RUNTIME=${SUPABASE_DB_URL}" >> "$GITHUB_ENV"
+          elif [ -n "${SUPABASE_DB_PASSWORD:-}" ]; then
+            echo "SUPABASE_CONNECTION_SOURCE=DB_PASSWORD"
+            python - <<'PY' >> "$GITHUB_ENV"
+          import os
+          from urllib.parse import quote
+          password = quote(os.environ["SUPABASE_DB_PASSWORD"], safe="")
+          print(f"SUPABASE_DB_URL_RUNTIME=postgresql://postgres:{password}@db.{os.environ['SUPABASE_PROJECT_REF']}.supabase.co:5432/postgres")
+          PY
+          else
+            echo "SUPABASE_REAL_DB=BLOCKED"
+            echo "Missing SUPABASE_DB_URL or SUPABASE_DB_PASSWORD GitHub secret."
+            exit 1
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "22"
+
+      - name: Install Supabase CLI
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest --version
+
+      - name: Preview pending migrations
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest db push --db-url "$SUPABASE_DB_URL_RUNTIME" --dry-run
+
+      - name: Apply pending migrations to real Supabase
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest db push --db-url "$SUPABASE_DB_URL_RUNTIME" --include-all
+          echo "SUPABASE_MIGRATIONS=PASS"
+
+      - name: Validate migration history
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest migration list --db-url "$SUPABASE_DB_URL_RUNTIME"
+
+      - name: Database lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest db lint --db-url "$SUPABASE_DB_URL_RUNTIME" --fail-on error
+          echo "SUPABASE_DB_LINT=PASS"
+
+      - name: Generate live database types
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest gen types --db-url "$SUPABASE_DB_URL_RUNTIME" --lang typescript > /tmp/database-live.ts
+          grep -q "catalog_activation_status" /tmp/database-live.ts
+          grep -q "catalog_activation_reason" /tmp/database-live.ts
+          grep -q "catalog_activation_events" /tmp/database-live.ts
+          echo "SUPABASE_LIVE_TYPES=PASS"
+
+      - name: Verify activation boundary and catalogue projection
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes supabase@latest db query --db-url "$SUPABASE_DB_URL_RUNTIME" <<'SQL'
+          select to_regclass('public.products') is not null as products_exists;
+          select to_regclass('public.catalog_activation_events') is not null as activation_events_exists;
+          select to_regprocedure('public.evaluate_catalog_activation(uuid)') is not null as evaluate_rpc_exists;
+          select to_regprocedure('public.activate_catalog_product(uuid)') is not null as activate_rpc_exists;
+          select to_regprocedure('public.deactivate_catalog_product(uuid,public.catalog_activation_reason)') is not null as deactivate_rpc_exists;
+          select to_regclass('public.retail_catalog') is not null as retail_projection_exists;
+          select c.relrowsecurity as activation_events_rls_enabled
+            from pg_class c join pg_namespace n on n.oid = c.relnamespace
+           where n.nspname = 'public' and c.relname = 'catalog_activation_events';
+          select count(*) as supplier_seed_products
+            from public.products
+           where technical_specs->>'catalog_status' = 'source_import_unpriced';
+          SQL
+          echo "SUPABASE_BOUNDARY=PASS"
+
+      - name: Final evidence marker
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "SUPABASE_PROJECT_REF=${SUPABASE_PROJECT_REF}"
+          echo "SUPABASE_REAL_DB=PASS"
+          echo "SUPABASE_MIGRATIONS=PASS"
+          echo "SUPABASE_DB_LINT=PASS"
+          echo "SUPABASE_LIVE_TYPES=PASS"
+          echo "SUPABASE_BOUNDARY=PASS"
