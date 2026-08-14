@@ -100,12 +100,18 @@ function AuthPage() {
           </div>
 
           {error ? (
-            <div role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+            <div
+              role="alert"
+              className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+            >
               {error}
             </div>
           ) : null}
           {message ? (
-            <div role="status" className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+            <div
+              role="status"
+              className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary"
+            >
               {message}
             </div>
           ) : null}
