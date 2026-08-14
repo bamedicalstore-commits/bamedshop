@@ -1,0 +1,82 @@
+name: Production Admin E2E
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  deployments: read
+
+jobs:
+  admin-production-e2e:
+    name: Real Admin Auth → Repository Read
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      E2E_ADMIN_EMAIL: bamedicalstore@gmail.com
+      E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate E2E credential boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${E2E_ADMIN_PASSWORD:-}" ]; then
+            echo "E2E_ADMIN_PASSWORD=BLOCKED"
+            echo "Missing GitHub secret E2E_ADMIN_PASSWORD."
+            exit 1
+          fi
+          echo "E2E_ADMIN_PASSWORD=AVAILABLE"
+
+      - name: Resolve production deployment for this commit
+        id: deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          target=""
+          for attempt in $(seq 1 20); do
+            deployment_id=$(gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=Production&per_page=20" \
+              --jq ".[] | select(.sha == \"${GITHUB_SHA}\") | .id" | head -n 1 || true)
+            if [ -n "$deployment_id" ]; then
+              target=$(gh api "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}/statuses" \
+                --jq 'map(select(.state == "success"))[0].target_url // empty' || true)
+            fi
+            if [ -n "$target" ]; then
+              break
+            fi
+            echo "Waiting for successful Vercel production deployment ($attempt/20)..."
+            sleep 6
+          done
+          if [ -z "$target" ]; then
+            echo "No successful Production deployment found for ${GITHUB_SHA}."
+            exit 1
+          fi
+          echo "Production deployment: $target"
+          echo "base_url=$target" >> "$GITHUB_OUTPUT"
+
+      - name: Install Playwright test runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save --ignore-scripts @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Run real production Admin E2E
+        env:
+          E2E_BASE_URL: ${{ steps.deployment.outputs.base_url }}
+        run: node scripts/admin-production-e2e.mjs
+
+      - name: Upload E2E failure evidence
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-production-e2e-evidence
+          path: admin-production-e2e-failure.png
+          if-no-files-found: ignore
