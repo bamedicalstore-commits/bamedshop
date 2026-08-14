@@ -1,9 +1,11 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, HeartPulse, Bell, Search, ShieldCheck } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
+import { LayoutDashboard, Building2, HeartPulse, Bell, Search, ShieldCheck, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -23,8 +25,61 @@ const NAV: ReadonlyArray<{
   { to: "/admin/b2b", label: "Comptes B2B", icon: Building2 },
 ];
 
+type AccessState = "loading" | "allowed" | "denied";
+
 function AdminLayout() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const navigate = useNavigate();
+  const [access, setAccess] = useState<AccessState>("loading");
+
+  useEffect(() => {
+    let active = true;
+
+    const resolveAccess = async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+
+      if (!user) {
+        if (active) setAccess("denied");
+        return;
+      }
+
+      const { data: roleRows, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+
+      const isAdmin = !error && roleRows?.some((row) => row.role === "admin" || row.role === "super_admin");
+      if (active) setAccess(isAdmin ? "allowed" : "denied");
+    };
+
+    void resolveAccess();
+    const { data: authSubscription } = supabase.auth.onAuthStateChange(() => {
+      void resolveAccess();
+    });
+
+    return () => {
+      active = false;
+      authSubscription.subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (access === "denied") {
+      void navigate({ to: "/auth", replace: true });
+    }
+  }, [access, navigate]);
+
+  if (access !== "allowed") {
+    return (
+      <div className="grid min-h-dvh place-items-center bg-background p-6">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="size-4 animate-spin" /> Vérification des droits administrateur…
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-dvh bg-background">
       <aside className="hidden w-64 shrink-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:block">
