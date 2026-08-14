@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  useNavigate,
-  useRouterState,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Building2,
@@ -23,10 +17,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [
-      { title: "Administration — BA Medical Store" },
-      { name: "robots", content: "noindex" },
-    ],
+    meta: [{ title: "Administration — BA Medical Store" }, { name: "robots", content: "noindex" }],
   }),
   component: AdminLayout,
 });
@@ -72,8 +63,7 @@ function AdminLayout() {
         .eq("user_id", user.id);
 
       const isAdmin =
-        !error &&
-        roleRows?.some((row) => row.role === "admin" || row.role === "super_admin");
+        !error && roleRows?.some((row) => row.role === "admin" || row.role === "super_admin");
       if (active) setAccess(isAdmin ? "allowed" : "denied");
     };
 
