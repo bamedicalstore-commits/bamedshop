@@ -15,7 +15,10 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Connexion & inscription — BA Medical Store" },
-      { name: "description", content: "Connectez-vous ou créez votre compte BA Medical Store." },
+      {
+        name: "description",
+        content: "Connectez-vous ou créez votre compte BA Medical Store.",
+      },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -51,7 +54,9 @@ function AuthPage() {
       setMessage("Connexion réussie. Redirection vers votre espace…");
       window.location.assign("/admin");
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Connexion impossible.");
+      setError(
+        authError instanceof Error ? authError.message : "Connexion impossible.",
+      );
     } finally {
       setBusy(false);
     }
@@ -79,7 +84,9 @@ function AuthPage() {
           : "Compte créé. Vérifiez votre e-mail pour confirmer votre compte.",
       );
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Inscription impossible.");
+      setError(
+        authError instanceof Error ? authError.message : "Inscription impossible.",
+      );
     } finally {
       setBusy(false);
     }
@@ -220,7 +227,13 @@ function AuthPage() {
                 <label className="flex items-start gap-2 text-xs text-muted-foreground">
                   <Checkbox id="cgv" className="mt-0.5" required />
                   <span>
-                    J'accepte les <a className="text-primary hover:underline" href="#">conditions générales</a> et la <a className="text-primary hover:underline" href="#">politique de confidentialité</a>.
+                    J'accepte les <a className="text-primary hover:underline" href="#">
+                      conditions générales
+                    </a>{" "}
+                    et la <a className="text-primary hover:underline" href="#">
+                      politique de confidentialité
+                    </a>
+                    .
                   </span>
                 </label>
                 <Button type="submit" size="lg" width="full" disabled={busy}>
