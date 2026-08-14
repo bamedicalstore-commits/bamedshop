@@ -37,7 +37,12 @@ const NAV: ReadonlyArray<{
   icon: typeof LayoutDashboard;
   exact?: boolean;
 }> = [
-  { to: "/admin", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
+  {
+    to: "/admin",
+    label: "Vue d'ensemble",
+    icon: LayoutDashboard,
+    exact: true,
+  },
   { to: "/admin/catalog", label: "Activation catalogue", icon: ShieldCheck },
   { to: "/admin/b2b", label: "Comptes B2B", icon: Building2 },
 ];
