@@ -24,7 +24,11 @@ try {
   console.log(`E2E_BASE_URL=${baseUrl}`);
   console.log("VERCEL_PROTECTION_BYPASS=AVAILABLE");
 
-  await page.goto(`${baseUrl}/auth`, { waitUntil: "domcontentloaded" });
+  const bootstrapUrl = new URL(`${baseUrl}/auth`);
+  bootstrapUrl.searchParams.set("x-vercel-protection-bypass", vercelBypassSecret);
+  bootstrapUrl.searchParams.set("x-vercel-set-bypass-cookie", "true");
+
+  await page.goto(bootstrapUrl.toString(), { waitUntil: "domcontentloaded" });
   await page.locator("#login-email").fill(email);
   await page.locator("#login-password").fill(password);
   await page.getByRole("button", { name: "Se connecter" }).click();
