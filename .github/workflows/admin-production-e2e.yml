@@ -17,10 +17,11 @@ jobs:
     env:
       E2E_ADMIN_EMAIL: bamedicalstore@gmail.com
       E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
+      VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Validate E2E credential boundary
         shell: bash
@@ -31,7 +32,13 @@ jobs:
             echo "Missing GitHub secret E2E_ADMIN_PASSWORD."
             exit 1
           fi
+          if [ -z "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]; then
+            echo "VERCEL_AUTOMATION_BYPASS_SECRET=BLOCKED"
+            echo "Missing GitHub secret VERCEL_AUTOMATION_BYPASS_SECRET."
+            exit 1
+          fi
           echo "E2E_ADMIN_PASSWORD=AVAILABLE"
+          echo "VERCEL_AUTOMATION_BYPASS_SECRET=AVAILABLE"
 
       - name: Resolve production deployment for this commit
         id: deployment
@@ -71,7 +78,7 @@ jobs:
       - name: Run real production Admin E2E
         env:
           E2E_BASE_URL: ${{ steps.deployment.outputs.base_url }}
-        run: node scripts/admin-production-e2e.mjs
+        run: node scripts/admin-production-e2e-protected.mjs
 
       - name: Upload E2E failure evidence
         if: failure()
