@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Building2, HeartPulse, Bell, Search, ShieldCheck, Loader2 } from "lucide-react";
+import {
+  createFileRoute,
+  Link,
+  Outlet,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router";
+import {
+  LayoutDashboard,
+  Building2,
+  HeartPulse,
+  Bell,
+  Search,
+  ShieldCheck,
+  Loader2,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +23,10 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [{ title: "Administration — BA Medical Store" }, { name: "robots", content: "noindex" }],
+    meta: [
+      { title: "Administration — BA Medical Store" },
+      { name: "robots", content: "noindex" },
+    ],
   }),
   component: AdminLayout,
 });
@@ -49,7 +66,9 @@ function AdminLayout() {
         .select("role")
         .eq("user_id", user.id);
 
-      const isAdmin = !error && roleRows?.some((row) => row.role === "admin" || row.role === "super_admin");
+      const isAdmin =
+        !error &&
+        roleRows?.some((row) => row.role === "admin" || row.role === "super_admin");
       if (active) setAccess(isAdmin ? "allowed" : "denied");
     };
 
