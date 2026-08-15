@@ -88,7 +88,9 @@ await page.route(`https://${supabaseHost}/**`, async (route) => {
   try {
     await route.fulfill(await proxySupabaseRequest(request));
   } catch (error) {
-    console.error(`E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`);
+    console.error(
+      `E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`,
+    );
     await route.abort("failed");
   }
 });
@@ -106,7 +108,9 @@ await context.route("**/*", async (route) => {
 
 page.on("requestfailed", (request) => {
   if (request.url().includes("supabase")) {
-    console.error(`E2E_REQUEST_FAILED=${request.method()} ${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`);
+    console.error(
+      `E2E_REQUEST_FAILED=${request.method()} ${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`,
+    );
   }
 });
 
@@ -133,26 +137,43 @@ try {
   await page.getByRole("button", { name: "Se connecter", exact: true }).click({ force: true });
 
   await page.waitForFunction(
-    () => window.location.pathname === "/admin" || window.location.pathname.startsWith("/admin/") || Boolean(document.querySelector('[role="alert"]')),
+    () =>
+      window.location.pathname === "/admin" ||
+      window.location.pathname.startsWith("/admin/") ||
+      Boolean(document.querySelector('[role="alert"]')),
     undefined,
     { timeout: 20000 },
   );
 
-  const alert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const alert = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (alert) throw new Error(`Supabase login rejected: ${alert.trim()}`);
 
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
   const keys = await page.evaluate(() => Object.keys(localStorage));
-  console.log(`E2E_SUPABASE_STORAGE_KEYS=${keys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`);
+  console.log(
+    `E2E_SUPABASE_STORAGE_KEYS=${keys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
+  );
 
-  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), { timeout: 15000 });
+  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
+    timeout: 15000,
+  });
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
   console.log("AUTH_ADMIN=PASS");
 
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
-  await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByRole("heading", { name: "Activation catalogue" })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("Supabase authority", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("File d’activation retail", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
   console.log("ADMIN_REPOSITORY_READ=PASS");
@@ -160,10 +181,16 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const alert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const alert = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (alert) console.error(`E2E_AUTH_ERROR=${alert.trim()}`);
   console.error(error);
-  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
+  await page
+    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
+    .catch(() => {});
   process.exitCode = 1;
 } finally {
   await browser.close();

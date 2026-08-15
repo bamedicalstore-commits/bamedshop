@@ -124,7 +124,9 @@ await context.route("**/*", async (route) => {
       const proxied = await proxySupabaseRequest(route.request());
       await route.fulfill(proxied);
     } catch (error) {
-      console.error(`E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`);
+      console.error(
+        `E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`,
+      );
       await route.abort("failed");
     }
     return;
@@ -177,10 +179,12 @@ try {
 
   const bypassCookies = await context.cookies(baseUrl);
   console.log(
-    `E2E_VERCEL_BYPASS_COOKIES=${bypassCookies
-      .filter(({ name }) => name.toLowerCase().includes("vercel"))
-      .map(({ name }) => name)
-      .join(",") || "NONE"}`,
+    `E2E_VERCEL_BYPASS_COOKIES=${
+      bypassCookies
+        .filter(({ name }) => name.toLowerCase().includes("vercel"))
+        .map(({ name }) => name)
+        .join(",") || "NONE"
+    }`,
   );
 
   await page.locator("#login-email").waitFor({ state: "visible", timeout: 15000 });
@@ -208,10 +212,7 @@ try {
 
   if (inputState.passwordLength === 0) {
     await passwordInput.evaluate((element, value) => {
-      const setter = Object.getOwnPropertyDescriptor(
-        HTMLInputElement.prototype,
-        "value",
-      )?.set;
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
       setter?.call(element, value);
       element.dispatchEvent(new Event("input", { bubbles: true }));
       element.dispatchEvent(new Event("change", { bubbles: true }));
@@ -249,10 +250,18 @@ try {
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
   console.log(`E2E_POST_LOGIN_TITLE=${await page.title().catch(() => "<unavailable>")}`);
 
-  const authAlert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const authAlert = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (authAlert) throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
 
-  const statusMessage = await page.locator('[role="status"]').first().textContent().catch(() => null);
+  const statusMessage = await page
+    .locator('[role="status"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (statusMessage) console.log(`E2E_AUTH_STATUS=${statusMessage.trim()}`);
 
   const rootError = await page
@@ -281,8 +290,12 @@ try {
     state: "visible",
     timeout: 15000,
   });
-  await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("Supabase authority", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("File d’activation retail", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
 
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
@@ -291,13 +304,19 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const authError = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   const storageKeys = await page.evaluate(() => Object.keys(localStorage)).catch(() => []);
   console.error(
     `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
   );
-  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
+  await page
+    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
+    .catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
