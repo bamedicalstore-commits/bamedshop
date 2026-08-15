@@ -34,6 +34,17 @@ jobs:
           echo "VERCEL_AUTOMATION_BYPASS_SECRET=AVAILABLE"
           echo "E2E_SUPABASE_HOST=${E2E_SUPABASE_HOST}"
 
+      - name: Pin Supabase edge DNS fallback
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! getent ahostsv4 "${E2E_SUPABASE_HOST}" >/dev/null 2>&1; then
+            echo "Runner DNS cannot resolve ${E2E_SUPABASE_HOST}; applying last-known-good Supabase edge fallback."
+            echo "172.64.149.246 ${E2E_SUPABASE_HOST}" | sudo tee -a /etc/hosts >/dev/null
+          fi
+          echo "E2E_SUPABASE_RESOLUTION=$(getent ahostsv4 "${E2E_SUPABASE_HOST}" | head -n 2 | tr '\n' ';')"
+          getent ahostsv4 "${E2E_SUPABASE_HOST}"
+
       - name: Resolve production deployment for this commit
         id: deployment
         env:
