@@ -12,10 +12,21 @@ if (!baseUrl || !email || !password || !vercelBypassSecret) {
 }
 
 const browser = await chromium.launch({ headless: true });
-// Do not install the Vercel bypass header globally: it is sent to every
-// cross-origin request and breaks CORS preflights (notably Supabase and fonts).
 const context = await browser.newContext();
 const page = await context.newPage();
+const baseOrigin = new URL(baseUrl).origin;
+
+// Vercel's automation bypass must never leak to cross-origin requests.
+// In particular, Google Fonts and Supabase preflights reject this header.
+await context.route("**/*", async (route) => {
+  const requestUrl = route.request().url();
+  const headers = { ...route.request().headers() };
+  if (new URL(requestUrl).origin !== baseOrigin) {
+    delete headers["x-vercel-protection-bypass"];
+    delete headers["x-vercel-set-bypass-cookie"];
+  }
+  await route.continue({ headers });
+});
 
 page.on("pageerror", (error) => {
   console.error(`E2E_PAGE_ERROR=${error.message}`);
@@ -30,7 +41,9 @@ page.on("console", (message) => {
 page.on("requestfailed", (request) => {
   const url = request.url();
   if (url.includes("/auth/v1/") || url.includes("supabase")) {
-    console.error(`E2E_REQUEST_FAILED=${request.method()} ${url} :: ${request.failure()?.errorText ?? "unknown"}`);
+    console.error(
+      `E2E_REQUEST_FAILED=${request.method()} ${url} :: ${request.failure()?.errorText ?? "unknown"}`,
+    );
   }
 });
 
@@ -49,9 +62,8 @@ try {
   console.log(`E2E_BASE_URL=${baseUrl}`);
   console.log("VERCEL_PROTECTION_BYPASS=AVAILABLE");
 
-  // Bootstrap Vercel Deployment Protection through query parameters. Vercel
-  // uses this request to establish the bypass cookie for this deployment.
-  // After bootstrap, no Vercel-specific header is sent to application APIs.
+  // Bootstrap Deployment Protection once. The resulting Vercel cookie is then
+  // used for same-origin navigation; the bypass header is stripped elsewhere.
   const bootstrapUrl = new URL(`${baseUrl}/auth`);
   bootstrapUrl.searchParams.set("x-vercel-protection-bypass", vercelBypassSecret);
   bootstrapUrl.searchParams.set("x-vercel-set-bypass-cookie", "true");
@@ -67,21 +79,25 @@ try {
   );
 
   await page.locator("#login-email").fill(email);
-  const passwordInput = page.locator("#login-password");
-  await passwordInput.fill(password);
+  await page.locator("#login-password").fill(password);
 
-  const submitButton = page.getByRole("button", { name: "Se connecter" });
-  await submitButton.waitFor({ state: "visible", timeout: 15000 });
-  await passwordInput.press("Enter");
+  // Use the form's native requestSubmit instead of a pointer click/keyboard
+  // gesture. This avoids animation/layout interception while exercising the
+  // exact React onSubmit handler used by the production login form.
+  await page.locator('form').first().evaluate((form) => {
+    if (!(form instanceof HTMLFormElement)) throw new Error("Login form not found");
+    form.requestSubmit();
+  });
 
   await page.waitForFunction(
     () =>
       window.location.pathname === "/admin" ||
       window.location.pathname.startsWith("/admin/") ||
       Boolean(document.querySelector('[role="alert"]')) ||
+      Boolean(document.querySelector('[role="status"]')) ||
       document.body.innerText.includes("Le chargement a échoué"),
     undefined,
-    { timeout: 30000 },
+    { timeout: 20000 },
   );
 
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
@@ -95,6 +111,13 @@ try {
   if (authAlert) {
     throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
   }
+
+  const statusMessage = await page
+    .locator('[role="status"]')
+    .first()
+    .textContent()
+    .catch(() => null);
+  if (statusMessage) console.log(`E2E_AUTH_STATUS=${statusMessage.trim()}`);
 
   const rootError = await page
     .getByText("Le chargement a échoué", { exact: true })
@@ -144,9 +167,13 @@ try {
     .textContent()
     .catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
-  await page
-    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
-    .catch(() => {});
+  const storageKeys = await page
+    .evaluate(() => Object.keys(localStorage))
+    .catch(() => []);
+  console.error(
+    `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
+  );
+  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
