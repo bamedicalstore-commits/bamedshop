@@ -1,5 +1,6 @@
 import { chromium } from "@playwright/test";
 import { execFileSync } from "node:child_process";
+import https from "node:https";
 
 const baseUrl = process.env.E2E_BASE_URL?.replace(/\/$/, "");
 const email = process.env.E2E_ADMIN_EMAIL;
@@ -13,7 +14,40 @@ if (!baseUrl || !email || !password || !vercelBypassSecret || !supabaseHost) {
   );
 }
 
-function resolveSupabaseHost() {
+function unique(values) {
+  return [...new Set(values.filter(Boolean))];
+}
+
+function httpsRequest({ hostname, servername, path, method = "GET", headers = {}, body }) {
+  return new Promise((resolve, reject) => {
+    const request = https.request(
+      {
+        hostname,
+        servername,
+        path,
+        method,
+        headers,
+        rejectUnauthorized: true,
+      },
+      (response) => {
+        const chunks = [];
+        response.on("data", (chunk) => chunks.push(chunk));
+        response.on("end", () => {
+          resolve({
+            status: response.statusCode ?? 502,
+            headers: response.headers,
+            body: Buffer.concat(chunks),
+          });
+        });
+      },
+    );
+    request.once("error", reject);
+    if (body?.length) request.write(body);
+    request.end();
+  });
+}
+
+async function resolveSupabaseHost() {
   try {
     const addresses = execFileSync("getent", ["ahostsv4", supabaseHost], {
       encoding: "utf8",
@@ -23,52 +57,151 @@ function resolveSupabaseHost() {
       .split("\n")
       .map((line) => line.trim().split(/\s+/)[0])
       .filter(Boolean);
-    if (addresses.length > 0) return addresses[0];
+    if (addresses.length > 0) return unique(addresses);
   } catch {
     // Fall through to DNS-over-HTTPS when the runner resolver cannot resolve Supabase.
   }
 
-  const queryUrl = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`;
-  const raw = execFileSync(
-    "curl",
-    [
-      "--silent",
-      "--show-error",
-      "--fail",
-      "--max-time",
-      "10",
-      "--resolve",
-      "cloudflare-dns.com:443:1.1.1.1",
-      queryUrl,
-      "-H",
-      "accept: application/dns-json",
-    ],
-    { encoding: "utf8" },
+  const queryUrl = `/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`;
+  const response = await httpsRequest({
+    hostname: "1.1.1.1",
+    servername: "cloudflare-dns.com",
+    path: queryUrl,
+    headers: {
+      accept: "application/dns-json",
+      host: "cloudflare-dns.com",
+    },
+  });
+  if (response.status < 200 || response.status >= 300) {
+    throw new Error(`DNS-over-HTTPS returned HTTP ${response.status}.`);
+  }
+  const answers = JSON.parse(response.body.toString("utf8")).Answer ?? [];
+  const addresses = unique(
+    answers.filter((answer) => answer.type === 1).map((answer) => answer.data),
   );
-  const answers = JSON.parse(raw).Answer ?? [];
-  const address = answers.find((answer) => answer.type === 1)?.data;
-  if (!address) throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS.`);
-  return address;
+  if (addresses.length === 0) {
+    throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS.`);
+  }
+  return addresses;
 }
 
-const supabaseIp = resolveSupabaseHost();
-console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIp}`);
+const supabaseIps = await resolveSupabaseHost();
+console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIps.join(",")}`);
 
-const browser = await chromium.launch({
-  headless: true,
-  args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
-});
+const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ serviceWorkers: "block" });
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
 const supabaseOrigin = `https://${supabaseHost}`;
+
+async function proxySupabaseRequest(route) {
+  const request = route.request();
+  const requestUrl = new URL(request.url());
+  const method = request.method();
+  const path = `${requestUrl.pathname}${requestUrl.search}`;
+  console.log(`E2E_SUPABASE_PROXY_REQUEST=${method} ${path}`);
+
+  if (method === "OPTIONS") {
+    const requestedHeaders = request.headerValue("access-control-request-headers");
+    await route.fulfill({
+      status: 204,
+      headers: {
+        "access-control-allow-origin": baseOrigin,
+        "access-control-allow-credentials": "true",
+        "access-control-allow-headers": requestedHeaders || "*",
+        "access-control-allow-methods": "GET,POST,PUT,PATCH,DELETE,OPTIONS",
+        vary: "Origin",
+      },
+      body: "",
+    });
+    console.log(`E2E_SUPABASE_PROXY_RESPONSE=204 ${path}`);
+    return;
+  }
+
+  const originalHeaders = { ...request.headers() };
+  delete originalHeaders.host;
+  delete originalHeaders["content-length"];
+  delete originalHeaders["transfer-encoding"];
+  delete originalHeaders.connection;
+  delete originalHeaders["accept-encoding"];
+  originalHeaders.origin = baseOrigin;
+  originalHeaders.host = supabaseHost;
+  originalHeaders["accept-encoding"] = "identity";
+
+  const body = request.postDataBuffer() ?? undefined;
+  let response;
+  let lastError;
+
+  for (const ip of supabaseIps) {
+    try {
+      response = await httpsRequest({
+        hostname: ip,
+        servername: supabaseHost,
+        path,
+        method,
+        headers: originalHeaders,
+        body,
+      });
+      break;
+    } catch (error) {
+      lastError = error;
+    }
+  }
+
+  if (!response) {
+    throw new Error(
+      `Supabase proxy connection failed for ${method} ${path}: ${lastError?.message ?? "unknown error"}`,
+    );
+  }
+
+  const responseHeaders = {};
+  for (const [name, value] of Object.entries(response.headers)) {
+    if (
+      [
+        "connection",
+        "keep-alive",
+        "proxy-authenticate",
+        "proxy-authorization",
+        "te",
+        "trailer",
+        "transfer-encoding",
+        "upgrade",
+        "content-length",
+        "content-encoding",
+      ].includes(name.toLowerCase())
+    ) {
+      continue;
+    }
+    if (value !== undefined) {
+      responseHeaders[name] = Array.isArray(value) ? value.join(", ") : value;
+    }
+  }
+  responseHeaders["access-control-allow-origin"] = baseOrigin;
+  responseHeaders["access-control-allow-credentials"] = "true";
+  responseHeaders.vary = responseHeaders.vary ? `${responseHeaders.vary}, Origin` : "Origin";
+
+  await route.fulfill({
+    status: response.status,
+    headers: responseHeaders,
+    body: response.body,
+  });
+  console.log(`E2E_SUPABASE_PROXY_RESPONSE=${response.status} ${path}`);
+}
 
 await context.route("**/*", async (route) => {
   const requestUrl = route.request().url();
   const requestOrigin = new URL(requestUrl).origin;
 
   if (requestOrigin === supabaseOrigin) {
-    console.log(`E2E_SUPABASE_ROUTE=${route.request().method()} ${requestUrl}`);
+    try {
+      await proxySupabaseRequest(route);
+    } catch (error) {
+      console.error(
+        `E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`,
+      );
+      await route.abort("failed");
+    }
+    return;
   }
 
   const headers = { ...route.request().headers() };
@@ -104,6 +237,7 @@ page.on("response", async (response) => {
 try {
   console.log(`E2E_BASE_URL=${baseUrl}`);
   console.log("VERCEL_PROTECTION_BYPASS=AVAILABLE");
+  console.log("E2E_SUPABASE_PROXY=ENABLED");
 
   const bootstrapUrl = new URL(`${baseUrl}/auth`);
   bootstrapUrl.searchParams.set("x-vercel-protection-bypass", vercelBypassSecret);
@@ -122,7 +256,9 @@ try {
 
   await page.locator("#login-email").waitFor({ state: "visible", timeout: 15000 });
   await page.waitForFunction(
-    () => document.readyState === "complete" && Boolean(document.querySelector('form button[type="submit"]')),
+    () =>
+      document.readyState === "complete" &&
+      Boolean(document.querySelector('form button[type="submit"]')),
     undefined,
     { timeout: 15000 },
   );
@@ -194,8 +330,14 @@ try {
   await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({ state: "visible", timeout: 15000 });
   await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
   await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByText("Chargement Supabase…", { exact: true }).waitFor({ state: "hidden", timeout: 15000 });
+  const catalogError = await page.getByText("Action refusée", { exact: true }).count();
+  if (catalogError > 0) {
+    throw new Error("Catalog repository read failed: Action refusée is visible.");
+  }
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
+  console.log("ADMIN_CATALOG_LOAD=PASS");
   console.log("ADMIN_REPOSITORY_READ=PASS");
   console.log("PRODUCTION_ADMIN_AUTH_SMOKE=PASS");
 } catch (error) {
