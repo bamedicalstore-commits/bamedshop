@@ -20,12 +20,16 @@ try {
   await page.locator("#login-password").fill(password);
   await page.getByRole("button", { name: "Se connecter" }).click();
 
-  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
-    timeout: 30000,
-  });
+  await page.waitForURL(
+    (url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"),
+    { timeout: 30000 },
+  );
 
   await page.waitForLoadState("networkidle");
-  await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByText("BA Medical", { exact: true }).waitFor({
+    state: "visible",
+    timeout: 15000,
+  });
   console.log("AUTH_ADMIN=PASS");
 
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
@@ -47,7 +51,9 @@ try {
   console.log("ADMIN_REPOSITORY_READ=PASS");
   console.log("PRODUCTION_ADMIN_AUTH_SMOKE=PASS");
 } catch (error) {
-  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
+  await page
+    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
+    .catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
