@@ -12,12 +12,9 @@ if (!baseUrl || !email || !password || !vercelBypassSecret) {
 }
 
 const browser = await chromium.launch({ headless: true });
-const context = await browser.newContext({
-  extraHTTPHeaders: {
-    "x-vercel-protection-bypass": vercelBypassSecret,
-    "x-vercel-set-bypass-cookie": "samesitenone",
-  },
-});
+// Do not install the Vercel bypass header globally: it is sent to every
+// cross-origin request and breaks CORS preflights (notably Supabase and fonts).
+const context = await browser.newContext();
 const page = await context.newPage();
 
 page.on("pageerror", (error) => {
@@ -52,11 +49,23 @@ try {
   console.log(`E2E_BASE_URL=${baseUrl}`);
   console.log("VERCEL_PROTECTION_BYPASS=AVAILABLE");
 
+  // Bootstrap Vercel Deployment Protection through query parameters. Vercel
+  // uses this request to establish the bypass cookie for this deployment.
+  // After bootstrap, no Vercel-specific header is sent to application APIs.
   const bootstrapUrl = new URL(`${baseUrl}/auth`);
   bootstrapUrl.searchParams.set("x-vercel-protection-bypass", vercelBypassSecret);
   bootstrapUrl.searchParams.set("x-vercel-set-bypass-cookie", "true");
 
   await page.goto(bootstrapUrl.toString(), { waitUntil: "domcontentloaded" });
+
+  const bypassCookies = await context.cookies(baseUrl);
+  console.log(
+    `E2E_VERCEL_BYPASS_COOKIES=${bypassCookies
+      .filter(({ name }) => name.toLowerCase().includes("vercel"))
+      .map(({ name }) => name)
+      .join(",") || "NONE"}`,
+  );
+
   await page.locator("#login-email").fill(email);
   const passwordInput = page.locator("#login-password");
   await passwordInput.fill(password);
