@@ -26,10 +26,7 @@ try {
   );
 
   await page.waitForLoadState("networkidle");
-  await page.getByText("BA Medical", { exact: true }).waitFor({
-    state: "visible",
-    timeout: 15000,
-  });
+  await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
   console.log("AUTH_ADMIN=PASS");
 
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
