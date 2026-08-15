@@ -16,8 +16,6 @@ const context = await browser.newContext();
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
 
-// Vercel's automation bypass must never leak to cross-origin requests.
-// In particular, Google Fonts and Supabase preflights reject this header.
 await context.route("**/*", async (route) => {
   const requestUrl = route.request().url();
   const headers = { ...route.request().headers() };
@@ -33,9 +31,7 @@ page.on("pageerror", (error) => {
 });
 
 page.on("console", (message) => {
-  if (message.type() === "error") {
-    console.error(`E2E_CONSOLE_ERROR=${message.text()}`);
-  }
+  if (message.type() === "error") console.error(`E2E_CONSOLE_ERROR=${message.text()}`);
 });
 
 page.on("requestfailed", (request) => {
@@ -62,12 +58,9 @@ try {
   console.log(`E2E_BASE_URL=${baseUrl}`);
   console.log("VERCEL_PROTECTION_BYPASS=AVAILABLE");
 
-  // Bootstrap Deployment Protection once. The resulting Vercel cookie is then
-  // used for same-origin navigation; the bypass header is stripped elsewhere.
   const bootstrapUrl = new URL(`${baseUrl}/auth`);
   bootstrapUrl.searchParams.set("x-vercel-protection-bypass", vercelBypassSecret);
   bootstrapUrl.searchParams.set("x-vercel-set-bypass-cookie", "true");
-
   await page.goto(bootstrapUrl.toString(), { waitUntil: "domcontentloaded" });
 
   const bypassCookies = await context.cookies(baseUrl);
@@ -78,16 +71,39 @@ try {
       .join(",") || "NONE"}`,
   );
 
-  await page.locator("#login-email").fill(email);
-  await page.locator("#login-password").fill(password);
+  // Wait for the client-side React tree to hydrate before interacting with the
+  // controlled inputs. Without this, Playwright can fill the server HTML and
+  // React hydration can replace those nodes immediately before submit.
+  await page.locator("#login-email").waitFor({ state: "visible", timeout: 15000 });
+  await page.waitForFunction(
+    () => document.readyState === "complete" && Boolean(document.querySelector('form button[type="submit"]')),
+    undefined,
+    { timeout: 15000 },
+  );
+  await page.waitForTimeout(750);
 
-  // Use the form's native requestSubmit instead of a pointer click/keyboard
-  // gesture. This avoids animation/layout interception while exercising the
-  // exact React onSubmit handler used by the production login form.
-  await page.locator('form').first().evaluate((form) => {
-    if (!(form instanceof HTMLFormElement)) throw new Error("Login form not found");
-    form.requestSubmit();
-  });
+  const emailInput = page.locator("#login-email");
+  const passwordInput = page.locator("#login-password");
+  const submitButton = page.getByRole("button", { name: "Se connecter", exact: true });
+
+  await emailInput.fill(email);
+  await passwordInput.fill(password);
+  await page.waitForFunction(
+    ({ expectedEmail }) => {
+      const emailElement = document.querySelector<HTMLInputElement>("#login-email");
+      const passwordElement = document.querySelector<HTMLInputElement>("#login-password");
+      return emailElement?.value === expectedEmail && Boolean(passwordElement?.value);
+    },
+    { expectedEmail: email },
+    { timeout: 5000 },
+  );
+
+  console.log("E2E_LOGIN_FORM_READY=YES");
+
+  // Force only the final pointer action. This preserves the real React submit
+  // handler while avoiding transient layout overlays that previously intercepted
+  // the click.
+  await submitButton.click({ force: true });
 
   await page.waitForFunction(
     () =>
@@ -103,20 +119,10 @@ try {
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
   console.log(`E2E_POST_LOGIN_TITLE=${await page.title().catch(() => "<unavailable>")}`);
 
-  const authAlert = await page
-    .locator('[role="alert"]')
-    .first()
-    .textContent()
-    .catch(() => null);
-  if (authAlert) {
-    throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
-  }
+  const authAlert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  if (authAlert) throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
 
-  const statusMessage = await page
-    .locator('[role="status"]')
-    .first()
-    .textContent()
-    .catch(() => null);
+  const statusMessage = await page.locator('[role="status"]').first().textContent().catch(() => null);
   if (statusMessage) console.log(`E2E_AUTH_STATUS=${statusMessage.trim()}`);
 
   const rootError = await page
@@ -145,14 +151,8 @@ try {
     state: "visible",
     timeout: 15000,
   });
-  await page.getByText("Supabase authority", { exact: false }).waitFor({
-    state: "visible",
-    timeout: 15000,
-  });
-  await page.getByText("File d’activation retail", { exact: false }).waitFor({
-    state: "visible",
-    timeout: 15000,
-  });
+  await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
 
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
@@ -161,15 +161,9 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authError = await page
-    .locator('[role="alert"]')
-    .first()
-    .textContent()
-    .catch(() => null);
+  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
-  const storageKeys = await page
-    .evaluate(() => Object.keys(localStorage))
-    .catch(() => []);
+  const storageKeys = await page.evaluate(() => Object.keys(localStorage)).catch(() => []);
   console.error(
     `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
   );
