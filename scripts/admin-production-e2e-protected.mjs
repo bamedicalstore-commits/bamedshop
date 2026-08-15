@@ -30,15 +30,17 @@ try {
 
   await page.goto(bootstrapUrl.toString(), { waitUntil: "domcontentloaded" });
   await page.locator("#login-email").fill(email);
-  await page.locator("#login-password").fill(password);
+  const passwordInput = page.locator("#login-password");
+  await passwordInput.fill(password);
 
   const submitButton = page.getByRole("button", { name: "Se connecter" });
   await submitButton.waitFor({ state: "visible", timeout: 15000 });
-  await submitButton.click({ force: true });
+  await passwordInput.press("Enter");
 
-  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
-    timeout: 30000,
-  });
+  await page.waitForURL(
+    (url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"),
+    { timeout: 30000 },
+  );
 
   await page.waitForLoadState("networkidle");
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
@@ -63,6 +65,10 @@ try {
   console.log("ADMIN_REPOSITORY_READ=PASS");
   console.log("PRODUCTION_ADMIN_AUTH_SMOKE=PASS");
 } catch (error) {
+  console.error(`E2E_CURRENT_URL=${page.url()}`);
+  console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
+  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
   console.error(error);
   process.exitCode = 1;
