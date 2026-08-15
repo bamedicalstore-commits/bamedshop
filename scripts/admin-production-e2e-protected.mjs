@@ -43,10 +43,7 @@ try {
   );
 
   await page.waitForLoadState("networkidle");
-  await page.getByText("BA Medical", { exact: true }).waitFor({
-    state: "visible",
-    timeout: 15000,
-  });
+  await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
   console.log("AUTH_ADMIN=PASS");
 
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
@@ -69,14 +66,8 @@ try {
   console.log("PRODUCTION_ADMIN_AUTH_SMOKE=PASS");
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
-  console.error(
-    `E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`,
-  );
-  const authError = await page
-    .locator('[role="alert"]')
-    .first()
-    .textContent()
-    .catch(() => null);
+  console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
+  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   await page
     .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
