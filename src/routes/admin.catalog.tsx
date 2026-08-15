@@ -20,6 +20,7 @@ import {
 } from "@/lib/catalog-activation-supabase";
 
 export const Route = createFileRoute("/admin/catalog")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Activation catalogue — BA Medical Store" },
