@@ -65,7 +65,7 @@ jobs:
       - name: Run real production Admin E2E
         env:
           E2E_BASE_URL: ${{ steps.deployment.outputs.base_url }}
-        run: node scripts/admin-production-e2e-proxy.mjs
+        run: node scripts/admin-production-e2e-protected.mjs
 
       - name: Upload E2E failure evidence
         if: failure()
