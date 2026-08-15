@@ -1,0 +1,38 @@
+name: One-shot E2E Prettier Fix
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.2.20"
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Format E2E scripts
+        run: bunx prettier --write scripts/admin-production-e2e-protected.mjs scripts/admin-production-e2e-proxy.mjs
+      - name: Commit formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet; then
+            echo "FORMAT_STATUS=ALREADY_CLEAN"
+            exit 0
+          fi
+          git add scripts/admin-production-e2e-protected.mjs scripts/admin-production-e2e-proxy.mjs
+          git commit -m "chore(ci): format E2E scripts"
+          git push origin main
