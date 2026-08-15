@@ -71,12 +71,11 @@ try {
       .join(",") || "NONE"}`,
   );
 
-  // Wait for the client-side React tree to hydrate before interacting with the
-  // controlled inputs. Without this, Playwright can fill the server HTML and
-  // React hydration can replace those nodes immediately before submit.
   await page.locator("#login-email").waitFor({ state: "visible", timeout: 15000 });
   await page.waitForFunction(
-    () => document.readyState === "complete" && Boolean(document.querySelector('form button[type="submit"]')),
+    () =>
+      document.readyState === "complete" &&
+      Boolean(document.querySelector('form button[type="submit"]')),
     undefined,
     { timeout: 15000 },
   );
@@ -87,22 +86,46 @@ try {
   const submitButton = page.getByRole("button", { name: "Se connecter", exact: true });
 
   await emailInput.fill(email);
-  await passwordInput.fill(password);
-  await page.waitForFunction(
-    ({ expectedEmail }) => {
-      const emailElement = document.querySelector<HTMLInputElement>("#login-email");
-      const passwordElement = document.querySelector<HTMLInputElement>("#login-password");
-      return emailElement?.value === expectedEmail && Boolean(passwordElement?.value);
-    },
-    { expectedEmail: email },
-    { timeout: 5000 },
-  );
+  await passwordInput.click();
+  await passwordInput.pressSequentially(password);
+
+  let inputState = await page.evaluate(() => ({
+    email: document.querySelector("#login-email")?.value ?? "",
+    passwordLength: document.querySelector("#login-password")?.value.length ?? 0,
+  }));
+
+  // The production form is React-controlled. Chromium can occasionally clear a
+  // password input during hydration/autofill reconciliation. If that happens,
+  // set the native value and dispatch the same input event React listens to.
+  if (inputState.passwordLength === 0) {
+    await passwordInput.evaluate((element, value) => {
+      const input = element as HTMLInputElement;
+      const setter = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        "value",
+      )?.set;
+      setter?.call(input, value);
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }, password);
+  }
+
+  inputState = await page.evaluate(() => ({
+    email: document.querySelector("#login-email")?.value ?? "",
+    passwordLength: document.querySelector("#login-password")?.value.length ?? 0,
+  }));
+
+  console.log(`E2E_LOGIN_EMAIL_FILLED=${inputState.email === email ? "YES" : "NO"}`);
+  console.log(`E2E_LOGIN_PASSWORD_LENGTH=${inputState.passwordLength}`);
+
+  if (inputState.email !== email || inputState.passwordLength === 0) {
+    throw new Error(
+      `Login form state did not stabilize before submit (email=${inputState.email === email}, passwordLength=${inputState.passwordLength}).`,
+    );
+  }
 
   console.log("E2E_LOGIN_FORM_READY=YES");
 
-  // Force only the final pointer action. This preserves the real React submit
-  // handler while avoiding transient layout overlays that previously intercepted
-  // the click.
   await submitButton.click({ force: true });
 
   await page.waitForFunction(
