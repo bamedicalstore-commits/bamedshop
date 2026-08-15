@@ -18,7 +18,7 @@ jobs:
       E2E_ADMIN_EMAIL: bamedicalstore@gmail.com
       E2E_ADMIN_PASSWORD: ${{ secrets.E2E_ADMIN_PASSWORD }}
       VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
-      E2E_SUPABASE_HOST: vetltexelrqcgbwgggvj.supabase.co
+      E2E_SUPABASE_HOST: vetltexelrqcgbwgggv.supabase.co
 
     steps:
       - name: Checkout
@@ -28,16 +28,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "${E2E_ADMIN_PASSWORD:-}" ]; then
-            echo "E2E_ADMIN_PASSWORD=BLOCKED"
-            echo "Missing GitHub secret E2E_ADMIN_PASSWORD."
-            exit 1
-          fi
-          if [ -z "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" ]; then
-            echo "VERCEL_AUTOMATION_BYPASS_SECRET=BLOCKED"
-            echo "Missing GitHub secret VERCEL_AUTOMATION_BYPASS_SECRET."
-            exit 1
-          fi
+          test -n "${E2E_ADMIN_PASSWORD:-}" || { echo "Missing E2E_ADMIN_PASSWORD"; exit 1; }
+          test -n "${VERCEL_AUTOMATION_BYPASS_SECRET:-}" || { echo "Missing VERCEL_AUTOMATION_BYPASS_SECRET"; exit 1; }
           echo "E2E_ADMIN_PASSWORD=AVAILABLE"
           echo "VERCEL_AUTOMATION_BYPASS_SECRET=AVAILABLE"
           echo "E2E_SUPABASE_HOST=${E2E_SUPABASE_HOST}"
@@ -51,22 +43,15 @@ jobs:
           set -euo pipefail
           target=""
           for attempt in $(seq 1 20); do
-            deployment_id=$(gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=Production&per_page=20" \
-              --jq ".[] | select(.sha == \"${GITHUB_SHA}\") | .id" | head -n 1 || true)
+            deployment_id=$(gh api "repos/${GITHUB_REPOSITORY}/deployments?environment=Production&per_page=20" --jq ".[] | select(.sha == \"${GITHUB_SHA}\") | .id" | head -n 1 || true)
             if [ -n "$deployment_id" ]; then
-              target=$(gh api "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}/statuses" \
-                --jq 'map(select(.state == "success"))[0].target_url // empty' || true)
+              target=$(gh api "repos/${GITHUB_REPOSITORY}/deployments/${deployment_id}/statuses" --jq 'map(select(.state == "success"))[0].target_url // empty' || true)
             fi
-            if [ -n "$target" ]; then
-              break
-            fi
+            [ -n "$target" ] && break
             echo "Waiting for successful Vercel production deployment ($attempt/20)..."
             sleep 6
           done
-          if [ -z "$target" ]; then
-            echo "No successful Production deployment found for ${GITHUB_SHA}."
-            exit 1
-          fi
+          [ -n "$target" ] || { echo "No successful Production deployment found for ${GITHUB_SHA}."; exit 1; }
           echo "Production deployment: $target"
           echo "base_url=$target" >> "$GITHUB_OUTPUT"
 
@@ -80,7 +65,7 @@ jobs:
       - name: Run real production Admin E2E
         env:
           E2E_BASE_URL: ${{ steps.deployment.outputs.base_url }}
-        run: node scripts/admin-production-e2e-protected.mjs
+        run: node scripts/admin-production-e2e-proxy.mjs
 
       - name: Upload E2E failure evidence
         if: failure()
