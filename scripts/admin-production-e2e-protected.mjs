@@ -18,7 +18,15 @@ function unique(values) {
   return [...new Set(values.filter(Boolean))];
 }
 
-function httpsRequest({ hostname, servername, path, method = "GET", headers = {}, body }) {
+function httpsRequest({
+  hostname,
+  servername,
+  path,
+  method = "GET",
+  headers = {},
+  body,
+  timeout = 10000,
+}) {
   return new Promise((resolve, reject) => {
     const request = https.request(
       {
@@ -41,6 +49,7 @@ function httpsRequest({ hostname, servername, path, method = "GET", headers = {}
         });
       },
     );
+    request.setTimeout(timeout, () => request.destroy(new Error("HTTPS request timeout")));
     request.once("error", reject);
     if (body?.length) request.write(body);
     request.end();
@@ -48,6 +57,36 @@ function httpsRequest({ hostname, servername, path, method = "GET", headers = {}
 }
 
 async function resolveSupabaseHost() {
+  const resolvers = [
+    { ip: "1.1.1.1", servername: "cloudflare-dns.com" },
+    { ip: "8.8.8.8", servername: "dns.google" },
+  ];
+
+  for (const resolver of resolvers) {
+    try {
+      const response = await httpsRequest({
+        hostname: resolver.ip,
+        servername: resolver.servername,
+        path: `/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`,
+        headers: {
+          accept: "application/dns-json",
+          host: resolver.servername,
+        },
+      });
+      if (response.status < 200 || response.status >= 300) continue;
+
+      const answers = JSON.parse(response.body.toString("utf8")).Answer ?? [];
+      const addresses = unique(
+        answers.filter((answer) => answer.type === 1).map((answer) => answer.data),
+      );
+      if (addresses.length > 0) {
+        return { addresses, source: `DOH_${resolver.servername}` };
+      }
+    } catch {
+      // Try the next public DNS-over-HTTPS resolver, then the runner resolver.
+    }
+  }
+
   try {
     const addresses = execFileSync("getent", ["ahostsv4", supabaseHost], {
       encoding: "utf8",
@@ -57,36 +96,19 @@ async function resolveSupabaseHost() {
       .split("\n")
       .map((line) => line.trim().split(/\s+/)[0])
       .filter(Boolean);
-    if (addresses.length > 0) return unique(addresses);
+    if (addresses.length > 0) {
+      return { addresses: unique(addresses), source: "GETENT_FALLBACK" };
+    }
   } catch {
-    // Fall through to DNS-over-HTTPS when the runner resolver cannot resolve Supabase.
+    // No usable runner resolver result.
   }
 
-  const queryUrl = `/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`;
-  const response = await httpsRequest({
-    hostname: "1.1.1.1",
-    servername: "cloudflare-dns.com",
-    path: queryUrl,
-    headers: {
-      accept: "application/dns-json",
-      host: "cloudflare-dns.com",
-    },
-  });
-  if (response.status < 200 || response.status >= 300) {
-    throw new Error(`DNS-over-HTTPS returned HTTP ${response.status}.`);
-  }
-  const answers = JSON.parse(response.body.toString("utf8")).Answer ?? [];
-  const addresses = unique(
-    answers.filter((answer) => answer.type === 1).map((answer) => answer.data),
-  );
-  if (addresses.length === 0) {
-    throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS.`);
-  }
-  return addresses;
+  throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS or getent.`);
 }
 
-const supabaseIps = await resolveSupabaseHost();
+const { addresses: supabaseIps, source: supabaseDnsSource } = await resolveSupabaseHost();
 console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIps.join(",")}`);
+console.log(`E2E_SUPABASE_DNS_SOURCE=${supabaseDnsSource}`);
 
 const browser = await chromium.launch({ headless: true });
 const context = await browser.newContext({ serviceWorkers: "block" });
@@ -129,12 +151,12 @@ async function proxySupabaseRequest(route) {
   originalHeaders["accept-encoding"] = "identity";
 
   const body = request.postDataBuffer() ?? undefined;
-  let response;
+  let lastResponse;
   let lastError;
 
   for (const ip of supabaseIps) {
     try {
-      response = await httpsRequest({
+      const response = await httpsRequest({
         hostname: ip,
         servername: supabaseHost,
         path,
@@ -142,20 +164,27 @@ async function proxySupabaseRequest(route) {
         headers: originalHeaders,
         body,
       });
-      break;
+      lastResponse = response;
+
+      const responseText = response.body.toString("utf8");
+      const isProjectRoutingMiss =
+        response.status === 404 && responseText.toLowerCase().includes("project not found");
+      if (!isProjectRoutingMiss) break;
+
+      console.error(`E2E_SUPABASE_PROXY_RETRY=${ip} HTTP_${response.status}_PROJECT_NOT_FOUND`);
     } catch (error) {
       lastError = error;
     }
   }
 
-  if (!response) {
+  if (!lastResponse) {
     throw new Error(
       `Supabase proxy connection failed for ${method} ${path}: ${lastError?.message ?? "unknown error"}`,
     );
   }
 
   const responseHeaders = {};
-  for (const [name, value] of Object.entries(response.headers)) {
+  for (const [name, value] of Object.entries(lastResponse.headers)) {
     if (
       [
         "connection",
@@ -181,11 +210,11 @@ async function proxySupabaseRequest(route) {
   responseHeaders.vary = responseHeaders.vary ? `${responseHeaders.vary}, Origin` : "Origin";
 
   await route.fulfill({
-    status: response.status,
+    status: lastResponse.status,
     headers: responseHeaders,
-    body: response.body,
+    body: lastResponse.body,
   });
-  console.log(`E2E_SUPABASE_PROXY_RESPONSE=${response.status} ${path}`);
+  console.log(`E2E_SUPABASE_PROXY_RESPONSE=${lastResponse.status} ${path}`);
 }
 
 await context.route("**/*", async (route) => {
