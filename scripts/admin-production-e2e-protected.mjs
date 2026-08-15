@@ -99,14 +99,13 @@ try {
   // set the native value and dispatch the same input event React listens to.
   if (inputState.passwordLength === 0) {
     await passwordInput.evaluate((element, value) => {
-      const input = element as HTMLInputElement;
       const setter = Object.getOwnPropertyDescriptor(
         HTMLInputElement.prototype,
         "value",
       )?.set;
-      setter?.call(input, value);
-      input.dispatchEvent(new Event("input", { bubbles: true }));
-      input.dispatchEvent(new Event("change", { bubbles: true }));
+      setter?.call(element, value);
+      element.dispatchEvent(new Event("input", { bubbles: true }));
+      element.dispatchEvent(new Event("change", { bubbles: true }));
     }, password);
   }
 
@@ -125,7 +124,6 @@ try {
   }
 
   console.log("E2E_LOGIN_FORM_READY=YES");
-
   await submitButton.click({ force: true });
 
   await page.waitForFunction(
