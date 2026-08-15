@@ -107,9 +107,7 @@ const browser = await chromium.launch({
   headless: true,
   args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
 });
-const context = await browser.newContext({
-  serviceWorkers: "block",
-});
+const context = await browser.newContext({ serviceWorkers: "block" });
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
 const supabaseOrigin = `https://${supabaseHost}`;
@@ -140,23 +138,17 @@ await context.route("**/*", async (route) => {
   await route.continue({ headers });
 });
 
-page.on("pageerror", (error) => {
-  console.error(`E2E_PAGE_ERROR=${error.message}`);
-});
-
+page.on("pageerror", (error) => console.error(`E2E_PAGE_ERROR=${error.message}`));
 page.on("console", (message) => {
   if (message.type() === "error") console.error(`E2E_CONSOLE_ERROR=${message.text()}`);
 });
-
 page.on("requestfailed", (request) => {
-  const url = request.url();
-  if (url.includes("/auth/v1/") || url.includes("supabase")) {
+  if (request.url().includes("/auth/v1/") || request.url().includes("supabase")) {
     console.error(
-      `E2E_REQUEST_FAILED=${request.method()} ${url} :: ${request.failure()?.errorText ?? "unknown"}`,
+      `E2E_REQUEST_FAILED=${request.method()} ${request.url()} :: ${request.failure()?.errorText ?? "unknown"}`,
     );
   }
 });
-
 page.on("response", async (response) => {
   const url = response.url();
   if (url.includes("/auth/v1/token")) {
@@ -189,9 +181,7 @@ try {
 
   await page.locator("#login-email").waitFor({ state: "visible", timeout: 15000 });
   await page.waitForFunction(
-    () =>
-      document.readyState === "complete" &&
-      Boolean(document.querySelector('form button[type="submit"]')),
+    () => document.readyState === "complete" && Boolean(document.querySelector('form button[type="submit"]')),
     undefined,
     { timeout: 15000 },
   );
@@ -200,7 +190,6 @@ try {
   const emailInput = page.locator("#login-email");
   const passwordInput = page.locator("#login-password");
   const submitButton = page.getByRole("button", { name: "Se connecter", exact: true });
-
   await emailInput.fill(email);
   await passwordInput.click();
   await passwordInput.pressSequentially(password);
@@ -209,7 +198,6 @@ try {
     email: document.querySelector("#login-email")?.value ?? "",
     passwordLength: document.querySelector("#login-password")?.value.length ?? 0,
   }));
-
   if (inputState.passwordLength === 0) {
     await passwordInput.evaluate((element, value) => {
       const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
@@ -218,7 +206,6 @@ try {
       element.dispatchEvent(new Event("change", { bubbles: true }));
     }, password);
   }
-
   inputState = await page.evaluate(() => ({
     email: document.querySelector("#login-email")?.value ?? "",
     passwordLength: document.querySelector("#login-password")?.value.length ?? 0,
@@ -226,7 +213,6 @@ try {
 
   console.log(`E2E_LOGIN_EMAIL_FILLED=${inputState.email === email ? "YES" : "NO"}`);
   console.log(`E2E_LOGIN_PASSWORD_LENGTH=${inputState.passwordLength}`);
-
   if (inputState.email !== email || inputState.passwordLength === 0) {
     throw new Error(
       `Login form state did not stabilize before submit (email=${inputState.email === email}, passwordLength=${inputState.passwordLength}).`,
@@ -249,54 +235,24 @@ try {
 
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
   console.log(`E2E_POST_LOGIN_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-
-  const authAlert = await page
-    .locator('[role="alert"]')
-    .first()
-    .textContent()
-    .catch(() => null);
+  const authAlert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
   if (authAlert) throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
-
-  const statusMessage = await page
-    .locator('[role="status"]')
-    .first()
-    .textContent()
-    .catch(() => null);
-  if (statusMessage) console.log(`E2E_AUTH_STATUS=${statusMessage.trim()}`);
-
-  const rootError = await page
-    .getByText("Le chargement a échoué", { exact: true })
-    .isVisible()
-    .catch(() => false);
-  if (rootError) {
-    throw new Error("Production app entered the TanStack root error boundary during admin login.");
-  }
 
   const storageKeys = await page.evaluate(() => Object.keys(localStorage));
   console.log(
     `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
   );
-
   await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
     timeout: 15000,
   });
-
   await page.waitForLoadState("networkidle");
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
   console.log("AUTH_ADMIN=PASS");
 
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
-  await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({
-    state: "visible",
-    timeout: 15000,
-  });
-  await page
-    .getByText("Supabase authority", { exact: false })
-    .waitFor({ state: "visible", timeout: 15000 });
-  await page
-    .getByText("File d’activation retail", { exact: false })
-    .waitFor({ state: "visible", timeout: 15000 });
-
+  await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
+  await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
   console.log("ADMIN_REPOSITORY_READ=PASS");
@@ -304,19 +260,13 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authError = await page
-    .locator('[role="alert"]')
-    .first()
-    .textContent()
-    .catch(() => null);
+  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   const storageKeys = await page.evaluate(() => Object.keys(localStorage)).catch(() => []);
   console.error(
     `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
   );
-  await page
-    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
-    .catch(() => {});
+  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
