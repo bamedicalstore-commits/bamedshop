@@ -58,8 +58,7 @@ console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIp}`);
 function proxySupabaseRequest(request) {
   return new Promise((resolve, reject) => {
     const requestUrl = new URL(request.url());
-    const incomingHeaders = { ...request.headers() };
-    const headers = { ...incomingHeaders };
+    const headers = { ...request.headers() };
 
     delete headers.host;
     delete headers.connection;
@@ -106,8 +105,11 @@ function proxySupabaseRequest(request) {
 
 const browser = await chromium.launch({
   headless: true,
+  args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
 });
-const context = await browser.newContext();
+const context = await browser.newContext({
+  serviceWorkers: "block",
+});
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
 const supabaseOrigin = `https://${supabaseHost}`;
@@ -117,6 +119,7 @@ await context.route("**/*", async (route) => {
   const requestOrigin = new URL(requestUrl).origin;
 
   if (requestOrigin === supabaseOrigin) {
+    console.log(`E2E_SUPABASE_ROUTE=${route.request().method()} ${requestUrl}`);
     try {
       const proxied = await proxySupabaseRequest(route.request());
       await route.fulfill(proxied);
