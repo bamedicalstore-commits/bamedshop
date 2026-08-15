@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
       - genesis/builder-probe
 
 permissions:
@@ -23,7 +22,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           fetch-depth: 0
-          ref: ${{ github.ref_name }}
+          ref: genesis/builder-probe
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -55,4 +54,4 @@ jobs:
 
           git add -A
           git commit -m "chore(ci): apply Prettier formatting"
-          git push origin "HEAD:${GITHUB_REF_NAME}"
+          git push origin HEAD:genesis/builder-probe
