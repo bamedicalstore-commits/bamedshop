@@ -1,6 +1,5 @@
 import { chromium } from "@playwright/test";
 import { execFileSync } from "node:child_process";
-import https from "node:https";
 
 const baseUrl = process.env.E2E_BASE_URL?.replace(/\/$/, "");
 const email = process.env.E2E_ADMIN_EMAIL;
@@ -55,54 +54,6 @@ function resolveSupabaseHost() {
 const supabaseIp = resolveSupabaseHost();
 console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIp}`);
 
-function proxySupabaseRequest(request) {
-  return new Promise((resolve, reject) => {
-    const requestUrl = new URL(request.url());
-    const headers = { ...request.headers() };
-
-    delete headers.host;
-    delete headers.connection;
-    delete headers["content-length"];
-    delete headers["accept-encoding"];
-    headers.host = supabaseHost;
-    headers["accept-encoding"] = "identity";
-
-    const upstream = https.request(
-      {
-        hostname: supabaseIp,
-        port: 443,
-        method: request.method(),
-        path: `${requestUrl.pathname}${requestUrl.search}`,
-        headers,
-        servername: supabaseHost,
-        rejectUnauthorized: true,
-      },
-      (response) => {
-        const responseHeaders = { ...response.headers };
-        delete responseHeaders.connection;
-        delete responseHeaders["transfer-encoding"];
-        delete responseHeaders["content-encoding"];
-
-        const chunks = [];
-        response.on("data", (chunk) => chunks.push(chunk));
-        response.on("end", () => {
-          resolve({
-            status: response.statusCode ?? 502,
-            headers: responseHeaders,
-            body: Buffer.concat(chunks),
-          });
-        });
-      },
-    );
-
-    upstream.on("error", reject);
-
-    const body = request.postDataBuffer();
-    if (body) upstream.write(body);
-    upstream.end();
-  });
-}
-
 const browser = await chromium.launch({
   headless: true,
   args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
@@ -118,16 +69,6 @@ await context.route("**/*", async (route) => {
 
   if (requestOrigin === supabaseOrigin) {
     console.log(`E2E_SUPABASE_ROUTE=${route.request().method()} ${requestUrl}`);
-    try {
-      const proxied = await proxySupabaseRequest(route.request());
-      await route.fulfill(proxied);
-    } catch (error) {
-      console.error(
-        `E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`,
-      );
-      await route.abort("failed");
-    }
-    return;
   }
 
   const headers = { ...route.request().headers() };
