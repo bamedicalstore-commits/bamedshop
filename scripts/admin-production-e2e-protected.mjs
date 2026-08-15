@@ -31,7 +31,10 @@ try {
   await page.goto(bootstrapUrl.toString(), { waitUntil: "domcontentloaded" });
   await page.locator("#login-email").fill(email);
   await page.locator("#login-password").fill(password);
-  await page.getByRole("button", { name: "Se connecter" }).click();
+
+  const submitButton = page.getByRole("button", { name: "Se connecter" });
+  await submitButton.waitFor({ state: "visible", timeout: 15000 });
+  await submitButton.click({ force: true });
 
   await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
     timeout: 30000,
