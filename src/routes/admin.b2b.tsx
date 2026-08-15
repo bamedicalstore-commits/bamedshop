@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 
 export const Route = createFileRoute("/admin/b2b")({
+  ssr: false,
   component: B2BPage,
 });
 
