@@ -1,17 +1,64 @@
 import { chromium } from "@playwright/test";
+import { lookup } from "node:dns/promises";
+import { execFileSync } from "node:child_process";
 
 const baseUrl = process.env.E2E_BASE_URL?.replace(/\/$/, "");
 const email = process.env.E2E_ADMIN_EMAIL;
 const password = process.env.E2E_ADMIN_PASSWORD;
 const vercelBypassSecret = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+const supabaseHost = process.env.E2E_SUPABASE_HOST;
 
-if (!baseUrl || !email || !password || !vercelBypassSecret) {
+if (!baseUrl || !email || !password || !vercelBypassSecret || !supabaseHost) {
   throw new Error(
-    "E2E_BASE_URL, E2E_ADMIN_EMAIL, E2E_ADMIN_PASSWORD and VERCEL_AUTOMATION_BYPASS_SECRET are required",
+    "E2E_BASE_URL, E2E_ADMIN_EMAIL, E2E_ADMIN_PASSWORD, VERCEL_AUTOMATION_BYPASS_SECRET and E2E_SUPABASE_HOST are required",
   );
 }
 
-const browser = await chromium.launch({ headless: true });
+function resolveSupabaseHost() {
+  try {
+    const addresses = execFileSync("getent", ["ahostsv4", supabaseHost], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .trim()
+      .split("\\n")
+      .map((line) => line.trim().split(/\\s+/)[0])
+      .filter(Boolean);
+    if (addresses.length > 0) return addresses[0];
+  } catch {
+    // Fall through to DNS-over-HTTPS when the runner resolver cannot resolve Supabase.
+  }
+
+  const queryUrl = `https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`;
+  const raw = execFileSync(
+    "curl",
+    [
+      "--silent",
+      "--show-error",
+      "--fail",
+      "--max-time",
+      "10",
+      "--resolve",
+      "cloudflare-dns.com:443:1.1.1.1",
+      queryUrl,
+      "-H",
+      "accept: application/dns-json",
+    ],
+    { encoding: "utf8" },
+  );
+  const answers = JSON.parse(raw).Answer ?? [];
+  const address = answers.find((answer) => answer.type === 1)?.data;
+  if (!address) throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS.`);
+  return address;
+}
+
+const supabaseIp = resolveSupabaseHost();
+console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIp}`);
+
+const browser = await chromium.launch({
+  headless: true,
+  args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
+});
 const context = await browser.newContext();
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
@@ -94,9 +141,6 @@ try {
     passwordLength: document.querySelector("#login-password")?.value.length ?? 0,
   }));
 
-  // The production form is React-controlled. Chromium can occasionally clear a
-  // password input during hydration/autofill reconciliation. If that happens,
-  // set the native value and dispatch the same input event React listens to.
   if (inputState.passwordLength === 0) {
     await passwordInput.evaluate((element, value) => {
       const setter = Object.getOwnPropertyDescriptor(
