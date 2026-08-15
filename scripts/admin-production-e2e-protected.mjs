@@ -1,6 +1,6 @@
 import { chromium } from "@playwright/test";
-import { lookup } from "node:dns/promises";
 import { execFileSync } from "node:child_process";
+import https from "node:https";
 
 const baseUrl = process.env.E2E_BASE_URL?.replace(/\/$/, "");
 const email = process.env.E2E_ADMIN_EMAIL;
@@ -21,8 +21,8 @@ function resolveSupabaseHost() {
       stdio: ["ignore", "pipe", "ignore"],
     })
       .trim()
-      .split("\\n")
-      .map((line) => line.trim().split(/\\s+/)[0])
+      .split("\n")
+      .map((line) => line.trim().split(/\s+/)[0])
       .filter(Boolean);
     if (addresses.length > 0) return addresses[0];
   } catch {
@@ -55,18 +55,80 @@ function resolveSupabaseHost() {
 const supabaseIp = resolveSupabaseHost();
 console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIp}`);
 
+function proxySupabaseRequest(request) {
+  return new Promise((resolve, reject) => {
+    const requestUrl = new URL(request.url());
+    const incomingHeaders = { ...request.headers() };
+    const headers = { ...incomingHeaders };
+
+    delete headers.host;
+    delete headers.connection;
+    delete headers["content-length"];
+    delete headers["accept-encoding"];
+    headers.host = supabaseHost;
+    headers["accept-encoding"] = "identity";
+
+    const upstream = https.request(
+      {
+        hostname: supabaseIp,
+        port: 443,
+        method: request.method(),
+        path: `${requestUrl.pathname}${requestUrl.search}`,
+        headers,
+        servername: supabaseHost,
+        rejectUnauthorized: true,
+      },
+      (response) => {
+        const responseHeaders = { ...response.headers };
+        delete responseHeaders.connection;
+        delete responseHeaders["transfer-encoding"];
+        delete responseHeaders["content-encoding"];
+
+        const chunks = [];
+        response.on("data", (chunk) => chunks.push(chunk));
+        response.on("end", () => {
+          resolve({
+            status: response.statusCode ?? 502,
+            headers: responseHeaders,
+            body: Buffer.concat(chunks),
+          });
+        });
+      },
+    );
+
+    upstream.on("error", reject);
+
+    const body = request.postDataBuffer();
+    if (body) upstream.write(body);
+    upstream.end();
+  });
+}
+
 const browser = await chromium.launch({
   headless: true,
-  args: [`--host-resolver-rules=MAP ${supabaseHost} ${supabaseIp}`],
 });
 const context = await browser.newContext();
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
+const supabaseOrigin = `https://${supabaseHost}`;
 
 await context.route("**/*", async (route) => {
   const requestUrl = route.request().url();
+  const requestOrigin = new URL(requestUrl).origin;
+
+  if (requestOrigin === supabaseOrigin) {
+    try {
+      const proxied = await proxySupabaseRequest(route.request());
+      await route.fulfill(proxied);
+    } catch (error) {
+      console.error(`E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`);
+      await route.abort("failed");
+    }
+    return;
+  }
+
   const headers = { ...route.request().headers() };
-  if (new URL(requestUrl).origin !== baseOrigin) {
+  if (requestOrigin !== baseOrigin) {
     delete headers["x-vercel-protection-bypass"];
     delete headers["x-vercel-set-bypass-cookie"];
   }
