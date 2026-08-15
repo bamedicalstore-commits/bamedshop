@@ -20,10 +20,9 @@ try {
   await page.locator("#login-password").fill(password);
   await page.getByRole("button", { name: "Se connecter" }).click();
 
-  await page.waitForURL(
-    (url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"),
-    { timeout: 30000 },
-  );
+  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
+    timeout: 30000,
+  });
 
   await page.waitForLoadState("networkidle");
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });

@@ -37,10 +37,9 @@ try {
   await submitButton.waitFor({ state: "visible", timeout: 15000 });
   await passwordInput.press("Enter");
 
-  await page.waitForURL(
-    (url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"),
-    { timeout: 30000 },
-  );
+  await page.waitForURL((url) => url.pathname === "/admin" || url.pathname.startsWith("/admin/"), {
+    timeout: 30000,
+  });
 
   await page.waitForLoadState("networkidle");
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
@@ -67,7 +66,11 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const authError = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   await page
     .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
