@@ -56,7 +56,29 @@ function httpsRequest({
   });
 }
 
-async function resolveSupabaseHost() {
+function getentIPv4(host) {
+  try {
+    const addresses = execFileSync("getent", ["ahostsv4", host], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+      .trim()
+      .split("\n")
+      .map((line) => line.trim().split(/\s+/)[0])
+      .filter(Boolean);
+
+    return unique(addresses);
+  } catch {
+    return [];
+  }
+}
+
+async function resolveHost(host) {
+  const runnerAddresses = getentIPv4(host);
+  if (runnerAddresses.length > 0) {
+    return { addresses: runnerAddresses, source: "GETENT" };
+  }
+
   const resolvers = [
     { ip: "1.1.1.1", servername: "cloudflare-dns.com" },
     { ip: "8.8.8.8", servername: "dns.google" },
@@ -67,7 +89,7 @@ async function resolveSupabaseHost() {
       const response = await httpsRequest({
         hostname: resolver.ip,
         servername: resolver.servername,
-        path: `/dns-query?name=${encodeURIComponent(supabaseHost)}&type=A`,
+        path: `/dns-query?name=${encodeURIComponent(host)}&type=A`,
         headers: {
           accept: "application/dns-json",
           host: resolver.servername,
@@ -77,36 +99,22 @@ async function resolveSupabaseHost() {
 
       const answers = JSON.parse(response.body.toString("utf8")).Answer ?? [];
       const addresses = unique(
-        answers.filter((answer) => answer.type === 1).map((answer) => answer.data),
+        answers
+          .filter((answer) => answer.type === 1 && typeof answer.data === "string")
+          .map((answer) => answer.data),
       );
       if (addresses.length > 0) {
         return { addresses, source: `DOH_${resolver.servername}` };
       }
     } catch {
-      // Try the next public DNS-over-HTTPS resolver, then the runner resolver.
+      // Try the next resolver.
     }
   }
 
-  try {
-    const addresses = execFileSync("getent", ["ahostsv4", supabaseHost], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "ignore"],
-    })
-      .trim()
-      .split("\n")
-      .map((line) => line.trim().split(/\s+/)[0])
-      .filter(Boolean);
-    if (addresses.length > 0) {
-      return { addresses: unique(addresses), source: "GETENT_FALLBACK" };
-    }
-  } catch {
-    // No usable runner resolver result.
-  }
-
-  throw new Error(`Unable to resolve ${supabaseHost} through DNS-over-HTTPS or getent.`);
+  throw new Error(`Unable to resolve ${host} through getent or DNS-over-HTTPS.`);
 }
 
-const { addresses: supabaseIps, source: supabaseDnsSource } = await resolveSupabaseHost();
+const { addresses: supabaseIps, source: supabaseDnsSource } = await resolveHost(supabaseHost);
 console.log(`E2E_SUPABASE_DNS=${supabaseHost} -> ${supabaseIps.join(",")}`);
 console.log(`E2E_SUPABASE_DNS_SOURCE=${supabaseDnsSource}`);
 
@@ -115,8 +123,24 @@ const context = await browser.newContext({ serviceWorkers: "block" });
 const page = await context.newPage();
 const baseOrigin = new URL(baseUrl).origin;
 const supabaseOrigin = `https://${supabaseHost}`;
+const e2eSupabaseAnonKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZldGx0ZXhlbHJxY2did2dnZ3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODI5MzgsImV4cCI6MjA5OTk1ODkzOH0.xXyfRNN6GQgU2FZ1Je_sKNuDiZIVE6ZA9Ypclxy1Yqc";
+const resolvedHosts = new Map([[supabaseHost, { addresses: supabaseIps, source: supabaseDnsSource }]]);
 
-async function proxySupabaseRequest(route) {
+function getProxyTarget(host) {
+  if (host === supabaseHost) {
+    return supabaseHost;
+  }
+
+  if (host.endsWith(".supabase.co")) {
+    console.log(`E2E_SUPABASE_PROXY_HOST_REWRITE=${host} -> ${supabaseHost}`);
+    return supabaseHost;
+  }
+
+  return null;
+}
+
+async function proxySupabaseRequest(route, targetHost) {
   const request = route.request();
   const requestUrl = new URL(request.url());
   const method = request.method();
@@ -141,24 +165,30 @@ async function proxySupabaseRequest(route) {
   }
 
   const originalHeaders = { ...request.headers() };
+  const originalApiKey = originalHeaders.apikey;
+  const originalAuthorization = originalHeaders.authorization;
   delete originalHeaders.host;
   delete originalHeaders["content-length"];
   delete originalHeaders["transfer-encoding"];
   delete originalHeaders.connection;
   delete originalHeaders["accept-encoding"];
   originalHeaders.origin = baseOrigin;
-  originalHeaders.host = supabaseHost;
+  originalHeaders.host = targetHost;
+  originalHeaders.apikey = e2eSupabaseAnonKey;
+  if (!originalAuthorization || originalAuthorization === `Bearer ${originalApiKey}`) {
+    originalHeaders.authorization = `Bearer ${e2eSupabaseAnonKey}`;
+  }
   originalHeaders["accept-encoding"] = "identity";
 
   const body = request.postDataBuffer() ?? undefined;
   let lastResponse;
   let lastError;
 
-  for (const ip of supabaseIps) {
+  for (const ip of resolvedHosts.get(targetHost)?.addresses ?? []) {
     try {
       const response = await httpsRequest({
         hostname: ip,
-        servername: supabaseHost,
+        servername: targetHost,
         path,
         method,
         headers: originalHeaders,
@@ -207,7 +237,8 @@ async function proxySupabaseRequest(route) {
   }
   responseHeaders["access-control-allow-origin"] = baseOrigin;
   responseHeaders["access-control-allow-credentials"] = "true";
-  responseHeaders.vary = responseHeaders.vary ? `${responseHeaders.vary}, Origin` : "Origin";
+  const vary = responseHeaders.vary ?? responseHeaders.Vary;
+  responseHeaders.vary = vary ? `${vary}, Origin` : "Origin";
 
   await route.fulfill({
     status: lastResponse.status,
@@ -220,17 +251,22 @@ async function proxySupabaseRequest(route) {
 await context.route("**/*", async (route) => {
   const requestUrl = route.request().url();
   const requestOrigin = new URL(requestUrl).origin;
+  const requestHost = new URL(requestUrl).hostname;
 
-  if (requestOrigin === supabaseOrigin) {
+  if (requestOrigin === supabaseOrigin || requestHost.endsWith(".supabase.co")) {
     try {
-      await proxySupabaseRequest(route);
+      const target = getProxyTarget(requestHost);
+      if (target) {
+        await proxySupabaseRequest(route, target);
+        return;
+      }
     } catch (error) {
       console.error(
         `E2E_SUPABASE_PROXY_ERROR=${error instanceof Error ? error.message : String(error)}`,
       );
       await route.abort("failed");
+      return;
     }
-    return;
   }
 
   const headers = { ...route.request().headers() };
@@ -252,8 +288,20 @@ page.on("requestfailed", (request) => {
     );
   }
 });
+
+let catalogRepositoryRequestSeen = false;
+let catalogRepositoryRequestSucceeded = false;
+
 page.on("response", async (response) => {
   const url = response.url();
+  if (url.includes(".supabase.co/rest/v1/")) {
+    catalogRepositoryRequestSeen = true;
+    catalogRepositoryRequestSucceeded =
+      catalogRepositoryRequestSucceeded || (response.status() >= 200 && response.status() < 300);
+    console.log(
+      `E2E_REPOSITORY_HTTP=${response.status()} ${response.request().method()} ${new URL(url).pathname}`,
+    );
+  }
   if (url.includes("/auth/v1/token")) {
     console.log(`E2E_AUTH_HTTP=${response.status()} ${response.request().method()} ${url}`);
     if (response.status() >= 400) {
@@ -355,6 +403,8 @@ try {
   await page.getByText("BA Medical", { exact: true }).waitFor({ state: "visible", timeout: 15000 });
   console.log("AUTH_ADMIN=PASS");
 
+  catalogRepositoryRequestSeen = false;
+  catalogRepositoryRequestSucceeded = false;
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
   await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({ state: "visible", timeout: 15000 });
   await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
@@ -363,6 +413,11 @@ try {
   const catalogError = await page.getByText("Action refusée", { exact: true }).count();
   if (catalogError > 0) {
     throw new Error("Catalog repository read failed: Action refusée is visible.");
+  }
+  if (!catalogRepositoryRequestSeen || !catalogRepositoryRequestSucceeded) {
+    throw new Error(
+      `Catalog repository request did not complete successfully (seen=${catalogRepositoryRequestSeen}, succeeded=${catalogRepositoryRequestSucceeded}).`,
+    );
   }
   const rows = await page.locator("text=Motif:").count();
   console.log(`ADMIN_CATALOG_ROWS=${rows}`);
