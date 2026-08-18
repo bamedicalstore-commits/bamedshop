@@ -125,7 +125,9 @@ const baseOrigin = new URL(baseUrl).origin;
 const supabaseOrigin = `https://${supabaseHost}`;
 const e2eSupabaseAnonKey =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZldGx0ZXhlbHJxY2did2dnZ3ZqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQzODI5MzgsImV4cCI6MjA5OTk1ODkzOH0.xXyfRNN6GQgU2FZ1Je_sKNuDiZIVE6ZA9Ypclxy1Yqc";
-const resolvedHosts = new Map([[supabaseHost, { addresses: supabaseIps, source: supabaseDnsSource }]]);
+const resolvedHosts = new Map([
+  [supabaseHost, { addresses: supabaseIps, source: supabaseDnsSource }],
+]);
 
 function getProxyTarget(host) {
   if (host === supabaseHost) {
@@ -389,7 +391,11 @@ try {
 
   console.log(`E2E_POST_LOGIN_URL=${page.url()}`);
   console.log(`E2E_POST_LOGIN_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authAlert = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const authAlert = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (authAlert) throw new Error(`Supabase login rejected: ${authAlert.trim()}`);
 
   const storageKeys = await page.evaluate(() => Object.keys(localStorage));
@@ -406,10 +412,18 @@ try {
   catalogRepositoryRequestSeen = false;
   catalogRepositoryRequestSucceeded = false;
   await page.goto(`${baseUrl}/admin/catalog`, { waitUntil: "networkidle" });
-  await page.getByRole("heading", { name: "Activation catalogue" }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("Supabase authority", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("File d’activation retail", { exact: false }).waitFor({ state: "visible", timeout: 15000 });
-  await page.getByText("Chargement Supabase…", { exact: true }).waitFor({ state: "hidden", timeout: 15000 });
+  await page
+    .getByRole("heading", { name: "Activation catalogue" })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("Supabase authority", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("File d’activation retail", { exact: false })
+    .waitFor({ state: "visible", timeout: 15000 });
+  await page
+    .getByText("Chargement Supabase…", { exact: true })
+    .waitFor({ state: "hidden", timeout: 15000 });
   const catalogError = await page.getByText("Action refusée", { exact: true }).count();
   if (catalogError > 0) {
     throw new Error("Catalog repository read failed: Action refusée is visible.");
@@ -427,13 +441,19 @@ try {
 } catch (error) {
   console.error(`E2E_CURRENT_URL=${page.url()}`);
   console.error(`E2E_PAGE_TITLE=${await page.title().catch(() => "<unavailable>")}`);
-  const authError = await page.locator('[role="alert"]').first().textContent().catch(() => null);
+  const authError = await page
+    .locator('[role="alert"]')
+    .first()
+    .textContent()
+    .catch(() => null);
   if (authError) console.error(`E2E_AUTH_ERROR=${authError.trim()}`);
   const storageKeys = await page.evaluate(() => Object.keys(localStorage)).catch(() => []);
   console.error(
     `E2E_SUPABASE_STORAGE_KEYS=${storageKeys.filter((key) => key.includes("auth-token")).join(",") || "NONE"}`,
   );
-  await page.screenshot({ path: "admin-production-e2e-failure.png", fullPage: true }).catch(() => {});
+  await page
+    .screenshot({ path: "admin-production-e2e-failure.png", fullPage: true })
+    .catch(() => {});
   console.error(error);
   process.exitCode = 1;
 } finally {
