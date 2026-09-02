@@ -4,7 +4,6 @@
 -- D2: gross subtotal < 200 TND => 8 TND shipping; >= 200 TND => free shipping.
 -- D3: staff uses the same DB shipping rule; staff does not bypass shipping authority.
 
--- Retail activation gate (D1).
 drop policy if exists "products_public_read_active" on public.products;
 create policy "products_public_read_active" on public.products
 for select to anon using (
@@ -19,7 +18,6 @@ for select to authenticated using (
   or public.is_staff(auth.uid())
 );
 
--- Canonical shipping authority for both INSERT and UPDATE of orders (D2/D3).
 create or replace function public.enforce_order_shipping_authority()
 returns trigger
 language plpgsql
