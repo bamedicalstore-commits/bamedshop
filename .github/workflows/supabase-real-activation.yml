@@ -1,4 +1,4 @@
-name: Supabase Real Activation Verification
+name: Supabase Staging Gate
 
 on:
   workflow_dispatch:
@@ -10,39 +10,39 @@ permissions:
   contents: read
 
 jobs:
-  real-supabase:
-    name: Real Supabase migration + smoke
+  staging-supabase:
+    name: Supabase staging migration + security smoke
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      SUPABASE_PROJECT_REF: vetltexelrqcgbwgggvj
-      SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
-      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_REF: rkaziatuqxsedcusxgaq
+      SUPABASE_STAGING_DB_URL: ${{ secrets.SUPABASE_STAGING_DB_URL }}
+      SUPABASE_STAGING_DB_PASSWORD: ${{ secrets.SUPABASE_STAGING_DB_PASSWORD }}
       SUPABASE_DB_POOLER_HOST: aws-0-eu-west-1.pooler.supabase.com
     steps:
       - name: Checkout exact revision
         uses: actions/checkout@v5
 
-      - name: Resolve production database connection
+      - name: Resolve staging database connection
         shell: bash
         run: |
           set -euo pipefail
-          if [ -n "${SUPABASE_DB_URL:-}" ]; then
-            echo "SUPABASE_CONNECTION_SOURCE=DB_URL"
-            echo "SUPABASE_DB_URL_RUNTIME=${SUPABASE_DB_URL}" >> "$GITHUB_ENV"
-          elif [ -n "${SUPABASE_DB_PASSWORD:-}" ]; then
-            echo "SUPABASE_CONNECTION_SOURCE=SUPAVISOR_SESSION_POOLER"
+          if [ -n "${SUPABASE_STAGING_DB_URL:-}" ]; then
+            echo "SUPABASE_CONNECTION_SOURCE=STAGING_DB_URL"
+            echo "SUPABASE_DB_URL_RUNTIME=${SUPABASE_STAGING_DB_URL}" >> "$GITHUB_ENV"
+          elif [ -n "${SUPABASE_STAGING_DB_PASSWORD:-}" ]; then
+            echo "SUPABASE_CONNECTION_SOURCE=STAGING_POOLER"
             python - <<'PY' >> "$GITHUB_ENV"
           import os
           from urllib.parse import quote
-          password = quote(os.environ["SUPABASE_DB_PASSWORD"], safe="")
+          password = quote(os.environ["SUPABASE_STAGING_DB_PASSWORD"], safe="")
           project_ref = os.environ["SUPABASE_PROJECT_REF"]
           host = os.environ["SUPABASE_DB_POOLER_HOST"]
           print(f"SUPABASE_DB_URL_RUNTIME=postgresql://postgres.{project_ref}:{password}@{host}:5432/postgres?sslmode=require")
           PY
           else
-            echo "SUPABASE_REAL_DB=BLOCKED"
-            echo "Missing SUPABASE_DB_URL or SUPABASE_DB_PASSWORD GitHub secret."
+            echo "SUPABASE_STAGING_DB=BLOCKED"
+            echo "Missing SUPABASE_STAGING_DB_URL or SUPABASE_STAGING_DB_PASSWORD GitHub secret."
             exit 1
           fi
 
@@ -57,20 +57,20 @@ jobs:
           set -euo pipefail
           npx --yes supabase@latest --version
 
-      - name: Preview pending migrations
+      - name: Preview pending migrations on staging
         shell: bash
         run: |
           set -euo pipefail
           npx --yes supabase@latest db push --db-url "$SUPABASE_DB_URL_RUNTIME" --dry-run
 
-      - name: Apply pending migrations to real Supabase
+      - name: Apply pending migrations to staging
         shell: bash
         run: |
           set -euo pipefail
           npx --yes supabase@latest db push --db-url "$SUPABASE_DB_URL_RUNTIME" --include-all
-          echo "SUPABASE_MIGRATIONS=PASS"
+          echo "SUPABASE_STAGING_MIGRATIONS=PASS"
 
-      - name: Validate migration history
+      - name: Validate staging migration history
         shell: bash
         run: |
           set -euo pipefail
@@ -81,17 +81,17 @@ jobs:
         run: |
           set -euo pipefail
           npx --yes supabase@latest db lint --db-url "$SUPABASE_DB_URL_RUNTIME" --fail-on error
-          echo "SUPABASE_DB_LINT=PASS"
+          echo "SUPABASE_STAGING_DB_LINT=PASS"
 
-      - name: Generate live database types
+      - name: Generate live staging database types
         shell: bash
         run: |
           set -euo pipefail
-          npx --yes supabase@latest gen types --db-url "$SUPABASE_DB_URL_RUNTIME" --lang typescript > /tmp/database-live.ts
-          grep -q "catalog_activation_status" /tmp/database-live.ts
-          grep -q "catalog_activation_reason" /tmp/database-live.ts
-          grep -q "catalog_activation_events" /tmp/database-live.ts
-          echo "SUPABASE_LIVE_TYPES=PASS"
+          npx --yes supabase@latest gen types --db-url "$SUPABASE_DB_URL_RUNTIME" --lang typescript > /tmp/database-staging.ts
+          grep -q "catalog_activation_status" /tmp/database-staging.ts
+          grep -q "catalog_activation_reason" /tmp/database-staging.ts
+          grep -q "catalog_activation_events" /tmp/database-staging.ts
+          echo "SUPABASE_STAGING_LIVE_TYPES=PASS"
 
       - name: Verify activation boundary and catalogue projection
         shell: bash
@@ -118,15 +118,15 @@ jobs:
               where technical_specs->>'catalog_status' = 'source_import_unpriced'
             ) as supplier_seed_products;
           SQL
-          echo "SUPABASE_BOUNDARY=PASS"
+          echo "SUPABASE_STAGING_BOUNDARY=PASS"
 
-      - name: Final evidence marker
+      - name: Final staging evidence marker
         shell: bash
         run: |
           set -euo pipefail
           echo "SUPABASE_PROJECT_REF=${SUPABASE_PROJECT_REF}"
-          echo "SUPABASE_REAL_DB=PASS"
-          echo "SUPABASE_MIGRATIONS=PASS"
-          echo "SUPABASE_DB_LINT=PASS"
-          echo "SUPABASE_LIVE_TYPES=PASS"
-          echo "SUPABASE_BOUNDARY=PASS"
+          echo "SUPABASE_STAGING_DB=PASS"
+          echo "SUPABASE_STAGING_MIGRATIONS=PASS"
+          echo "SUPABASE_STAGING_DB_LINT=PASS"
+          echo "SUPABASE_STAGING_LIVE_TYPES=PASS"
+          echo "SUPABASE_STAGING_BOUNDARY=PASS"
