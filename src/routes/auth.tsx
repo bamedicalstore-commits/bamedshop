@@ -57,7 +57,9 @@ function AuthPage() {
       window.location.assign("/admin");
     } catch (authError) {
       setError(
-        authError instanceof Error ? authError.message : "Connexion impossible.",
+        authError instanceof Error
+          ? authError.message
+          : "Connexion impossible.",
       );
     } finally {
       setBusy(false);
@@ -113,7 +115,9 @@ function AuthPage() {
       );
     } catch (authError) {
       setError(
-        authError instanceof Error ? authError.message : "Inscription impossible.",
+        authError instanceof Error
+          ? authError.message
+          : "Inscription impossible.",
       );
     } finally {
       setBusy(false);
@@ -296,7 +300,9 @@ function AuthPage() {
                       id="reg-first"
                       required
                       value={registerFirstName}
-                      onChange={(event) => setRegisterFirstName(event.target.value)}
+                      onChange={(event) =>
+                        setRegisterFirstName(event.target.value)
+                      }
                       className="mt-2"
                     />
                   </div>
