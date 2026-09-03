@@ -14,7 +14,8 @@ export const Route = createFileRoute("/auth/reset-password")({
       { title: "Réinitialiser le mot de passe — BA Medical Store" },
       {
         name: "description",
-        content: "Définissez un nouveau mot de passe pour votre compte BA Medical Store.",
+        content:
+          "Définissez un nouveau mot de passe pour votre compte BA Medical Store.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -47,7 +48,9 @@ function ResetPasswordPage() {
         return;
       }
 
-      setError("Le lien de réinitialisation est invalide ou a expiré. Demandez un nouveau lien.");
+      setError(
+        "Le lien de réinitialisation est invalide ou a expiré. Demandez un nouveau lien.",
+      );
     };
 
     const {
@@ -90,7 +93,9 @@ function ResetPasswordPage() {
       });
       if (updateError) throw updateError;
 
-      setMessage("Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter.");
+      setMessage(
+        "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter.",
+      );
       setNewPassword("");
       setConfirmPassword("");
       await supabase.auth.signOut();
@@ -120,12 +125,18 @@ function ResetPasswordPage() {
           </div>
 
           {error ? (
-            <div role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+            <div
+              role="alert"
+              className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+            >
               {error}
             </div>
           ) : null}
           {message ? (
-            <div role="status" className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+            <div
+              role="status"
+              className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary"
+            >
               {message}
             </div>
           ) : null}
