@@ -56,7 +56,9 @@ function AuthPage() {
       setMessage("Connexion réussie. Redirection vers votre espace…");
       window.location.assign("/admin");
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Connexion impossible.");
+      setError(
+        authError instanceof Error ? authError.message : "Connexion impossible.",
+      );
     } finally {
       setBusy(false);
     }
@@ -110,7 +112,9 @@ function AuthPage() {
           : "Compte créé. Vérifiez votre e-mail pour confirmer votre compte.",
       );
     } catch (authError) {
-      setError(authError instanceof Error ? authError.message : "Inscription impossible.");
+      setError(
+        authError instanceof Error ? authError.message : "Inscription impossible.",
+      );
     } finally {
       setBusy(false);
     }
@@ -127,7 +131,8 @@ function AuthPage() {
               </div>
               <h1 className="text-xl font-bold">Mot de passe oublié ?</h1>
               <p className="text-sm text-muted-foreground">
-                Entrez votre adresse e-mail pour recevoir un lien de réinitialisation sécurisé.
+                Entrez votre adresse e-mail pour recevoir un lien de
+                réinitialisation sécurisé.
               </p>
             </div>
 
@@ -199,12 +204,18 @@ function AuthPage() {
           </div>
 
           {error ? (
-            <div role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+            <div
+              role="alert"
+              className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+            >
               {error}
             </div>
           ) : null}
           {message ? (
-            <div role="status" className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+            <div
+              role="status"
+              className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary"
+            >
               {message}
             </div>
           ) : null}
