@@ -127,8 +127,8 @@ function AuthPage() {
           <Card className="w-full max-w-md p-6 sm:p-8">
             <div className="flex flex-col items-center gap-2 text-center">
               <div
-              className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
-            >
+                className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
+              >
                 <HeartPulse className="size-5" aria-hidden="true" />
               </div>
               <h1 className="text-xl font-bold">Mot de passe oublié ?</h1>
@@ -275,7 +275,9 @@ function AuthPage() {
                 </Button>
                 <div className="relative py-2">
                   <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+                  <span
+                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground"
+                  >
                     ou
                   </span>
                 </div>
