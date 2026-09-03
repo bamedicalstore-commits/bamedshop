@@ -177,7 +177,10 @@ function ResetPasswordPage() {
           ) : null}
 
           {message ? (
-            <Link to="/auth" className="mt-5 block text-center text-sm text-primary hover:underline">
+            <Link
+              to="/auth"
+              className="mt-5 block text-center text-sm text-primary hover:underline"
+            >
               Retour à la connexion
             </Link>
           ) : null}
