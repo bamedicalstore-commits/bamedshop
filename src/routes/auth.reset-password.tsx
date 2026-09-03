@@ -157,7 +157,9 @@ function ResetPasswordPage() {
                 />
               </div>
               <div>
-                <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
+                <Label htmlFor="confirm-password">
+                  Confirmer le mot de passe
+                </Label>
                 <Input
                   id="confirm-password"
                   type="password"
