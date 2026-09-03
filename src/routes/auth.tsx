@@ -67,11 +67,16 @@ function AuthPage() {
     clearFeedback();
     setBusy(true);
     try {
-      const { error: authError } = await supabase.auth.resetPasswordForEmail(recoveryEmail, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
+      const { error: authError } = await supabase.auth.resetPasswordForEmail(
+        recoveryEmail,
+        {
+          redirectTo: `${window.location.origin}/auth/reset-password`,
+        },
+      );
       if (authError) throw authError;
-      setMessage("Un lien de réinitialisation vient d’être envoyé à votre adresse e-mail.");
+      setMessage(
+        "Un lien de réinitialisation vient d’être envoyé à votre adresse e-mail.",
+      );
     } catch (authError) {
       setError(
         authError instanceof Error
@@ -127,12 +132,18 @@ function AuthPage() {
             </div>
 
             {error ? (
-              <div role="alert" className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive">
+              <div
+                role="alert"
+                className="mt-5 rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive"
+              >
                 {error}
               </div>
             ) : null}
             {message ? (
-              <div role="status" className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+              <div
+                role="status"
+                className="mt-5 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary"
+              >
                 {message}
               </div>
             ) : null}
@@ -208,7 +219,15 @@ function AuthPage() {
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
                   <Label htmlFor="login-email">Email</Label>
-                  <Input id="login-email" type="email" autoComplete="email" required value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} className="mt-2" />
+                  <Input
+                    id="login-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={loginEmail}
+                    onChange={(event) => setLoginEmail(event.target.value)}
+                    className="mt-2"
+                  />
                 </div>
                 <div>
                   <div className="flex items-center justify-between">
@@ -225,7 +244,15 @@ function AuthPage() {
                       Mot de passe oublié ?
                     </button>
                   </div>
-                  <Input id="login-password" type="password" autoComplete="current-password" required value={loginPassword} onChange={(event) => setLoginPassword(event.target.value)} className="mt-2" />
+                  <Input
+                    id="login-password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    value={loginPassword}
+                    onChange={(event) => setLoginPassword(event.target.value)}
+                    className="mt-2"
+                  />
                 </div>
                 <Button type="submit" size="lg" width="full" disabled={busy}>
                   {busy ? <Loader2 className="animate-spin" /> : null}
@@ -233,7 +260,9 @@ function AuthPage() {
                 </Button>
                 <div className="relative py-2">
                   <Separator />
-                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">ou</span>
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
+                    ou
+                  </span>
                 </div>
                 <Button type="button" variant="outline" width="full" disabled>
                   Continuer avec Google
@@ -246,28 +275,61 @@ function AuthPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <Label htmlFor="reg-first">Prénom</Label>
-                    <Input id="reg-first" required value={registerFirstName} onChange={(event) => setRegisterFirstName(event.target.value)} className="mt-2" />
+                    <Input
+                      id="reg-first"
+                      required
+                      value={registerFirstName}
+                      onChange={(event) => setRegisterFirstName(event.target.value)}
+                      className="mt-2"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="reg-last">Nom</Label>
-                    <Input id="reg-last" required value={registerLastName} onChange={(event) => setRegisterLastName(event.target.value)} className="mt-2" />
+                    <Input
+                      id="reg-last"
+                      required
+                      value={registerLastName}
+                      onChange={(event) => setRegisterLastName(event.target.value)}
+                      className="mt-2"
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="reg-email">Email</Label>
-                  <Input id="reg-email" type="email" autoComplete="email" required value={registerEmail} onChange={(event) => setRegisterEmail(event.target.value)} className="mt-2" />
+                  <Input
+                    id="reg-email"
+                    type="email"
+                    autoComplete="email"
+                    required
+                    value={registerEmail}
+                    onChange={(event) => setRegisterEmail(event.target.value)}
+                    className="mt-2"
+                  />
                 </div>
                 <div>
                   <Label htmlFor="reg-password">Mot de passe</Label>
-                  <Input id="reg-password" type="password" autoComplete="new-password" required value={registerPassword} onChange={(event) => setRegisterPassword(event.target.value)} className="mt-2" />
+                  <Input
+                    id="reg-password"
+                    type="password"
+                    autoComplete="new-password"
+                    required
+                    value={registerPassword}
+                    onChange={(event) => setRegisterPassword(event.target.value)}
+                    className="mt-2"
+                  />
                 </div>
                 <label className="flex items-start gap-2 text-xs text-muted-foreground">
                   <Checkbox id="cgv" className="mt-0.5" required />
                   <span>
                     J'accepte les{" "}
-                    <a className="text-primary hover:underline" href="#">conditions générales</a>{" "}
+                    <a className="text-primary hover:underline" href="#">
+                      conditions générales
+                    </a>{" "}
                     et la{" "}
-                    <a className="text-primary hover:underline" href="#">politique de confidentialité</a>.
+                    <a className="text-primary hover:underline" href="#">
+                      politique de confidentialité
+                    </a>
+                    .
                   </span>
                 </label>
                 <Button type="submit" size="lg" width="full" disabled={busy}>
