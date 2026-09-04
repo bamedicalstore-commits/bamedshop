@@ -78,9 +78,7 @@ function AuthPage() {
         },
       );
       if (authError) throw authError;
-      setMessage(
-        "Un lien de réinitialisation vient d’être envoyé à votre adresse e-mail.",
-      );
+      setMessage("Un lien de réinitialisation vient d’être envoyé à votre adresse e-mail.");
     } catch (authError) {
       setError(
         authError instanceof Error
@@ -300,9 +298,7 @@ function AuthPage() {
                       id="reg-first"
                       required
                       value={registerFirstName}
-                      onChange={(event) =>
-                        setRegisterFirstName(event.target.value)
-                      }
+                      onChange={(event) => setRegisterFirstName(event.target.value)}
                       className="mt-2"
                     />
                   </div>

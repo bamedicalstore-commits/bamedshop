@@ -48,9 +48,7 @@ function ResetPasswordPage() {
         return;
       }
 
-      setError(
-        "Le lien de réinitialisation est invalide ou a expiré. Demandez un nouveau lien.",
-      );
+      setError("Le lien de réinitialisation est invalide ou a expiré. Demandez un nouveau lien.");
     };
 
     const {
@@ -93,9 +91,7 @@ function ResetPasswordPage() {
       });
       if (updateError) throw updateError;
 
-      setMessage(
-        "Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter.",
-      );
+      setMessage("Votre mot de passe a été réinitialisé. Vous pouvez maintenant vous connecter.");
       setNewPassword("");
       setConfirmPassword("");
       await supabase.auth.signOut();
