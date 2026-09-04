@@ -56,11 +56,7 @@ function AuthPage() {
       setMessage("Connexion réussie. Redirection vers votre espace…");
       window.location.assign("/admin");
     } catch (authError) {
-      setError(
-        authError instanceof Error
-          ? authError.message
-          : "Connexion impossible.",
-      );
+      setError(authError instanceof Error ? authError.message : "Connexion impossible.");
     } finally {
       setBusy(false);
     }
@@ -71,12 +67,9 @@ function AuthPage() {
     clearFeedback();
     setBusy(true);
     try {
-      const { error: authError } = await supabase.auth.resetPasswordForEmail(
-        recoveryEmail,
-        {
-          redirectTo: `${window.location.origin}/auth/reset-password`,
-        },
-      );
+      const { error: authError } = await supabase.auth.resetPasswordForEmail(recoveryEmail, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      });
       if (authError) throw authError;
       setMessage("Un lien de réinitialisation vient d’être envoyé à votre adresse e-mail.");
     } catch (authError) {
@@ -112,11 +105,7 @@ function AuthPage() {
           : "Compte créé. Vérifiez votre e-mail pour confirmer votre compte.",
       );
     } catch (authError) {
-      setError(
-        authError instanceof Error
-          ? authError.message
-          : "Inscription impossible.",
-      );
+      setError(authError instanceof Error ? authError.message : "Inscription impossible.");
     } finally {
       setBusy(false);
     }
@@ -128,15 +117,12 @@ function AuthPage() {
         <div className="container-page grid min-h-[70dvh] place-items-center py-10">
           <Card className="w-full max-w-md p-6 sm:p-8">
             <div className="flex flex-col items-center gap-2 text-center">
-              <div
-                className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
-              >
+              <div className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]">
                 <HeartPulse className="size-5" aria-hidden="true" />
               </div>
               <h1 className="text-xl font-bold">Mot de passe oublié ?</h1>
               <p className="text-sm text-muted-foreground">
-                Entrez votre adresse e-mail pour recevoir un lien de
-                réinitialisation sécurisé.
+                Entrez votre adresse e-mail pour recevoir un lien de réinitialisation sécurisé.
               </p>
             </div>
 
@@ -198,9 +184,7 @@ function AuthPage() {
       <div className="container-page grid min-h-[70dvh] place-items-center py-10">
         <Card className="w-full max-w-md p-6 sm:p-8">
           <div className="flex flex-col items-center gap-2 text-center">
-            <div
-              className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
-            >
+            <div className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]">
               <HeartPulse className="size-5" aria-hidden="true" />
             </div>
             <h1 className="text-xl font-bold">Bienvenue</h1>
@@ -277,9 +261,7 @@ function AuthPage() {
                 </Button>
                 <div className="relative py-2">
                   <Separator />
-                  <span
-                    className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground"
-                  >
+                  <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">
                     ou
                   </span>
                 </div>

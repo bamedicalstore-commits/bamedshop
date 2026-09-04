@@ -14,8 +14,7 @@ export const Route = createFileRoute("/auth/reset-password")({
       { title: "Réinitialiser le mot de passe — BA Medical Store" },
       {
         name: "description",
-        content:
-          "Définissez un nouveau mot de passe pour votre compte BA Medical Store.",
+        content: "Définissez un nouveau mot de passe pour votre compte BA Medical Store.",
       },
       { name: "robots", content: "noindex" },
     ],
@@ -111,9 +110,7 @@ function ResetPasswordPage() {
       <div className="container-page grid min-h-[70dvh] place-items-center py-10">
         <Card className="w-full max-w-md p-6 sm:p-8">
           <div className="flex flex-col items-center gap-2 text-center">
-            <div
-              className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]"
-            >
+            <div className="flex size-11 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]">
               <HeartPulse className="size-5" aria-hidden="true" />
             </div>
             <h1 className="text-xl font-bold">Nouveau mot de passe</h1>
