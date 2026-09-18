@@ -60,7 +60,7 @@ function HomePage() {
         <div className="container-page grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
           <div className="animate-fade-in space-y-6">
             <Badge variant="soft" className="w-fit">
-              <Sparkles aria-hidden="true" /> Nouveau · Catalogue Pharmatec en ligne
+              <Sparkles aria-hidden="true" /> Catalogue BA Medical Store
             </Badge>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Matériel médical <span className="text-primary">professionnel</span>, livré partout en
@@ -80,21 +80,21 @@ function HomePage() {
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/contact">Devis professionnel</Link>
+                <Link to="/contact">Nous contacter</Link>
               </Button>
             </div>
             <dl className="grid max-w-md grid-cols-3 gap-4 pt-2">
               <div>
-                <dt className="text-xs text-muted-foreground">Références</dt>
-                <dd className="text-lg font-bold">2 500+</dd>
+                <dt className="text-xs text-muted-foreground">Catalogue</dt>
+                <dd className="text-lg font-bold">En ligne</dd>
               </div>
               <div>
-                <dt className="text-xs text-muted-foreground">Notes vérifiées</dt>
-                <dd className="text-lg font-bold">4.8/5</dd>
+                <dt className="text-xs text-muted-foreground">Commande</dt>
+                <dd className="text-lg font-bold">WhatsApp</dd>
               </div>
               <div>
-                <dt className="text-xs text-muted-foreground">Pros équipés</dt>
-                <dd className="text-lg font-bold">1 400+</dd>
+                <dt className="text-xs text-muted-foreground">Livraison</dt>
+                <dd className="text-lg font-bold">Tunisie</dd>
               </div>
             </dl>
           </div>
@@ -138,7 +138,7 @@ function HomePage() {
           <FeatureCard
             icon={Sparkles}
             title="Prix professionnels"
-            description="Tarifs dégressifs et abonnement BA Medical+ pour économiser."
+            description="Une équipe disponible pour vous orienter vers le produit adapté."
           />
         </div>
       </section>

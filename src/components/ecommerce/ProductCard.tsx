@@ -3,15 +3,12 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PriceBlock } from "./PriceBlock";
-import { Rating } from "./Rating";
-import { WishlistButton } from "./WishlistButton";
-import { AddToCartButton } from "./AddToCartButton";
 import { AvailabilityBadge } from "./AvailabilityBadge";
-import { CompareToggleButton } from "./CompareDrawer";
 import type { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
-import { Pill, Eye, Truck, Repeat, ShieldCheck, Plug, Stethoscope } from "lucide-react";
+import { Pill, Eye, Truck, ShieldCheck, Plug, Stethoscope } from "lucide-react";
 import { uiActions } from "@/hooks/useUiStore";
+import { WhatsAppOrderButton } from "./WhatsAppOrderButton";
 
 interface ProductCardProps {
   product: Product;
@@ -20,10 +17,10 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, layout = "grid", className }: ProductCardProps) {
-  const outOfStock =
-    product.availability === "out_of_stock" || product.availability === "unavailable";
+  const unavailable = product.availability === "out_of_stock" || product.availability === "unavailable";
   const image = product.images?.[0];
   const chips = buildChips(product);
+
   return (
     <Card
       className={cn(
@@ -60,12 +57,6 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
             </Badge>
           )}
         </div>
-        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
-          <WishlistButton productId={product.id} />
-          <CompareToggleButton product={product} />
-        </div>
-
-        {/* Quick view — apparaît au hover (desktop), toujours visible sur tactile */}
         <div className="absolute inset-x-3 bottom-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:opacity-0">
           <Button
             type="button"
@@ -100,10 +91,6 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
           <p className="line-clamp-2 text-sm text-muted-foreground">{product.shortDescription}</p>
         )}
 
-        {product.rating !== undefined && (
-          <Rating value={product.rating} count={product.ratingCount} />
-        )}
-
         {chips.length > 0 && (
           <ul className="flex flex-wrap gap-1.5" aria-label="Avantages produit">
             {chips.map((c) => (
@@ -122,14 +109,14 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
           </ul>
         )}
 
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
+        <div className="mt-auto flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <PriceBlock price={product.price} compareAtPrice={product.compareAtPrice} size="lg" />
-          <AddToCartButton
+          <WhatsAppOrderButton
             product={product}
             size="sm"
-            disabled={outOfStock}
-            aria-label={`Ajouter ${product.name} au panier`}
-            label="Ajouter"
+            disabled={unavailable}
+            label="Commander"
+            aria-label={`Commander ${product.name} sur WhatsApp`}
           />
         </div>
       </div>
@@ -137,18 +124,11 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
   );
 }
 
-/** Petits chips métier affichés sous les infos produit. */
 function buildChips(product: Product) {
   const chips: { label: string; Icon: typeof Truck; emphasis?: boolean }[] = [];
   if (product.deliveryEta) chips.push({ label: `Livré ${product.deliveryEta}`, Icon: Truck });
-  if (product.subscriptionEligible)
-    chips.push({ label: "Abonnement", Icon: Repeat, emphasis: true });
-  if (product.warrantyMonths)
-    chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
-  if (product.compatibleWith && product.compatibleWith.length > 0)
-    chips.push({
-      label: `${product.compatibleWith.length} compat.`,
-      Icon: Plug,
-    });
+  if (product.warrantyMonths) chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
+  if (product.compatibleWith?.length)
+    chips.push({ label: `${product.compatibleWith.length} compat.`, Icon: Plug });
   return chips.slice(0, 3);
 }

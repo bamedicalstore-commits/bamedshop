@@ -18,6 +18,7 @@ import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CatalogueRouteImport } from './routes/catalogue'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
 import { Route as AdvisorRouteImport } from './routes/advisor'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AccountRouteImport } from './routes/account'
@@ -86,6 +87,11 @@ const CartRoute = CartRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/auth/reset-password',
+  path: '/auth/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdvisorRoute = AdvisorRouteImport.update({
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
@@ -321,6 +329,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/advisor'
     | '/auth'
+    | '/auth/reset-password'
     | '/cart'
     | '/catalogue'
     | '/checkout'
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/'
     | '/advisor'
     | '/auth'
+    | '/auth/reset-password'
     | '/cart'
     | '/catalogue'
     | '/checkout'
@@ -425,6 +435,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AdvisorRoute: typeof AdvisorRoute
   AuthRoute: typeof AuthRoute
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
   CartRoute: typeof CartRoute
   CatalogueRoute: typeof CatalogueRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -505,6 +516,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/auth/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/advisor': {
@@ -735,6 +753,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AdvisorRoute: AdvisorRoute,
   AuthRoute: AuthRoute,
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
   CartRoute: CartRoute,
   CatalogueRoute: CatalogueRoute,
   CheckoutRoute: CheckoutRoute,

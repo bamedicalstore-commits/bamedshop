@@ -5,30 +5,32 @@ import { cn } from "@/lib/utils";
 
 interface FloatingWhatsAppProps {
   /** International format without leading +, e.g. "21671000000" */
-  phone?: string;
   defaultMessage?: string;
   className?: string;
 }
 
-const AGENT_NAME = "Support BA Medical";
+const AGENT_NAME = "BA Medical Store";
 
 /**
  * Bouton WhatsApp flottant + mini bulle promotionnelle.
  * WCAG : role button, aria-labels, focus visible, dismissible.
  */
 export function FloatingWhatsApp({
-  phone = "21671000000",
   defaultMessage = "Bonjour BA Medical Store, j'ai une question sur un produit.",
   className,
 }: FloatingWhatsAppProps) {
   const [open, setOpen] = useState(false);
   const [dismissed, setDismissed] = useState(true);
   const [message, setMessage] = useState(defaultMessage);
+  const phone = ((import.meta.env.VITE_WHATSAPP_BUSINESS_PHONE ?? "") as string).replace(/\D/g, "");
 
   useEffect(() => {
+    if (!phone) return;
     const t = window.setTimeout(() => setDismissed(false), 2500);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [phone]);
+
+  if (!phone) return null;
 
   const buildHref = () => `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 
@@ -64,7 +66,7 @@ export function FloatingWhatsApp({
               <MessageCircle className="size-4" aria-hidden="true" />
               <div>
                 <p className="text-sm font-semibold leading-tight">{AGENT_NAME}</p>
-                <p className="text-[10px] text-primary-foreground/80">En ligne · répond en 5 min</p>
+                <p className="text-[10px] text-primary-foreground/80">WhatsApp Business</p>
               </div>
             </div>
             <button
@@ -77,7 +79,7 @@ export function FloatingWhatsApp({
           </div>
           <div className="space-y-3 bg-surface-muted p-4">
             <div className="max-w-[85%] rounded-2xl rounded-tl-sm border border-border bg-background p-3 text-xs text-foreground shadow-sm">
-              Bonjour 👋, comment pouvons-nous vous aider ?
+              Bonjour, comment pouvons-nous vous aider ?
             </div>
             <label htmlFor="wa-message" className="sr-only">
               Votre message
