@@ -1,26 +1,22 @@
 import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Stethoscope } from "lucide-react";
+import { ArrowUpRight, Stethoscope } from "lucide-react";
 import type { Category } from "@/types/product";
 
 export function CategoryCard({ category }: { category: Category }) {
   return (
-    <Link to="/categories/$slug" params={{ slug: category.slug }} className="group block">
-      <Card className="flex h-full flex-col gap-4 border-border/70 p-6 transition-all hover:border-primary/40 hover:shadow-[var(--shadow-elevated)]">
-        <div className="flex size-12 items-center justify-center rounded-lg bg-primary-soft text-primary">
-          <Stethoscope className="size-6" aria-hidden="true" />
-        </div>
-        <div className="space-y-1">
-          <h3 className="text-base font-semibold text-foreground">{category.name}</h3>
-          {category.description && (
-            <p className="line-clamp-2 text-sm text-muted-foreground">{category.description}</p>
-          )}
-        </div>
-        <div className="mt-auto flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">{category.productCount ?? 0} produits</span>
-          <span className="inline-flex items-center gap-1 font-medium text-primary transition-transform group-hover:translate-x-0.5">
-            Voir <ArrowRight className="size-3.5" aria-hidden="true" />
+    <Link to="/categories/$slug" params={{ slug: category.slug }} className="group block h-full">
+      <Card className="flex h-full min-h-40 flex-col justify-between gap-6 border-border/80 bg-card p-5 shadow-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[var(--shadow-elevated)] sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <span className="flex size-10 items-center justify-center rounded-xl bg-primary-soft text-primary">
+            <Stethoscope className="size-[18px]" aria-hidden="true" />
           </span>
+          <ArrowUpRight className="size-4 text-muted-foreground/50 transition-all duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden="true" />
+        </div>
+        <div>
+          <h3 className="text-[15px] font-semibold tracking-[-0.01em] text-foreground">{category.name}</h3>
+          {category.description ? <p className="mt-1.5 line-clamp-2 text-sm leading-5 text-muted-foreground">{category.description}</p> : null}
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">{category.productCount ?? 0} produits</p>
         </div>
       </Card>
     </Link>
