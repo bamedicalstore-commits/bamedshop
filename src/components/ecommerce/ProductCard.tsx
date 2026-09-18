@@ -4,14 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { PriceBlock } from "./PriceBlock";
 import { Rating } from "./Rating";
-import { WishlistButton } from "./WishlistButton";
-import { AddToCartButton } from "./AddToCartButton";
 import { AvailabilityBadge } from "./AvailabilityBadge";
-import { CompareToggleButton } from "./CompareDrawer";
+import { WhatsAppOrderButton } from "./WhatsAppOrderButton";
 import type { Product } from "@/types/product";
 import { cn } from "@/lib/utils";
-import { Pill, Eye, Truck, Repeat, ShieldCheck, Plug, Stethoscope } from "lucide-react";
-import { uiActions } from "@/hooks/useUiStore";
+import { Pill, ArrowUpRight, Truck, ShieldCheck, Plug, Stethoscope } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -20,69 +17,55 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, layout = "grid", className }: ProductCardProps) {
-  const outOfStock =
+  const unavailable =
     product.availability === "out_of_stock" || product.availability === "unavailable";
   const image = product.images?.[0];
   const chips = buildChips(product);
+
   return (
     <Card
       className={cn(
-        "group relative flex overflow-hidden border-border/70 p-0 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-elevated)]",
+        "group flex overflow-hidden border-border/80 bg-card p-0 shadow-none transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[var(--shadow-elevated)]",
         layout === "grid" ? "flex-col" : "flex-row",
         className,
       )}
     >
-      <div
+      <Link
+        to="/product/$slug"
+        params={{ slug: product.slug }}
         className={cn(
-          "relative shrink-0 overflow-hidden bg-surface-muted",
-          layout === "grid" ? "aspect-square w-full" : "aspect-square w-40 sm:w-48",
+          "relative block shrink-0 overflow-hidden bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+          layout === "grid" ? "aspect-square w-full" : "aspect-square w-36 sm:w-44",
         )}
+        aria-label={`Voir ${product.name}`}
       >
         {image ? (
           <img
             src={image}
             alt={product.name}
             loading="lazy"
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="size-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.025]"
           />
         ) : (
-          <div className="flex size-full items-center justify-center text-muted-foreground/40 transition-transform duration-500 group-hover:scale-105">
-            <Pill className="size-16" aria-hidden="true" />
+          <div className="flex size-full items-center justify-center text-muted-foreground/30">
+            <Pill className="size-14" aria-hidden="true" />
           </div>
         )}
-        <div className="absolute left-3 top-3 flex flex-col gap-1.5">
+
+        <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
           {product.isNew && <Badge variant="info">Nouveau</Badge>}
-          {product.isBestSeller && <Badge variant="soft">Best-seller</Badge>}
-          {product.compareAtPrice && <Badge variant="destructive">Promo</Badge>}
-          {product.prescriptionRequired && (
-            <Badge variant="warning" aria-label="Sur ordonnance">
-              <Stethoscope aria-hidden="true" /> Rx
-            </Badge>
-          )}
-        </div>
-        <div className="absolute right-3 top-3 flex flex-col gap-1.5">
-          <WishlistButton productId={product.id} />
-          <CompareToggleButton product={product} />
+          {product.isBestSeller && <Badge variant="soft">Sélection</Badge>}
+          {product.compareAtPrice && <Badge variant="destructive">Offre</Badge>}
         </div>
 
-        {/* Quick view — apparaît au hover (desktop), toujours visible sur tactile */}
-        <div className="absolute inset-x-3 bottom-3 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 md:opacity-0">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            width="full"
-            onClick={() => uiActions.openQuickView(product)}
-            className="bg-background/95 backdrop-blur"
-          >
-            <Eye aria-hidden="true" /> Aperçu rapide
-          </Button>
-        </div>
-      </div>
+        <span className="absolute bottom-3 right-3 inline-flex size-9 items-center justify-center rounded-full border border-border/80 bg-background/90 text-foreground opacity-0 shadow-sm backdrop-blur transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100">
+          <ArrowUpRight className="size-4" aria-hidden="true" />
+        </span>
+      </Link>
 
-      <div className={cn("flex flex-1 flex-col gap-3 p-4", layout === "list" && "sm:p-5")}>
-        <div className="flex items-center justify-between gap-2">
-          <span className="truncate text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <div className={cn("flex flex-1 flex-col gap-3 p-4 sm:p-5", layout === "list" && "sm:p-5")}>
+        <div className="flex items-center justify-between gap-3">
+          <span className="truncate text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
             {product.brand}
           </span>
           <AvailabilityBadge status={product.availability} />
@@ -91,13 +74,15 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
         <Link
           to="/product/$slug"
           params={{ slug: product.slug }}
-          className="line-clamp-2 text-sm font-semibold text-foreground transition-colors hover:text-primary"
+          className="line-clamp-2 text-[15px] font-semibold leading-5 tracking-[-0.01em] text-foreground transition-colors hover:text-primary"
         >
           {product.name}
         </Link>
 
         {product.shortDescription && layout === "list" && (
-          <p className="line-clamp-2 text-sm text-muted-foreground">{product.shortDescription}</p>
+          <p className="line-clamp-2 text-sm leading-5 text-muted-foreground">
+            {product.shortDescription}
+          </p>
         )}
 
         {product.rating !== undefined && (
@@ -105,31 +90,31 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
         )}
 
         {chips.length > 0 && (
-          <ul className="flex flex-wrap gap-1.5" aria-label="Avantages produit">
-            {chips.map((c) => (
-              <li key={c.label}>
+          <ul className="flex flex-wrap gap-1.5" aria-label="Informations produit">
+            {chips.map((chip) => (
+              <li key={chip.label}>
                 <span
                   className={cn(
-                    "inline-flex items-center gap-1 rounded-full border border-border/70 bg-surface px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground",
-                    c.emphasis && "border-primary/30 bg-primary-soft text-primary",
+                    "inline-flex items-center gap-1 rounded-full border border-border/70 bg-surface px-2 py-1 text-[10px] font-medium text-muted-foreground",
+                    chip.emphasis && "border-primary/20 bg-primary-soft text-primary",
                   )}
                 >
-                  <c.Icon className="size-3" aria-hidden="true" />
-                  {c.label}
+                  <chip.Icon className="size-3" aria-hidden="true" />
+                  {chip.label}
                 </span>
               </li>
             ))}
           </ul>
         )}
 
-        <div className="mt-auto flex flex-wrap items-end justify-between gap-3">
+        <div className="mt-auto flex flex-col gap-3 border-t border-border/70 pt-3 sm:flex-row sm:items-end sm:justify-between">
           <PriceBlock price={product.price} compareAtPrice={product.compareAtPrice} size="lg" />
-          <AddToCartButton
+          <WhatsAppOrderButton
             product={product}
             size="sm"
-            disabled={outOfStock}
-            aria-label={`Ajouter ${product.name} au panier`}
-            label="Ajouter"
+            disabled={unavailable}
+            label="Commander"
+            aria-label={`Commander ${product.name} sur WhatsApp`}
           />
         </div>
       </div>
@@ -137,18 +122,13 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
   );
 }
 
-/** Petits chips métier affichés sous les infos produit. */
 function buildChips(product: Product) {
   const chips: { label: string; Icon: typeof Truck; emphasis?: boolean }[] = [];
   if (product.deliveryEta) chips.push({ label: `Livré ${product.deliveryEta}`, Icon: Truck });
-  if (product.subscriptionEligible)
-    chips.push({ label: "Abonnement", Icon: Repeat, emphasis: true });
-  if (product.warrantyMonths)
-    chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
-  if (product.compatibleWith && product.compatibleWith.length > 0)
-    chips.push({
-      label: `${product.compatibleWith.length} compat.`,
-      Icon: Plug,
-    });
+  if (product.warrantyMonths) chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
+  if (product.compatibleWith?.length)
+    chips.push({ label: `${product.compatibleWith.length} compat.`, Icon: Plug });
+  if (product.prescriptionRequired)
+    chips.push({ label: "Ordonnance", Icon: Stethoscope, emphasis: true });
   return chips.slice(0, 3);
 }
