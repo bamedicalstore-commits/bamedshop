@@ -255,6 +255,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/advisor': typeof AdvisorRoute
   '/auth': typeof AuthRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
