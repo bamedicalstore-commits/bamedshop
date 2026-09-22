@@ -15,47 +15,14 @@ on:
       - "feat/catalog-supabase-activation-clean"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: genesis-builder-probe-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  temporary-prettier-repair:
-    name: Temporary Prettier Repair
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout PR head
-        uses: actions/checkout@v5
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: "1.2.20"
-      - name: Install locked dependencies
-        run: bun install --frozen-lockfile
-      - name: Apply canonical Prettier formatting
-        run: bunx prettier --write .
-      - name: Commit formatting when needed
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet; then
-            echo "No formatting changes needed."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit -m "style: apply canonical Prettier formatting"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
-
   preflight-build:
-    needs: temporary-prettier-repair
     name: Preflight + Build
     runs-on: ubuntu-latest
     timeout-minutes: 25
