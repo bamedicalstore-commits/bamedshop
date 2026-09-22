@@ -12,9 +12,9 @@ interface PriceBlockProps {
 
 const SIZE_STYLES = {
   sm: { price: "text-sm font-semibold", compare: "text-xs" },
-  md: { price: "text-base font-semibold", compare: "text-sm" },
-  lg: { price: "text-xl font-bold", compare: "text-sm" },
-  xl: { price: "text-3xl font-bold tracking-tight", compare: "text-base" },
+  md: { price: "text-base font-semibold", compare: "text-xs" },
+  lg: { price: "text-lg font-semibold tracking-[-0.015em]", compare: "text-xs" },
+  xl: { price: "text-3xl font-semibold tracking-[-0.03em]", compare: "text-sm" },
 } as const;
 
 export function PriceBlock({
@@ -26,7 +26,6 @@ export function PriceBlock({
 }: PriceBlockProps) {
   const styles = SIZE_STYLES[size];
   const discount = discountFromCompare(price, compareAtPrice);
-
   return (
     <div
       className={cn(
@@ -36,14 +35,14 @@ export function PriceBlock({
       )}
     >
       <span className={cn(styles.price, "text-foreground")}>{formatMoney(price)}</span>
-      {compareAtPrice && (
+      {compareAtPrice ? (
         <span className={cn(styles.compare, "text-muted-foreground line-through")}>
           {formatMoney(compareAtPrice)}
         </span>
-      )}
-      {discount !== undefined && (
+      ) : null}
+      {discount !== undefined ? (
         <span className={cn(styles.compare, "font-semibold text-success")}>-{discount}%</span>
-      )}
+      ) : null}
     </div>
   );
 }

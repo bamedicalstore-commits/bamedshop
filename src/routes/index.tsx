@@ -1,28 +1,21 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Truck, HeartHandshake, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  ShieldCheck,
+  Truck,
+  HeartHandshake,
+  MessageCircle,
+  Package,
+} from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "@/components/common/SectionHeader";
 import { FeatureCard } from "@/components/common/FeatureCard";
 import { CategoryCard } from "@/components/ecommerce/CategoryCard";
 import { BrandCard } from "@/components/ecommerce/BrandCard";
 import { ProductCard } from "@/components/ecommerce/ProductCard";
-import { SmartSearchTrigger } from "@/components/ecommerce/SmartSearch";
-import { MedicalProductFinder } from "@/components/ecommerce/MedicalProductFinder";
-import { TrustSection } from "@/components/marketing/TrustSection";
-import { MedicalPlusCard } from "@/components/marketing/MedicalPlusCard";
-import { B2BBanner } from "@/components/marketing/B2BBanner";
-import { BrandStory } from "@/components/marketing/BrandStory";
-import { HowItWorks } from "@/components/marketing/HowItWorks";
-import { HealthPacksGrid } from "@/components/marketing/HealthPacksGrid";
-import { ReviewsSection } from "@/components/marketing/ReviewsSection";
-import { BlogTeaser } from "@/components/marketing/BlogTeaser";
-import { FaqTeaser } from "@/components/marketing/FaqTeaser";
-import { NewsletterSection } from "@/components/marketing/NewsletterSection";
-import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { Package } from "lucide-react";
 import { EmptyState } from "@/components/feedback/EmptyState";
 import { ErrorState } from "@/components/feedback/ErrorState";
 import { ProductGridSkeleton } from "@/components/feedback/Skeletons";
@@ -33,20 +26,19 @@ import { CATEGORIES, BRANDS } from "@/constants/navigation";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "BA Medical Store — Matériel médical certifié en Tunisie" },
+      { title: "BA Medical Store — Matériel médical en Tunisie" },
       {
         name: "description",
         content:
-          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
+          "BA Medical Store propose du matériel médical et des équipements de santé pour professionnels et particuliers en Tunisie.",
       },
-      { property: "og:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
+      { property: "og:title", content: "BA Medical Store — Matériel médical en Tunisie" },
       {
         property: "og:description",
         content:
-          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
+          "Découvrez notre sélection de matériel médical et commandez directement avec BA Medical Store.",
       },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: HomePage,
@@ -55,189 +47,147 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   return (
     <SiteLayout>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-primary-soft/60 to-background">
-        <div className="container-page grid gap-10 py-14 lg:grid-cols-2 lg:items-center lg:py-20">
-          <div className="animate-fade-in space-y-6">
-            <Badge variant="soft" className="w-fit">
-              <Sparkles aria-hidden="true" /> Nouveau · Catalogue Pharmatec en ligne
-            </Badge>
-            <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Matériel médical <span className="text-primary">professionnel</span>, livré partout en
-              Tunisie.
-            </h1>
-            <p className="max-w-xl text-base text-muted-foreground sm:text-lg">
-              Dispositifs, consommables et mobilier certifiés pour médecins, cliniques, infirmiers,
-              kinés et particuliers. Sélection experte, prix pros, service premium.
+      <section className="relative overflow-hidden border-b border-border bg-surface">
+        <div className="container-page grid gap-10 py-12 sm:py-16 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:py-20">
+          <div className="max-w-2xl">
+            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-primary">
+              BA Medical Store
             </p>
-            <div className="max-w-lg">
-              <SmartSearchTrigger />
-            </div>
-            <div className="flex flex-wrap gap-3">
+            <h1 className="max-w-3xl text-4xl font-semibold leading-[1.08] tracking-[-0.035em] text-foreground sm:text-5xl lg:text-6xl">
+              Le matériel médical, simplement.
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-muted-foreground sm:text-lg">
+              Une sélection de matériel médical et d’équipements de santé pour les professionnels
+              comme pour les particuliers, avec un accompagnement direct par notre équipe.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg">
                 <Link to="/catalogue">
-                  Voir le catalogue <ArrowRight aria-hidden="true" />
+                  Explorer le catalogue <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link to="/contact">Devis professionnel</Link>
+                <Link to="/contact">
+                  <MessageCircle aria-hidden="true" /> Nous contacter
+                </Link>
               </Button>
             </div>
-            <dl className="grid max-w-md grid-cols-3 gap-4 pt-2">
-              <div>
-                <dt className="text-xs text-muted-foreground">Références</dt>
-                <dd className="text-lg font-bold">2 500+</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">Notes vérifiées</dt>
-                <dd className="text-lg font-bold">4.8/5</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-muted-foreground">Pros équipés</dt>
-                <dd className="text-lg font-bold">1 400+</dd>
-              </div>
-            </dl>
+            <p className="mt-5 text-xs text-muted-foreground">
+              Commande confirmée directement avec notre équipe sur WhatsApp.
+            </p>
           </div>
-          <div
-            className="relative hidden aspect-[4/5] w-full rounded-3xl bg-gradient-to-br from-primary/20 to-info-soft lg:block"
-            aria-hidden="true"
-          >
-            <div className="absolute inset-4 rounded-2xl border border-border/60 bg-background/60 backdrop-blur-sm" />
-            <div className="absolute bottom-6 left-6 right-6 flex gap-3">
-              <div className="flex-1 surface-card px-4 py-3">
-                <p className="text-xs text-muted-foreground">Livraison</p>
-                <p className="text-lg font-bold">24-48h</p>
-              </div>
-              <div className="flex-1 surface-card px-4 py-3">
-                <p className="text-xs text-muted-foreground">Certifiés CE</p>
-                <p className="text-lg font-bold">100%</p>
+
+          <div className="relative min-h-[360px] overflow-hidden rounded-3xl border border-border bg-background shadow-[var(--shadow-soft)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_20%,var(--primary-soft),transparent_48%)]" />
+            <div className="relative flex h-full min-h-[360px] flex-col justify-end p-6 sm:p-8">
+              <div className="max-w-sm rounded-2xl border border-border/80 bg-background/90 p-5 shadow-[var(--shadow-soft)] backdrop-blur">
+                <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
+                  Votre sélection
+                </p>
+                <p className="mt-2 text-xl font-semibold tracking-tight">
+                  Des produits choisis pour la santé au quotidien.
+                </p>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  Consultez les détails, vérifiez les informations disponibles et échangez avec
+                  notre équipe avant de commander.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Réassurance rapide */}
-      <section className="container-page py-12">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="container-page py-10 sm:py-12">
+        <div className="grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3">
           <FeatureCard
             icon={ShieldCheck}
-            title="Produits certifiés"
-            description="Dispositifs CE et normes internationales, traçabilité complète."
+            title="Sélection rigoureuse"
+            description="Des références choisies avec attention pour leur usage et leurs caractéristiques."
           />
           <FeatureCard
             icon={Truck}
-            title="Livraison rapide"
-            description="Expédition sous 24h en Tunisie, offerte dès 200 DT."
+            title="Livraison en Tunisie"
+            description="Les modalités de livraison sont confirmées avec vous lors de la commande."
           />
           <FeatureCard
             icon={HeartHandshake}
-            title="Support pro"
-            description="Conseillers médicaux dédiés B2B pour cabinets et cliniques."
-          />
-          <FeatureCard
-            icon={Sparkles}
-            title="Prix professionnels"
-            description="Tarifs dégressifs et abonnement BA Medical+ pour économiser."
+            title="Conseil humain"
+            description="Une équipe disponible pour vous aider à choisir le produit adapté."
           />
         </div>
       </section>
 
-      {/* 1. Pourquoi BA Medical Store — brand story */}
-      <BrandStory />
-
-      {/* 2. Nos marques */}
-      <section className="border-y border-border bg-surface py-14">
-        <div className="container-page">
-          <SectionHeader
-            eyebrow="Nos partenaires"
-            title="Marques référentes"
-            actionLabel="Toutes les marques"
-            actionTo="/brands"
-          />
-          <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
-            {BRANDS.map((b) => (
-              <BrandCard key={b.slug} brand={b} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Catégories */}
-      <section className="container-page py-14">
+      <section className="container-page py-12 sm:py-16">
         <SectionHeader
           eyebrow="Explorer"
-          title="Nos catégories"
-          description="Une gamme complète pour équiper votre pratique."
-          actionLabel="Toutes les catégories"
+          title="Les catégories essentielles"
+          description="Accédez rapidement aux familles de produits BA Medical Store."
+          actionLabel="Voir toutes les catégories"
           actionTo="/categories"
         />
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {CATEGORIES.slice(0, 8).map((c) => (
-            <CategoryCard key={c.slug} category={c} />
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {CATEGORIES.slice(0, 8).map((category) => (
+            <CategoryCard key={category.slug} category={category} />
           ))}
         </div>
       </section>
 
-      {/* 4. Comment ça fonctionne */}
-      <HowItWorks />
-
-      {/* 5. Medical Product Finder */}
-      <section className="container-page py-10">
-        <MedicalProductFinder />
+      <section className="border-y border-border bg-surface py-12 sm:py-16">
+        <div className="container-page">
+          <SectionHeader
+            eyebrow="Sélection"
+            title="Produits disponibles"
+            description="Les références actuellement publiées dans notre catalogue."
+            actionLabel="Tout le catalogue"
+            actionTo="/catalogue"
+          />
+          <PublicProductsGrid />
+        </div>
       </section>
 
-      {/* 6. Produits populaires */}
-      <section className="container-page py-14">
+      <section className="container-page py-12 sm:py-16">
         <SectionHeader
-          eyebrow="Populaires"
-          title="Best-sellers"
-          description="Les produits préférés des professionnels."
-          actionLabel="Tout le catalogue"
-          actionTo="/catalogue"
+          eyebrow="Marques"
+          title="Des marques reconnues"
+          description="Découvrez les marques présentes dans notre sélection."
+          actionLabel="Toutes les marques"
+          actionTo="/brands"
         />
-        <BestSellersGrid />
+        <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {BRANDS.slice(0, 6).map((brand) => (
+            <BrandCard key={brand.slug} brand={brand} />
+          ))}
+        </div>
       </section>
 
-      {/* 7. Packs santé */}
-      <HealthPacksGrid limit={6} />
-
-      {/* 8. BA Medical+ */}
-      <section className="container-page py-14">
-        <MedicalPlusCard />
+      <section className="container-page pb-16 sm:pb-20">
+        <div className="overflow-hidden rounded-3xl bg-primary px-6 py-10 text-primary-foreground sm:px-10 sm:py-12">
+          <div className="flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground/70">
+                Besoin d’aide ?
+              </p>
+              <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">
+                Nous vous orientons vers le bon produit.
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-primary-foreground/80 sm:text-base">
+                Pour une question produit, une disponibilité ou une commande, échangez directement
+                avec BA Medical Store.
+              </p>
+            </div>
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/contact">
+                Contacter BA Medical Store <ArrowRight aria-hidden="true" />
+              </Link>
+            </Button>
+          </div>
+        </div>
       </section>
-
-      {/* 9. Avis clients */}
-      <ReviewsSection />
-
-      {/* Trust long-form */}
-      <section className="py-14">
-        <TrustSection />
-      </section>
-
-      {/* 10. Blog santé */}
-      <BlogTeaser />
-
-      {/* B2B */}
-      <section className="container-page py-14">
-        <B2BBanner />
-      </section>
-
-      {/* 11. FAQ */}
-      <FaqTeaser />
-
-      {/* 12. Newsletter */}
-      <NewsletterSection />
     </SiteLayout>
   );
 }
 
-/**
- * Grille "Best-sellers" — première surface publique branchée sur la DB réelle
- * via `listPublicProducts` (lecture seule). Utilise les états existants du
- * design system : ProductGridSkeleton / EmptyState / ErrorState.
- */
-function BestSellersGrid() {
+function PublicProductsGrid() {
   const fetchProducts = useServerFn(listPublicProducts);
   const { data, isPending, isError } = useQuery({
     queryKey: ["public-products", { limit: 4 }],
@@ -245,25 +195,30 @@ function BestSellersGrid() {
   });
 
   if (isPending) return <ProductGridSkeleton count={4} />;
-  if (isError || data?.error)
+  if (isError || data?.error) {
     return <ErrorState description="Catalogue temporairement indisponible." />;
+  }
 
   const products = (data?.products ?? []).map((row) => toProduct(row));
-
   if (products.length === 0) {
     return (
       <EmptyState
         icon={Package}
-        title="Aucun produit disponible"
-        description="Le catalogue sera bientôt enrichi. Revenez très prochainement."
+        title="Le catalogue arrive"
+        description="Les produits seront progressivement publiés dans cette sélection."
+        action={
+          <Button asChild variant="outline">
+            <Link to="/contact">Nous contacter</Link>
+          </Button>
+        }
       />
     );
   }
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-      {products.map((p) => (
-        <ProductCard key={p.id} product={p} />
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
       ))}
     </div>
   );

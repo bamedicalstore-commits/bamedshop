@@ -1,3 +1,4 @@
+# Canonical build gate: format, lint, catalog tests, build, and runtime smoke.
 name: GENESIS Builder Probe
 
 on:
