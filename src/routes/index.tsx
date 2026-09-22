@@ -1,5 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, ShieldCheck, Truck, HeartHandshake, MessageCircle, Package } from "lucide-react";
+import {
+  ArrowRight,
+  ShieldCheck,
+  Truck,
+  HeartHandshake,
+  MessageCircle,
+  Package,
+} from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/layout/SiteLayout";
@@ -169,7 +176,9 @@ function HomePage() {
               </p>
             </div>
             <Button asChild size="lg" variant="secondary">
-              <Link to="/contact">Contacter BA Medical Store <ArrowRight aria-hidden="true" /></Link>
+              <Link to="/contact">
+                Contacter BA Medical Store <ArrowRight aria-hidden="true" />
+              </Link>
             </Button>
           </div>
         </div>

@@ -125,7 +125,8 @@ export function ProductCard({ product, layout = "grid", className }: ProductCard
 function buildChips(product: Product) {
   const chips: { label: string; Icon: typeof Truck; emphasis?: boolean }[] = [];
   if (product.deliveryEta) chips.push({ label: `Livré ${product.deliveryEta}`, Icon: Truck });
-  if (product.warrantyMonths) chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
+  if (product.warrantyMonths)
+    chips.push({ label: `Garantie ${product.warrantyMonths} mois`, Icon: ShieldCheck });
   if (product.compatibleWith?.length)
     chips.push({ label: `${product.compatibleWith.length} compat.`, Icon: Plug });
   if (product.prescriptionRequired)

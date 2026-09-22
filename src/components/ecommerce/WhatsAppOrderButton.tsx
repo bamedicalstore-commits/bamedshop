@@ -14,7 +14,9 @@ export function buildWhatsAppOrderUrl(product: Product, quantity = 1): string | 
     `Quantité : ${quantity}`,
     "",
     "Merci de me confirmer la disponibilité et les modalités de livraison.",
-  ].filter(Boolean).join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
   return `https://wa.me/${PHONE}?text=${encodeURIComponent(message)}`;
 }
 
@@ -24,8 +26,25 @@ interface WhatsAppOrderButtonProps extends Omit<ButtonProps, "children"> {
   label?: string;
 }
 
-export function WhatsAppOrderButton({ product, quantity = 1, label = "Commander", ...rest }: WhatsAppOrderButtonProps) {
+export function WhatsAppOrderButton({
+  product,
+  quantity = 1,
+  label = "Commander",
+  ...rest
+}: WhatsAppOrderButtonProps) {
   const href = buildWhatsAppOrderUrl(product, quantity);
-  if (!href) return <Button type="button" disabled {...rest}><MessageCircle aria-hidden="true" /> Commander</Button>;
-  return <Button asChild {...rest}><a href={href} target="_blank" rel="noopener noreferrer"><MessageCircle aria-hidden="true" /><span>{label}</span></a></Button>;
+  if (!href)
+    return (
+      <Button type="button" disabled {...rest}>
+        <MessageCircle aria-hidden="true" /> Commander
+      </Button>
+    );
+  return (
+    <Button asChild {...rest}>
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        <MessageCircle aria-hidden="true" />
+        <span>{label}</span>
+      </a>
+    </Button>
+  );
 }
