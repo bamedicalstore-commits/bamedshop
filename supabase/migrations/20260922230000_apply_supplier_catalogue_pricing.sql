@@ -27,14 +27,11 @@ set
   retail_price_approved = true,
   copy_approved = true,
   active = true,
-  catalog_activation_status = case
-    when p.media_approved then 'ACTIVE'::public.catalog_activation_status
-    else 'BLOCKED'::public.catalog_activation_status
-  end,
-  catalog_activation_reason = case
-    when p.media_approved then 'ready'::public.catalog_activation_reason
-    else 'media_not_approved'::public.catalog_activation_reason
-  end,
+  -- Pricing approval is not a substitute for the final catalog activation gate.
+  -- Public activation remains blocked until media approval is completed through the
+  -- canonical activation workflow.
+  catalog_activation_status = 'BLOCKED'::public.catalog_activation_status,
+  catalog_activation_reason = 'media_not_approved'::public.catalog_activation_reason,
   retail_updated_at = now(),
   technical_specs = jsonb_set(
     jsonb_set(
