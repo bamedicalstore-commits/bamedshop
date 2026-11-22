@@ -20,6 +20,7 @@ const SOLD_BRANDS = ["Bionime", "Sterilance", "Clickfine", "Rossmax"];
 const DIABETES_LINKS = [
   { label: "Pack Diabète Démarrage", to: "/packs/diabete" as const },
   { label: "Abonnement Diabète Insuline", to: "/packs/diabete" as const },
+  { label: "Tous nos produits", to: "/produits" as const },
 ];
 
 const linkClass =

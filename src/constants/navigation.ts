@@ -72,6 +72,7 @@ export const BRANDS: Brand[] = [
 export const MAIN_NAV = [
   { label: "Accueil", to: "/" as const },
   { label: "Pack diabète", to: "/packs/diabete" as const },
+  { label: "Produits", to: "/produits" as const },
   { label: "Questions fréquentes", to: "/faq" as const },
   { label: "Contact", to: "/contact" as const },
 ];

@@ -9,96 +9,48 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SearchRouteImport } from './routes/search'
-import { Route as PacksRouteImport } from './routes/packs'
-import { Route as FaqRouteImport } from './routes/faq'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CompareRouteImport } from './routes/compare'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as CatalogueRouteImport } from './routes/catalogue'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as AuthRouteImport } from './routes/auth'
-import { Route as AdvisorRouteImport } from './routes/advisor'
-import { Route as AdminRouteImport } from './routes/admin'
-import { Route as AccountRouteImport } from './routes/account'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
-import { Route as BrandsIndexRouteImport } from './routes/brands.index'
-import { Route as BlogIndexRouteImport } from './routes/blog.index'
-import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AdvisorRouteImport } from './routes/advisor'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CartRouteImport } from './routes/cart'
+import { Route as CatalogueRouteImport } from './routes/catalogue'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as PacksRouteImport } from './routes/packs'
+import { Route as SearchRouteImport } from './routes/search'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
-import { Route as ProductSlugRouteImport } from './routes/product.$slug'
-import { Route as PacksDiabeteRouteImport } from './routes/packs.diabete'
-import { Route as PacksSlugRouteImport } from './routes/packs.$slug'
-import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
-import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
-import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
-import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
-import { Route as AdminB2bRouteImport } from './routes/admin.b2b'
-import { Route as AccountWishlistRouteImport } from './routes/account.wishlist'
-import { Route as AccountWarrantiesRouteImport } from './routes/account.warranties'
-import { Route as AccountSubscriptionsRouteImport } from './routes/account.subscriptions'
-import { Route as AccountProfileRouteImport } from './routes/account.profile'
-import { Route as AccountOrdersRouteImport } from './routes/account.orders'
-import { Route as AccountNotificationsRouteImport } from './routes/account.notifications'
-import { Route as AccountDocumentsRouteImport } from './routes/account.documents'
-import { Route as AccountDashboardRouteImport } from './routes/account.dashboard'
 import { Route as AccountAddressesRouteImport } from './routes/account.addresses'
+import { Route as AccountDashboardRouteImport } from './routes/account.dashboard'
+import { Route as AccountDocumentsRouteImport } from './routes/account.documents'
+import { Route as AccountNotificationsRouteImport } from './routes/account.notifications'
+import { Route as AccountOrdersRouteImport } from './routes/account.orders'
+import { Route as AccountProfileRouteImport } from './routes/account.profile'
+import { Route as AccountSubscriptionsRouteImport } from './routes/account.subscriptions'
+import { Route as AccountWarrantiesRouteImport } from './routes/account.warranties'
+import { Route as AccountWishlistRouteImport } from './routes/account.wishlist'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminB2bRouteImport } from './routes/admin.b2b'
+import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as BrandsIndexRouteImport } from './routes/brands.index'
+import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
+import { Route as CategoriesIndexRouteImport } from './routes/categories.index'
+import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
+import { Route as PacksSlugRouteImport } from './routes/packs.$slug'
+import { Route as PacksDiabeteRouteImport } from './routes/packs.diabete'
+import { Route as ProductSlugRouteImport } from './routes/product.$slug'
+import { Route as ProduitsIndexRouteImport } from './routes/produits.index'
+import { Route as ProduitsSlugRouteImport } from './routes/produits.$slug'
 
-const SearchRoute = SearchRouteImport.update({
-  id: '/search',
-  path: '/search',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PacksRoute = PacksRouteImport.update({
-  id: '/packs',
-  path: '/packs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const FaqRoute = FaqRouteImport.update({
-  id: '/faq',
-  path: '/faq',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ContactRoute = ContactRouteImport.update({
-  id: '/contact',
-  path: '/contact',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CompareRoute = CompareRouteImport.update({
-  id: '/compare',
-  path: '/compare',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CatalogueRoute = CatalogueRouteImport.update({
-  id: '/catalogue',
-  path: '/catalogue',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdvisorRoute = AdvisorRouteImport.update({
-  id: '/advisor',
-  path: '/advisor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AccountRoute = AccountRouteImport.update({
@@ -106,114 +58,69 @@ const AccountRoute = AccountRouteImport.update({
   path: '/account',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
-  id: '/categories/',
-  path: '/categories/',
+const AdvisorRoute = AdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BrandsIndexRoute = BrandsIndexRouteImport.update({
-  id: '/brands/',
-  path: '/brands/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogIndexRoute = BlogIndexRouteImport.update({
-  id: '/blog/',
-  path: '/blog/',
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => AdminRoute,
+const CatalogueRoute = CatalogueRouteImport.update({
+  id: '/catalogue',
+  path: '/catalogue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PacksRoute = PacksRouteImport.update({
+  id: '/packs',
+  path: '/packs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AccountIndexRoute = AccountIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AccountRoute,
 } as any)
-const ProductSlugRoute = ProductSlugRouteImport.update({
-  id: '/product/$slug',
-  path: '/product/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PacksDiabeteRoute = PacksDiabeteRouteImport.update({
-  id: '/diabete',
-  path: '/diabete',
-  getParentRoute: () => PacksRoute,
-} as any)
-const PacksSlugRoute = PacksSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => PacksRoute,
-} as any)
-const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
-  id: '/categories/$slug',
-  path: '/categories/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BrandsSlugRoute = BrandsSlugRouteImport.update({
-  id: '/brands/$slug',
-  path: '/brands/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRoute,
-} as any)
-const AdminCatalogRoute = AdminCatalogRouteImport.update({
-  id: '/catalog',
-  path: '/catalog',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AdminB2bRoute = AdminB2bRouteImport.update({
-  id: '/b2b',
-  path: '/b2b',
-  getParentRoute: () => AdminRoute,
-} as any)
-const AccountWishlistRoute = AccountWishlistRouteImport.update({
-  id: '/wishlist',
-  path: '/wishlist',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountWarrantiesRoute = AccountWarrantiesRouteImport.update({
-  id: '/warranties',
-  path: '/warranties',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountSubscriptionsRoute = AccountSubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountProfileRoute = AccountProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountOrdersRoute = AccountOrdersRouteImport.update({
-  id: '/orders',
-  path: '/orders',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountNotificationsRoute = AccountNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => AccountRoute,
-} as any)
-const AccountDocumentsRoute = AccountDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
+const AccountAddressesRoute = AccountAddressesRouteImport.update({
+  id: '/addresses',
+  path: '/addresses',
   getParentRoute: () => AccountRoute,
 } as any)
 const AccountDashboardRoute = AccountDashboardRouteImport.update({
@@ -221,10 +128,115 @@ const AccountDashboardRoute = AccountDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AccountRoute,
 } as any)
-const AccountAddressesRoute = AccountAddressesRouteImport.update({
-  id: '/addresses',
-  path: '/addresses',
+const AccountDocumentsRoute = AccountDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
   getParentRoute: () => AccountRoute,
+} as any)
+const AccountNotificationsRoute = AccountNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountOrdersRoute = AccountOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountProfileRoute = AccountProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountSubscriptionsRoute = AccountSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountWarrantiesRoute = AccountWarrantiesRouteImport.update({
+  id: '/warranties',
+  path: '/warranties',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AccountWishlistRoute = AccountWishlistRouteImport.update({
+  id: '/wishlist',
+  path: '/wishlist',
+  getParentRoute: () => AccountRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminB2bRoute = AdminB2bRouteImport.update({
+  id: '/b2b',
+  path: '/b2b',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCatalogRoute = AdminCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandsIndexRoute = BrandsIndexRouteImport.update({
+  id: '/brands/',
+  path: '/brands/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandsSlugRoute = BrandsSlugRouteImport.update({
+  id: '/brands/$slug',
+  path: '/brands/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesIndexRoute = CategoriesIndexRouteImport.update({
+  id: '/categories/',
+  path: '/categories/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriesSlugRoute = CategoriesSlugRouteImport.update({
+  id: '/categories/$slug',
+  path: '/categories/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PacksSlugRoute = PacksSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => PacksRoute,
+} as any)
+const PacksDiabeteRoute = PacksDiabeteRouteImport.update({
+  id: '/diabete',
+  path: '/diabete',
+  getParentRoute: () => PacksRoute,
+} as any)
+const ProductSlugRoute = ProductSlugRouteImport.update({
+  id: '/product/$slug',
+  path: '/product/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduitsIndexRoute = ProduitsIndexRouteImport.update({
+  id: '/produits/',
+  path: '/produits/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProduitsSlugRoute = ProduitsSlugRouteImport.update({
+  id: '/produits/$slug',
+  path: '/produits/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -259,11 +271,13 @@ export interface FileRoutesByFullPath {
   '/packs/$slug': typeof PacksSlugRoute
   '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/produits/$slug': typeof ProduitsSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/brands/': typeof BrandsIndexRoute
   '/categories/': typeof CategoriesIndexRoute
+  '/produits/': typeof ProduitsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -295,11 +309,13 @@ export interface FileRoutesByTo {
   '/packs/$slug': typeof PacksSlugRoute
   '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/produits/$slug': typeof ProduitsSlugRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
   '/brands': typeof BrandsIndexRoute
   '/categories': typeof CategoriesIndexRoute
+  '/produits': typeof ProduitsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -334,11 +350,13 @@ export interface FileRoutesById {
   '/packs/$slug': typeof PacksSlugRoute
   '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
+  '/produits/$slug': typeof ProduitsSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
   '/brands/': typeof BrandsIndexRoute
   '/categories/': typeof CategoriesIndexRoute
+  '/produits/': typeof ProduitsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -374,11 +392,13 @@ export interface FileRouteTypes {
     | '/packs/$slug'
     | '/packs/diabete'
     | '/product/$slug'
+    | '/produits/$slug'
     | '/account/'
     | '/admin/'
     | '/blog/'
     | '/brands/'
     | '/categories/'
+    | '/produits/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -410,11 +430,13 @@ export interface FileRouteTypes {
     | '/packs/$slug'
     | '/packs/diabete'
     | '/product/$slug'
+    | '/produits/$slug'
     | '/account'
     | '/admin'
     | '/blog'
     | '/brands'
     | '/categories'
+    | '/produits'
   id:
     | '__root__'
     | '/'
@@ -448,11 +470,13 @@ export interface FileRouteTypes {
     | '/packs/$slug'
     | '/packs/diabete'
     | '/product/$slug'
+    | '/produits/$slug'
     | '/account/'
     | '/admin/'
     | '/blog/'
     | '/brands/'
     | '/categories/'
+    | '/produits/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -473,88 +497,20 @@ export interface RootRouteChildren {
   BrandsSlugRoute: typeof BrandsSlugRoute
   CategoriesSlugRoute: typeof CategoriesSlugRoute
   ProductSlugRoute: typeof ProductSlugRoute
+  ProduitsSlugRoute: typeof ProduitsSlugRoute
   BlogIndexRoute: typeof BlogIndexRoute
   BrandsIndexRoute: typeof BrandsIndexRoute
   CategoriesIndexRoute: typeof CategoriesIndexRoute
+  ProduitsIndexRoute: typeof ProduitsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/search': {
-      id: '/search'
-      path: '/search'
-      fullPath: '/search'
-      preLoaderRoute: typeof SearchRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/packs': {
-      id: '/packs'
-      path: '/packs'
-      fullPath: '/packs'
-      preLoaderRoute: typeof PacksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/faq': {
-      id: '/faq'
-      path: '/faq'
-      fullPath: '/faq'
-      preLoaderRoute: typeof FaqRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/compare': {
-      id: '/compare'
-      path: '/compare'
-      fullPath: '/compare'
-      preLoaderRoute: typeof CompareRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/catalogue': {
-      id: '/catalogue'
-      path: '/catalogue'
-      fullPath: '/catalogue'
-      preLoaderRoute: typeof CatalogueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/advisor': {
-      id: '/advisor'
-      path: '/advisor'
-      fullPath: '/advisor'
-      preLoaderRoute: typeof AdvisorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/account': {
@@ -564,40 +520,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/categories/': {
-      id: '/categories/'
-      path: '/categories'
-      fullPath: '/categories/'
-      preLoaderRoute: typeof CategoriesIndexRouteImport
+    '/advisor': {
+      id: '/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AdvisorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/brands/': {
-      id: '/brands/'
-      path: '/brands'
-      fullPath: '/brands/'
-      preLoaderRoute: typeof BrandsIndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/': {
-      id: '/blog/'
-      path: '/blog'
-      fullPath: '/blog/'
-      preLoaderRoute: typeof BlogIndexRouteImport
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/': {
-      id: '/admin/'
-      path: '/'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof AdminRoute
+    '/catalogue': {
+      id: '/catalogue'
+      path: '/catalogue'
+      fullPath: '/catalogue'
+      preLoaderRoute: typeof CatalogueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packs': {
+      id: '/packs'
+      path: '/packs'
+      fullPath: '/packs'
+      preLoaderRoute: typeof PacksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/account/': {
       id: '/account/'
@@ -606,116 +604,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountIndexRouteImport
       parentRoute: typeof AccountRoute
     }
-    '/product/$slug': {
-      id: '/product/$slug'
-      path: '/product/$slug'
-      fullPath: '/product/$slug'
-      preLoaderRoute: typeof ProductSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/packs/diabete': {
-      id: '/packs/diabete'
-      path: '/diabete'
-      fullPath: '/packs/diabete'
-      preLoaderRoute: typeof PacksDiabeteRouteImport
-      parentRoute: typeof PacksRoute
-    }
-    '/packs/$slug': {
-      id: '/packs/$slug'
-      path: '/$slug'
-      fullPath: '/packs/$slug'
-      preLoaderRoute: typeof PacksSlugRouteImport
-      parentRoute: typeof PacksRoute
-    }
-    '/categories/$slug': {
-      id: '/categories/$slug'
-      path: '/categories/$slug'
-      fullPath: '/categories/$slug'
-      preLoaderRoute: typeof CategoriesSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/brands/$slug': {
-      id: '/brands/$slug'
-      path: '/brands/$slug'
-      fullPath: '/brands/$slug'
-      preLoaderRoute: typeof BrandsSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordRouteImport
-      parentRoute: typeof AuthRoute
-    }
-    '/admin/catalog': {
-      id: '/admin/catalog'
-      path: '/catalog'
-      fullPath: '/admin/catalog'
-      preLoaderRoute: typeof AdminCatalogRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/admin/b2b': {
-      id: '/admin/b2b'
-      path: '/b2b'
-      fullPath: '/admin/b2b'
-      preLoaderRoute: typeof AdminB2bRouteImport
-      parentRoute: typeof AdminRoute
-    }
-    '/account/wishlist': {
-      id: '/account/wishlist'
-      path: '/wishlist'
-      fullPath: '/account/wishlist'
-      preLoaderRoute: typeof AccountWishlistRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/warranties': {
-      id: '/account/warranties'
-      path: '/warranties'
-      fullPath: '/account/warranties'
-      preLoaderRoute: typeof AccountWarrantiesRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/subscriptions': {
-      id: '/account/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/account/subscriptions'
-      preLoaderRoute: typeof AccountSubscriptionsRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/profile': {
-      id: '/account/profile'
-      path: '/profile'
-      fullPath: '/account/profile'
-      preLoaderRoute: typeof AccountProfileRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/orders': {
-      id: '/account/orders'
-      path: '/orders'
-      fullPath: '/account/orders'
-      preLoaderRoute: typeof AccountOrdersRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/notifications': {
-      id: '/account/notifications'
-      path: '/notifications'
-      fullPath: '/account/notifications'
-      preLoaderRoute: typeof AccountNotificationsRouteImport
-      parentRoute: typeof AccountRoute
-    }
-    '/account/documents': {
-      id: '/account/documents'
-      path: '/documents'
-      fullPath: '/account/documents'
-      preLoaderRoute: typeof AccountDocumentsRouteImport
+    '/account/addresses': {
+      id: '/account/addresses'
+      path: '/addresses'
+      fullPath: '/account/addresses'
+      preLoaderRoute: typeof AccountAddressesRouteImport
       parentRoute: typeof AccountRoute
     }
     '/account/dashboard': {
@@ -725,12 +618,159 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AccountDashboardRouteImport
       parentRoute: typeof AccountRoute
     }
-    '/account/addresses': {
-      id: '/account/addresses'
-      path: '/addresses'
-      fullPath: '/account/addresses'
-      preLoaderRoute: typeof AccountAddressesRouteImport
+    '/account/documents': {
+      id: '/account/documents'
+      path: '/documents'
+      fullPath: '/account/documents'
+      preLoaderRoute: typeof AccountDocumentsRouteImport
       parentRoute: typeof AccountRoute
+    }
+    '/account/notifications': {
+      id: '/account/notifications'
+      path: '/notifications'
+      fullPath: '/account/notifications'
+      preLoaderRoute: typeof AccountNotificationsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/orders': {
+      id: '/account/orders'
+      path: '/orders'
+      fullPath: '/account/orders'
+      preLoaderRoute: typeof AccountOrdersRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/profile': {
+      id: '/account/profile'
+      path: '/profile'
+      fullPath: '/account/profile'
+      preLoaderRoute: typeof AccountProfileRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/subscriptions': {
+      id: '/account/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/account/subscriptions'
+      preLoaderRoute: typeof AccountSubscriptionsRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/warranties': {
+      id: '/account/warranties'
+      path: '/warranties'
+      fullPath: '/account/warranties'
+      preLoaderRoute: typeof AccountWarrantiesRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/account/wishlist': {
+      id: '/account/wishlist'
+      path: '/wishlist'
+      fullPath: '/account/wishlist'
+      preLoaderRoute: typeof AccountWishlistRouteImport
+      parentRoute: typeof AccountRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/b2b': {
+      id: '/admin/b2b'
+      path: '/b2b'
+      fullPath: '/admin/b2b'
+      preLoaderRoute: typeof AdminB2bRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/catalog': {
+      id: '/admin/catalog'
+      path: '/catalog'
+      fullPath: '/admin/catalog'
+      preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brands/': {
+      id: '/brands/'
+      path: '/brands'
+      fullPath: '/brands/'
+      preLoaderRoute: typeof BrandsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brands/$slug': {
+      id: '/brands/$slug'
+      path: '/brands/$slug'
+      fullPath: '/brands/$slug'
+      preLoaderRoute: typeof BrandsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories/': {
+      id: '/categories/'
+      path: '/categories'
+      fullPath: '/categories/'
+      preLoaderRoute: typeof CategoriesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categories/$slug': {
+      id: '/categories/$slug'
+      path: '/categories/$slug'
+      fullPath: '/categories/$slug'
+      preLoaderRoute: typeof CategoriesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/packs/$slug': {
+      id: '/packs/$slug'
+      path: '/$slug'
+      fullPath: '/packs/$slug'
+      preLoaderRoute: typeof PacksSlugRouteImport
+      parentRoute: typeof PacksRoute
+    }
+    '/packs/diabete': {
+      id: '/packs/diabete'
+      path: '/diabete'
+      fullPath: '/packs/diabete'
+      preLoaderRoute: typeof PacksDiabeteRouteImport
+      parentRoute: typeof PacksRoute
+    }
+    '/product/$slug': {
+      id: '/product/$slug'
+      path: '/product/$slug'
+      fullPath: '/product/$slug'
+      preLoaderRoute: typeof ProductSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produits/': {
+      id: '/produits/'
+      path: '/produits'
+      fullPath: '/produits/'
+      preLoaderRoute: typeof ProduitsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produits/$slug': {
+      id: '/produits/$slug'
+      path: '/produits/$slug'
+      fullPath: '/produits/$slug'
+      preLoaderRoute: typeof ProduitsSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -818,9 +858,11 @@ const rootRouteChildren: RootRouteChildren = {
   BrandsSlugRoute: BrandsSlugRoute,
   CategoriesSlugRoute: CategoriesSlugRoute,
   ProductSlugRoute: ProductSlugRoute,
+  ProduitsSlugRoute: ProduitsSlugRoute,
   BlogIndexRoute: BlogIndexRoute,
   BrandsIndexRoute: BrandsIndexRoute,
   CategoriesIndexRoute: CategoriesIndexRoute,
+  ProduitsIndexRoute: ProduitsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
