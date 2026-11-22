@@ -38,7 +38,12 @@ export const Route = createFileRoute("/")({
       { property: "og:url", content: absoluteUrl("/") },
       { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [{ rel: "canonical", href: absoluteUrl("/") }],
+    links: [
+      { rel: "canonical", href: absoluteUrl("/") },
+      { rel: "alternate", hrefLang: "fr", href: absoluteUrl("/") },
+      { rel: "alternate", hrefLang: "ar", href: absoluteUrl("/ar") },
+      { rel: "alternate", hrefLang: "x-default", href: absoluteUrl("/") },
+    ],
     scripts: [
       jsonLdScript({
         "@context": "https://schema.org",
