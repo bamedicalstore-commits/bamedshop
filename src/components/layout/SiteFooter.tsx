@@ -2,8 +2,10 @@ import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, HeartPulse } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, BRANDS, FOOTER_LINKS } from "@/constants/navigation";
+import { CATEGORIES, FOOTER_LINKS } from "@/constants/navigation";
 import { BUSINESS_PHONE_DISPLAY } from "@/lib/site";
+
+const SOLD_BRANDS = ["Bionime", "Sterilance", "Clickfine", "Rossmax"];
 
 export function SiteFooter() {
   return (
@@ -102,15 +104,10 @@ export function SiteFooter() {
         </FooterColumn>
 
         <FooterColumn title="Marques">
-          {BRANDS.slice(0, 6).map((b) => (
-            <li key={b.slug}>
-              <Link
-                to="/brands/$slug"
-                params={{ slug: b.slug }}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {b.name}
-              </Link>
+          {/* Marques réellement distribuées (via Pharmatec), sans page dédiée pour l'instant. */}
+          {SOLD_BRANDS.map((name) => (
+            <li key={name} className="text-sm text-muted-foreground">
+              {name}
             </li>
           ))}
         </FooterColumn>
