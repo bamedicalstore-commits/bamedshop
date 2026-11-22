@@ -16,6 +16,9 @@ export const BUSINESS_PHONE_E164 = "21624562660";
 /** Human-readable business phone. */
 export const BUSINESS_PHONE_DISPLAY = "+216 24 56 26 60";
 
+/** Business contact email. */
+export const BUSINESS_EMAIL = "bamedicalstore@gmail.com";
+
 /**
  * WhatsApp number used by reservation CTAs and the floating button.
  * VITE_WHATSAPP_NUMBER can override it per deployment.

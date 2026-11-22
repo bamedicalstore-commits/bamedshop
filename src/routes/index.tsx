@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DIABETES_FAQ, DIABETES_OFFERS, DIABETES_STEPS } from "@/constants/diabetes-offer";
 import {
   absoluteUrl,
+  BUSINESS_EMAIL,
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_E164,
   jsonLdScript,
@@ -44,6 +45,7 @@ export const Route = createFileRoute("/")({
         "@type": "Organization",
         name: SITE_NAME,
         url: SITE_URL,
+        email: BUSINESS_EMAIL,
         telephone: `+${BUSINESS_PHONE_E164}`,
         areaServed: "TN",
       }),
