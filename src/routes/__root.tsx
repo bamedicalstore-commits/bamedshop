@@ -84,6 +84,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // Vérification Google Search Console (compte bamedicalstore). Ne pas supprimer.
+      { name: "google-site-verification", content: "eH_gK_nBjhiEWGbjpMkvHt-sPyA7tH24JzC-NRk0bjE" },
       { title: SITE_TITLE },
       { name: "description", content: SITE_DESCRIPTION },
       { name: "author", content: "BA Medical Store" },
