@@ -110,9 +110,17 @@ function HomePage() {
 
       {/* 2 · Deux offres seulement (loi de Hick) */}
       <section aria-labelledby="offres" className="container-page py-12">
-        <h2 id="offres" className="text-2xl font-semibold tracking-tight">
-          Deux façons de commander
-        </h2>
+        <div className="flex flex-wrap items-end justify-between gap-2">
+          <h2 id="offres" className="text-2xl font-semibold tracking-tight">
+            Deux façons de commander
+          </h2>
+          <Link
+            to="/produits"
+            className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-primary"
+          >
+            Tous nos produits <ArrowRight className="size-4" aria-hidden="true" />
+          </Link>
+        </div>
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           {DIABETES_OFFERS.map((offer) => {
             const isSubscription = offer.id === "abonnement-insuline";
