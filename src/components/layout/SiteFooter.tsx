@@ -3,7 +3,7 @@ import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, HeartPulse } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, BRANDS, FOOTER_LINKS } from "@/constants/navigation";
-import { BUSINESS_PHONE_DISPLAY } from "@/lib/site";
+import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -65,7 +65,7 @@ export function SiteFooter() {
             </li>
             <li className="flex items-center gap-2">
               <Mail className="size-4 text-primary" aria-hidden="true" />
-              contact@bamedical.tn
+              {BUSINESS_EMAIL}
             </li>
           </ul>
           <div className="mt-6 flex gap-2">

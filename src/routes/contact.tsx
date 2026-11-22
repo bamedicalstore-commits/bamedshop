@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from "@/lib/site";
+import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -92,8 +92,8 @@ function ContactPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Mail className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href="mailto:contact@bamedical.tn" className="hover:text-primary">
-                    contact@bamedical.tn
+                  <a href={`mailto:${BUSINESS_EMAIL}`} className="hover:text-primary">
+                    {BUSINESS_EMAIL}
                   </a>
                 </li>
               </ul>
