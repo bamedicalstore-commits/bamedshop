@@ -695,7 +695,7 @@ export type Database = {
           description: string | null
           id: string
           name: string
-          price: number
+          price: number | null
           professional_price: number | null
           sku: string
           slug: string
@@ -714,7 +714,7 @@ export type Database = {
           description?: string | null
           id?: string
           name: string
-          price: number
+          price?: number | null
           professional_price?: number | null
           sku: string
           slug: string
@@ -733,7 +733,7 @@ export type Database = {
           description?: string | null
           id?: string
           name?: string
-          price?: number
+          price?: number | null
           professional_price?: number | null
           sku?: string
           slug?: string
