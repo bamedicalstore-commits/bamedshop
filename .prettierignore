@@ -8,3 +8,5 @@ bun.lock
 routeTree.gen.ts
 src/integrations/supabase/types.ts
 docs/catalogue/authoritative-seed.md
+# Fichier de vérification Google Search Console : contenu exact imposé par Google
+public/google*.html
