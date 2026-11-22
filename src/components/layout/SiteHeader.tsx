@@ -108,6 +108,13 @@ export function SiteHeader() {
 
         {/* Actions */}
         <div className="ml-auto flex items-center gap-1">
+          <Link
+            to="/ar"
+            lang="ar"
+            className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"
+          >
+            العربية
+          </Link>
           <a
             href={`tel:+${BUSINESS_PHONE_E164}`}
             className="hidden min-h-11 items-center gap-1.5 rounded-md px-3 text-sm text-muted-foreground hover:text-foreground xl:inline-flex"

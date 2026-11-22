@@ -2,6 +2,7 @@
 <!-- Pages réelles uniquement. Les pages de démonstration sont en noindex. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://bamedshop.vercel.app/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://bamedshop.vercel.app/ar</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://bamedshop.vercel.app/packs/diabete</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://bamedshop.vercel.app/produits</loc><lastmod>2026-11-22</lastmod></url>
   <url><loc>https://bamedshop.vercel.app/faq</loc><lastmod>2026-11-22</lastmod></url>
