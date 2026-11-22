@@ -34,6 +34,9 @@ const POSTS = [
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
+      // Contenu de démonstration (produits/marques/articles fictifs) : non indexé
+      // tant que le vrai catalogue n'est pas branché.
+      { name: "robots", content: "noindex" },
       { title: "Blog & conseils — BA Medical Store" },
       {
         name: "description",

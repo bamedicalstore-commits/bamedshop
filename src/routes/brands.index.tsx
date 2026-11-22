@@ -6,6 +6,9 @@ import { BRANDS } from "@/constants/navigation";
 export const Route = createFileRoute("/brands/")({
   head: () => ({
     meta: [
+      // Contenu de démonstration (produits/marques/articles fictifs) : non indexé
+      // tant que le vrai catalogue n'est pas branché.
+      { name: "robots", content: "noindex" },
       { title: "Nos marques — BA Medical Store" },
       {
         name: "description",

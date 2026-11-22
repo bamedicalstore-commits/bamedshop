@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 export const Route = createFileRoute("/blog/$slug")({
   head: ({ params }) => ({
     meta: [
+      // Contenu de démonstration (produits/marques/articles fictifs) : non indexé
+      // tant que le vrai catalogue n'est pas branché.
+      { name: "robots", content: "noindex" },
       { title: `Article — BA Medical Store` },
       { name: "description", content: `Article ${params.slug} — conseils et bonnes pratiques.` },
       { property: "og:type", content: "article" },

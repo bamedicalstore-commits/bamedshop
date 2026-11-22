@@ -23,6 +23,8 @@ export const Route = createFileRoute("/packs/$slug")({
       meta: [
         { title: `${p.name} — BA Medical Store` },
         { name: "description", content: p.description },
+        // Packs de démonstration : seul /packs/diabete (route dédiée) est indexé.
+        { name: "robots", content: "noindex" },
       ],
     };
   },

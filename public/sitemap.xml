@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Pages réelles uniquement. Les pages de démonstration sont en noindex. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://bamedshop.vercel.app/</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://bamedshop.vercel.app/packs/diabete</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://bamedshop.vercel.app/faq</loc><lastmod>2026-11-22</lastmod></url>
+  <url><loc>https://bamedshop.vercel.app/contact</loc><lastmod>2026-11-22</lastmod></url>
+</urlset>
