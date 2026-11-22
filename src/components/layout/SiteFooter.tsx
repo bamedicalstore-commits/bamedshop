@@ -45,9 +45,7 @@ export function SiteFooter() {
             <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <HeartPulse className="size-5" aria-hidden="true" />
             </div>
-            <span className="text-base font-bold tracking-tight text-foreground">
-              BA Medical Store
-            </span>
+            <span className="text-base font-semibold text-foreground">BA Medical Store</span>
           </Link>
           <p className="mt-3 max-w-sm text-sm text-muted-foreground">
             Consommables et matériel pour le diabète, livrés partout en Tunisie. Paiement à la

@@ -45,7 +45,7 @@ function CataloguePage() {
     <SiteLayout>
       <div className="container-page py-10">
         <header className="max-w-2xl">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Nos produits</h1>
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Nos produits</h1>
           <p className="mt-3 text-muted-foreground">
             {CATALOGUE_PRODUCTS.length} produits du distributeur officiel en Tunisie. Le prix vous
             est donné sur WhatsApp ; paiement à la livraison.
@@ -77,7 +77,7 @@ function CataloguePage() {
             >
               <h2
                 id={`h-${category.slug}`}
-                className="flex items-center gap-3 text-xl font-semibold tracking-tight"
+                className="flex items-center gap-3 text-xl font-semibold"
               >
                 <CategoryIcon category={category.slug} className="size-9" />
                 {category.name}

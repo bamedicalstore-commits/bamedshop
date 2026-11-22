@@ -76,7 +76,7 @@ function ArabicHomePage() {
             <span className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <HeartPulse className="size-5" aria-hidden="true" />
             </span>
-            <span className="text-sm font-bold" dir="ltr">
+            <span className="text-sm font-semibold" dir="ltr">
               BA Medical Store
             </span>
           </Link>
@@ -113,7 +113,7 @@ function ArabicHomePage() {
               <p className="text-sm font-semibold text-primary">
                 السكري · توصيل إلى كامل تراب الجمهورية
               </p>
-              <h1 className="mt-3 text-[2rem] font-bold leading-[1.3] text-foreground sm:text-5xl sm:leading-[1.25]">
+              <h1 className="mt-3 text-[2rem] font-semibold leading-[1.3] text-foreground sm:text-5xl sm:leading-[1.25]">
                 أشرطة قياس السكر ومستلزمات السكري، تصلك إلى باب منزلك.
               </h1>
               <p className="mt-4 text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -211,7 +211,7 @@ function ArabicHomePage() {
             <ol className="mt-6 grid gap-4 sm:grid-cols-3">
               {AR_DIABETES_STEPS.map((step, i) => (
                 <li key={step.title} className="flex gap-4">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground tabular-nums">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground tabular-nums">
                     {i + 1}
                   </span>
                   <div>
