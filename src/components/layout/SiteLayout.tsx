@@ -2,11 +2,7 @@ import type { ReactNode } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { AnnouncementBar } from "./AnnouncementBar";
-import { SmartSearch } from "@/components/ecommerce/SmartSearch";
 import { MiniCart } from "@/components/ecommerce/MiniCart";
-import { CompareDrawer, CompareFab } from "@/components/ecommerce/CompareDrawer";
-import { QuickView } from "@/components/ecommerce/QuickView";
-import { FloatingWhatsApp } from "@/components/common/FloatingWhatsApp";
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   return (
@@ -16,13 +12,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <main className="flex-1">{children}</main>
       <SiteFooter />
 
-      {/* Global overlays — mounted once, driven by useUiStore */}
-      <SmartSearch />
+      {/* Overlays globaux. Recherche, comparaison et aperçu rapide retirés : ils
+          affichaient des produits fictifs. Ils reviendront avec le vrai catalogue.
+          Bouton WhatsApp flottant retiré : l'en-tête fixe porte déjà cette action. */}
       <MiniCart />
-      <CompareDrawer />
-      <QuickView />
-      <CompareFab />
-      <FloatingWhatsApp />
     </div>
   );
 }

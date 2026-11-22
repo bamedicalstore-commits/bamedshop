@@ -68,28 +68,23 @@ export const BRANDS: Brand[] = [
   { id: "b6", slug: "welch-allyn", name: "Welch Allyn", productCount: 24 },
 ];
 
+/** Navigation principale : uniquement des pages réelles. */
 export const MAIN_NAV = [
   { label: "Accueil", to: "/" as const },
-  { label: "Catalogue", to: "/catalogue" as const },
-  { label: "Catégories", to: "/categories" as const },
-  { label: "Marques", to: "/brands" as const },
-  { label: "Blog", to: "/blog" as const },
+  { label: "Pack diabète", to: "/packs/diabete" as const },
+  { label: "Questions fréquentes", to: "/faq" as const },
   { label: "Contact", to: "/contact" as const },
 ];
 
+/**
+ * Liens du pied de page : uniquement des pages réelles.
+ * Les pages légales (mentions légales, CGV, confidentialité) seront ajoutées
+ * quand les informations de la société seront fournies.
+ */
 export const FOOTER_LINKS = {
   service: [
-    { label: "Aide & FAQ", to: "/faq" as const },
+    { label: "Questions fréquentes", to: "/faq" as const },
     { label: "Contact", to: "/contact" as const },
-    { label: "Livraison", to: "/faq" as const },
-    { label: "Retours & remboursements", to: "/faq" as const },
-    { label: "Suivi de commande", to: "/account/orders" as const },
-  ],
-  legal: [
-    { label: "Mentions légales", to: "/contact" as const },
-    { label: "Conditions générales", to: "/contact" as const },
-    { label: "Confidentialité", to: "/contact" as const },
-    { label: "Cookies", to: "/contact" as const },
   ],
 };
 

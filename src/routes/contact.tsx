@@ -1,105 +1,103 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from "@/lib/site";
+import {
+  absoluteUrl,
+  BUSINESS_EMAIL,
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_E164,
+  SITE_NAME,
+  whatsappLink,
+} from "@/lib/site";
+
+/*
+ * Contact — sans formulaire.
+ * L'ancien formulaire n'envoyait rien (preventDefault) : chaque message était
+ * perdu. Trois canaux réels, du plus rapide au plus lent. Pas de délai de
+ * réponse promis tant qu'il n'est pas mesuré.
+ */
+
+const TITLE = "Contact";
+const DESCRIPTION =
+  "Contactez BA Medical Store sur WhatsApp, par téléphone au +216 24 56 26 60 ou par e-mail.";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
-      { title: "Contact — BA Medical Store" },
-      {
-        name: "description",
-        content:
-          "Contactez notre équipe pour toute question sur nos produits, un devis pro ou un partenariat.",
-      },
-      { property: "og:title", content: "Contact — BA Medical Store" },
-      { property: "og:description", content: "Notre équipe répond sous 24h ouvrées." },
+      { title: `${TITLE} — ${SITE_NAME}` },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: `${TITLE} — ${SITE_NAME}` },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:url", content: absoluteUrl("/contact") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/contact") }],
   }),
   component: ContactPage,
 });
 
 function ContactPage() {
+  const whatsappHref = whatsappLink("Bonjour BA Medical Store, j'ai une question.");
+
+  const channels = [
+    whatsappHref
+      ? {
+          href: whatsappHref,
+          external: true,
+          Icon: MessageCircle,
+          title: "WhatsApp",
+          detail: "Le plus rapide pour commander ou poser une question.",
+          value: BUSINESS_PHONE_DISPLAY,
+        }
+      : null,
+    {
+      href: `tel:+${BUSINESS_PHONE_E164}`,
+      external: false,
+      Icon: Phone,
+      title: "Téléphone",
+      detail: "Pour être conseillé de vive voix.",
+      value: BUSINESS_PHONE_DISPLAY,
+    },
+    {
+      href: `mailto:${BUSINESS_EMAIL}`,
+      external: false,
+      Icon: Mail,
+      title: "E-mail",
+      detail: "Pour les demandes qui ne sont pas urgentes.",
+      value: BUSINESS_EMAIL,
+    },
+  ].filter((c) => c !== null);
+
   return (
     <SiteLayout>
-      <div className="container-page py-14">
-        <header className="mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Contact</h1>
+      <div className="container-page py-12">
+        <header className="max-w-2xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{TITLE}</h1>
           <p className="mt-3 text-muted-foreground">
-            Une question, un devis, un partenariat ? Notre équipe vous répond sous 24h ouvrées.
+            Une question sur un produit, une commande ou un abonnement ? Choisissez le canal qui
+            vous convient.
           </p>
         </header>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_360px]">
-          <Card className="p-6 sm:p-8">
-            <form onSubmit={(e) => e.preventDefault()} className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="c-first">Prénom</Label>
-                <Input id="c-first" required className="mt-2" />
-              </div>
-              <div>
-                <Label htmlFor="c-last">Nom</Label>
-                <Input id="c-last" required className="mt-2" />
-              </div>
-              <div>
-                <Label htmlFor="c-email">Email</Label>
-                <Input id="c-email" type="email" required className="mt-2" />
-              </div>
-              <div>
-                <Label htmlFor="c-phone">Téléphone</Label>
-                <Input id="c-phone" type="tel" className="mt-2" />
-              </div>
-              <div className="sm:col-span-2">
-                <Label htmlFor="c-subject">Sujet</Label>
-                <Input id="c-subject" required className="mt-2" />
-              </div>
-              <div className="sm:col-span-2">
-                <Label htmlFor="c-message">Message</Label>
-                <Textarea id="c-message" rows={6} required className="mt-2" />
-              </div>
-              <div className="sm:col-span-2">
-                <Button type="submit" size="lg">
-                  Envoyer
-                </Button>
-              </div>
-            </form>
-          </Card>
-
-          <div className="space-y-4">
-            <Card className="p-6">
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-                Nos coordonnées
-              </h2>
-              <ul className="mt-4 space-y-3 text-sm">
-                <li className="flex items-start gap-3">
-                  <MapPin className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <div>
-                    Tunis, Tunisie
-                    <br />
-                    <span className="text-muted-foreground">Ouvert Lun-Ven 9h-18h</span>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Phone className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href={`tel:+${BUSINESS_PHONE_E164}`} className="hover:text-primary">
-                    {BUSINESS_PHONE_DISPLAY}
-                  </a>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Mail className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href={`mailto:${BUSINESS_EMAIL}`} className="hover:text-primary">
-                    {BUSINESS_EMAIL}
-                  </a>
-                </li>
-              </ul>
-            </Card>
-          </div>
-        </div>
+        <ul className="mt-8 grid max-w-3xl gap-4">
+          {channels.map(({ href, external, Icon, title, detail, value }) => (
+            <li key={title}>
+              <a
+                href={href}
+                {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="flex min-h-11 items-center gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-primary-soft text-primary">
+                  <Icon className="size-6" aria-hidden="true" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-semibold">{title}</span>
+                  <span className="block text-sm text-muted-foreground">{detail}</span>
+                  <span className="mt-1 block truncate font-medium text-primary">{value}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
     </SiteLayout>
   );
