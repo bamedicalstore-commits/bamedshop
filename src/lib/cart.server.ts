@@ -97,5 +97,7 @@ export async function requireActiveProductPrice(
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) throw new Error("Produit indisponible");
+  // price est NULL tant que le prix de vente n'est pas approuvé (prix sur WhatsApp).
+  if (data.price === null) throw new Error("Prix sur demande : commande par WhatsApp");
   return Number(data.price);
 }
