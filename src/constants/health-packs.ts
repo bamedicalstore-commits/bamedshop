@@ -31,15 +31,21 @@ export const HEALTH_PACKS: HealthPack[] = [
   {
     slug: "diabete",
     name: "Pack Diabète",
-    tagline: "Auto-surveillance glycémique",
+    tagline: "Démarrage + abonnement trimestriel",
     description:
-      "Lecteur de glycémie, bandelettes, lancettes stériles et pochette de transport pour une gestion sereine du diabète.",
+      "Lecteur Bionime GM550, bandelettes et lancettes pour démarrer, puis vos consommables livrés tous les 3 mois. Paiement à la livraison.",
     icon: Droplet,
     color: "bg-info-soft text-info",
-    categories: ["Diagnostic", "Consommables"],
-    productSlugs: ["oxymetre-pouls-pro"],
-    savings: "-15%",
-    audience: "Patients diabétiques type 1 et 2",
+    categories: ["Lecteur de glycémie", "Bandelettes", "Lancettes", "Aiguilles à insuline"],
+    // Catalogue slugs (authoritative seed); /packs/diabete has its own route.
+    productSlugs: [
+      "bionime-gm550-03f",
+      "bionime-gs550-05f",
+      "sterilance-soft-100",
+      "clickfine-32gx4mm",
+    ],
+    savings: "Abonnement",
+    audience: "Personnes diabétiques, en particulier sous insuline",
   },
   {
     slug: "bebe",

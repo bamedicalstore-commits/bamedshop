@@ -3,6 +3,7 @@ import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, HeartPulse } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, BRANDS, FOOTER_LINKS } from "@/constants/navigation";
+import { BUSINESS_PHONE_DISPLAY } from "@/lib/site";
 
 export function SiteFooter() {
   return (
@@ -60,7 +61,7 @@ export function SiteFooter() {
             </li>
             <li className="flex items-center gap-2">
               <Phone className="size-4 text-primary" aria-hidden="true" />
-              +216 71 000 000
+              {BUSINESS_PHONE_DISPLAY}
             </li>
             <li className="flex items-center gap-2">
               <Mail className="size-4 text-primary" aria-hidden="true" />
