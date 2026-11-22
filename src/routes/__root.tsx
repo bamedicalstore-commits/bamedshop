@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@/lib/site";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import {
@@ -75,9 +76,10 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   );
 }
 
-const SITE_TITLE = "BA Medical Store — Matériel médical professionnel en Tunisie";
+const SITE_TITLE = "BA Medical Store — Bandelettes et consommables diabète en Tunisie";
 const SITE_DESCRIPTION =
-  "Achetez du matériel médical certifié en Tunisie : dispositifs, consommables, mobilier pour médecins, cliniques et particuliers. Livraison rapide.";
+  "Lecteurs et bandelettes de glycémie, lancettes, aiguilles à insuline, tensiomètres : commandez sur WhatsApp, paiement à la livraison partout en Tunisie.";
+const OG_IMAGE = absoluteUrl("/og-image.png");
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -94,35 +96,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "fr_TN" },
+      { property: "og:site_name", content: "BA Medical Store" },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
-      { title: "BA Medical Store — Matériel médical certifié en Tunisie" },
-      { property: "og:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
-      { name: "twitter:title", content: "BA Medical Store — Matériel médical certifié en Tunisie" },
-      {
-        name: "description",
-        content:
-          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
-      },
-      {
-        property: "og:description",
-        content:
-          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Distributeur premium de matériel médical en Tunisie : diagnostic, consommables, mobilier, orthopédie. Marques certifiées CE, livraison 24-48h, tarifs professionnels.",
-      },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/4387647b-2223-4eba-8cf3-85a214c6347f",
-      },
+      { name: "twitter:image", content: OG_IMAGE },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

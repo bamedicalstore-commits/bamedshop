@@ -15,7 +15,7 @@ import {
  * Cibles tactiles ≥ 44 px.
  */
 
-const SOLD_BRANDS = ["Bionime", "Sterilance", "Clickfine", "Rossmax"];
+const SOLD_BRANDS = ["Bionime", "Sterilance", "Clickfine", "Rossmax", "Mission"];
 
 const DIABETES_LINKS = [
   { label: "Pack Diabète Démarrage", to: "/packs/diabete" as const },
