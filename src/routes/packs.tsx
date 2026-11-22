@@ -5,6 +5,9 @@ import { HealthPacksGrid } from "@/components/marketing/HealthPacksGrid";
 export const Route = createFileRoute("/packs")({
   head: () => ({
     meta: [
+      // Contenu de démonstration (produits/marques/articles fictifs) : non indexé
+      // tant que le vrai catalogue n'est pas branché.
+      { name: "robots", content: "noindex" },
       { title: "Packs santé — BA Medical Store" },
       {
         name: "description",

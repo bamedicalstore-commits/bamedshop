@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import {
   Outlet,
   Link,
@@ -159,6 +160,9 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <Outlet />
       <Toaster richColors closeButton position="top-right" />
+      {/* Mesure des visites Vercel Web Analytics : sans cookie, sans donnée personnelle.
+          À activer dans Vercel → projet → Analytics. */}
+      <Analytics />
     </QueryClientProvider>
   );
 }

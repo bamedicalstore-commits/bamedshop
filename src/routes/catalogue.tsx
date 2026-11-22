@@ -40,6 +40,9 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/catalogue")({
   head: () => ({
     meta: [
+      // Contenu de démonstration (produits/marques/articles fictifs) : non indexé
+      // tant que le vrai catalogue n'est pas branché.
+      { name: "robots", content: "noindex" },
       { title: "Catalogue matériel médical — BA Medical Store" },
       {
         name: "description",

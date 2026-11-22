@@ -1,0 +1,11 @@
+# BA Medical — robots.txt
+# Tous les robots (moteurs de recherche et assistants IA) peuvent lire les pages publiques.
+User-agent: *
+Allow: /
+Disallow: /account
+Disallow: /admin
+Disallow: /auth
+Disallow: /cart
+Disallow: /checkout
+
+Sitemap: https://bamedshop.vercel.app/sitemap.xml

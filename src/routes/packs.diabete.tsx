@@ -38,6 +38,8 @@ export const Route = createFileRoute("/packs/diabete")({
   head: () => ({
     meta: [
       { title: `${TITLE} — ${SITE_NAME}` },
+      // Remplace le « noindex » hérité de /packs (liste de démonstration).
+      { name: "robots", content: "index, follow" },
       { name: "description", content: DESCRIPTION },
       { property: "og:title", content: TITLE },
       { property: "og:description", content: DESCRIPTION },
@@ -49,7 +51,6 @@ export const Route = createFileRoute("/packs/diabete")({
       jsonLdScript(
         breadcrumbJsonLd([
           { name: "Accueil", path: "/" },
-          { name: "Packs santé", path: "/packs" },
           { name: "Pack Diabète", path: PATH },
         ]),
       ),
@@ -67,10 +68,10 @@ function DiabetesPackPage() {
   return (
     <div className="container-page py-10">
       <Link
-        to="/packs"
+        to="/"
         className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
       >
-        <ArrowLeft className="size-4" aria-hidden="true" /> Tous les packs
+        <ArrowLeft className="size-4" aria-hidden="true" /> Accueil
       </Link>
 
       <header className="max-w-3xl">
