@@ -55,6 +55,35 @@ export const listPublicProducts = createServerFn({ method: "GET" })
     return { products: rows ?? [], error: null as string | null };
   });
 
+/**
+ * Active products for a known set of slugs (pack composition pages).
+ * Inactive / unpriced products are filtered out by `active = true` and by RLS.
+ */
+export const listPublicProductsBySlugs = createServerFn({ method: "GET" })
+  .validator((input: { slugs: string[] }) => {
+    const slugs = Array.from(
+      new Set((input?.slugs ?? []).map((s) => String(s).trim()).filter(Boolean)),
+    );
+    if (slugs.length === 0 || slugs.length > 20 || slugs.some((s) => s.length > 200)) {
+      throw new Error("Invalid slugs");
+    }
+    return { slugs };
+  })
+  .handler(async ({ data }) => {
+    const supabase = createPublicClient();
+    const { data: rows, error } = await supabase
+      .from("products")
+      .select(PRODUCT_COLUMNS)
+      .eq("active", true)
+      .in("slug", data.slugs);
+
+    if (error) {
+      console.error("listPublicProductsBySlugs failed:", error.message);
+      return { products: [], error: "Catalogue temporairement indisponible" as string | null };
+    }
+    return { products: rows ?? [], error: null as string | null };
+  });
+
 export const getPublicProductBySlug = createServerFn({ method: "GET" })
   .validator((input: { slug: string }) => {
     const slug = String(input?.slug ?? "").trim();

@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_E164 } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -85,8 +86,8 @@ function ContactPage() {
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone className="mt-0.5 size-4 shrink-0 text-primary" aria-hidden="true" />
-                  <a href="tel:+21671000000" className="hover:text-primary">
-                    +216 71 000 000
+                  <a href={`tel:+${BUSINESS_PHONE_E164}`} className="hover:text-primary">
+                    {BUSINESS_PHONE_DISPLAY}
                   </a>
                 </li>
                 <li className="flex items-start gap-3">

@@ -28,10 +28,13 @@ import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AccountIndexRouteImport } from './routes/account.index'
 import { Route as ProductSlugRouteImport } from './routes/product.$slug'
+import { Route as PacksDiabeteRouteImport } from './routes/packs.diabete'
 import { Route as PacksSlugRouteImport } from './routes/packs.$slug'
 import { Route as CategoriesSlugRouteImport } from './routes/categories.$slug'
 import { Route as BrandsSlugRouteImport } from './routes/brands.$slug'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthResetPasswordRouteImport } from './routes/auth.reset-password'
+import { Route as AdminCatalogRouteImport } from './routes/admin.catalog'
 import { Route as AdminB2bRouteImport } from './routes/admin.b2b'
 import { Route as AccountWishlistRouteImport } from './routes/account.wishlist'
 import { Route as AccountWarrantiesRouteImport } from './routes/account.warranties'
@@ -138,6 +141,11 @@ const ProductSlugRoute = ProductSlugRouteImport.update({
   path: '/product/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PacksDiabeteRoute = PacksDiabeteRouteImport.update({
+  id: '/diabete',
+  path: '/diabete',
+  getParentRoute: () => PacksRoute,
+} as any)
 const PacksSlugRoute = PacksSlugRouteImport.update({
   id: '/$slug',
   path: '/$slug',
@@ -157,6 +165,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AdminCatalogRoute = AdminCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminB2bRoute = AdminB2bRouteImport.update({
   id: '/b2b',
@@ -214,7 +232,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/advisor': typeof AdvisorRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
@@ -233,10 +251,13 @@ export interface FileRoutesByFullPath {
   '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/packs/$slug': typeof PacksSlugRoute
+  '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -247,7 +268,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/advisor': typeof AdvisorRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
@@ -266,10 +287,13 @@ export interface FileRoutesByTo {
   '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/packs/$slug': typeof PacksSlugRoute
+  '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
@@ -283,7 +307,7 @@ export interface FileRoutesById {
   '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/advisor': typeof AdvisorRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/cart': typeof CartRoute
   '/catalogue': typeof CatalogueRoute
   '/checkout': typeof CheckoutRoute
@@ -302,10 +326,13 @@ export interface FileRoutesById {
   '/account/warranties': typeof AccountWarrantiesRoute
   '/account/wishlist': typeof AccountWishlistRoute
   '/admin/b2b': typeof AdminB2bRoute
+  '/admin/catalog': typeof AdminCatalogRoute
+  '/auth/reset-password': typeof AuthResetPasswordRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/brands/$slug': typeof BrandsSlugRoute
   '/categories/$slug': typeof CategoriesSlugRoute
   '/packs/$slug': typeof PacksSlugRoute
+  '/packs/diabete': typeof PacksDiabeteRoute
   '/product/$slug': typeof ProductSlugRoute
   '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
@@ -339,10 +366,13 @@ export interface FileRouteTypes {
     | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
+    | '/admin/catalog'
+    | '/auth/reset-password'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/packs/$slug'
+    | '/packs/diabete'
     | '/product/$slug'
     | '/account/'
     | '/admin/'
@@ -372,10 +402,13 @@ export interface FileRouteTypes {
     | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
+    | '/admin/catalog'
+    | '/auth/reset-password'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/packs/$slug'
+    | '/packs/diabete'
     | '/product/$slug'
     | '/account'
     | '/admin'
@@ -407,10 +440,13 @@ export interface FileRouteTypes {
     | '/account/warranties'
     | '/account/wishlist'
     | '/admin/b2b'
+    | '/admin/catalog'
+    | '/auth/reset-password'
     | '/blog/$slug'
     | '/brands/$slug'
     | '/categories/$slug'
     | '/packs/$slug'
+    | '/packs/diabete'
     | '/product/$slug'
     | '/account/'
     | '/admin/'
@@ -424,7 +460,7 @@ export interface RootRouteChildren {
   AccountRoute: typeof AccountRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   AdvisorRoute: typeof AdvisorRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   CartRoute: typeof CartRoute
   CatalogueRoute: typeof CatalogueRoute
   CheckoutRoute: typeof CheckoutRoute
@@ -577,6 +613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProductSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/packs/diabete': {
+      id: '/packs/diabete'
+      path: '/diabete'
+      fullPath: '/packs/diabete'
+      preLoaderRoute: typeof PacksDiabeteRouteImport
+      parentRoute: typeof PacksRoute
+    }
     '/packs/$slug': {
       id: '/packs/$slug'
       path: '/$slug'
@@ -604,6 +647,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/blog/$slug'
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/auth/reset-password': {
+      id: '/auth/reset-password'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/admin/catalog': {
+      id: '/admin/catalog'
+      path: '/catalog'
+      fullPath: '/admin/catalog'
+      preLoaderRoute: typeof AdminCatalogRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/b2b': {
       id: '/admin/b2b'
@@ -709,22 +766,36 @@ const AccountRouteWithChildren =
 
 interface AdminRouteChildren {
   AdminB2bRoute: typeof AdminB2bRoute
+  AdminCatalogRoute: typeof AdminCatalogRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminB2bRoute: AdminB2bRoute,
+  AdminCatalogRoute: AdminCatalogRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AuthRouteChildren {
+  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthResetPasswordRoute: AuthResetPasswordRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface PacksRouteChildren {
   PacksSlugRoute: typeof PacksSlugRoute
+  PacksDiabeteRoute: typeof PacksDiabeteRoute
 }
 
 const PacksRouteChildren: PacksRouteChildren = {
   PacksSlugRoute: PacksSlugRoute,
+  PacksDiabeteRoute: PacksDiabeteRoute,
 }
 
 const PacksRouteWithChildren = PacksRoute._addFileChildren(PacksRouteChildren)
@@ -734,7 +805,7 @@ const rootRouteChildren: RootRouteChildren = {
   AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   AdvisorRoute: AdvisorRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   CartRoute: CartRoute,
   CatalogueRoute: CatalogueRoute,
   CheckoutRoute: CheckoutRoute,

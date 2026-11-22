@@ -9,6 +9,7 @@ import { SmartSearchTrigger, SmartSearchIconTrigger } from "@/components/ecommer
 import { MegaMenu } from "./MegaMenu";
 import { uiActions, useUiStore, selectors } from "@/hooks/useUiStore";
 import { useCart } from "@/hooks/useCart";
+import { BUSINESS_PHONE_DISPLAY } from "@/lib/site";
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
@@ -151,7 +152,7 @@ export function SiteHeader() {
           <MegaMenu />
           <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <Phone className="size-3.5" aria-hidden="true" />
-            +216 71 000 000
+            {BUSINESS_PHONE_DISPLAY}
           </span>
         </div>
       </nav>

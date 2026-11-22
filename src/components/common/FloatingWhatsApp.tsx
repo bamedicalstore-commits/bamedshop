@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { MessageCircle, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { WHATSAPP_NUMBER } from "@/lib/site";
 
 interface FloatingWhatsAppProps {
-  /** International format without leading +, e.g. "21671000000" */
+  /** International format without leading +, e.g. "21624562660" */
   phone?: string;
   defaultMessage?: string;
   className?: string;
@@ -17,7 +18,7 @@ const AGENT_NAME = "Support BA Medical";
  * WCAG : role button, aria-labels, focus visible, dismissible.
  */
 export function FloatingWhatsApp({
-  phone = "21671000000",
+  phone = WHATSAPP_NUMBER,
   defaultMessage = "Bonjour BA Medical Store, j'ai une question sur un produit.",
   className,
 }: FloatingWhatsAppProps) {
