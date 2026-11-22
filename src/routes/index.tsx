@@ -74,7 +74,7 @@ function HomePage() {
             <p className="text-sm font-semibold text-primary">
               Diabète · Livraison partout en Tunisie
             </p>
-            <h1 className="mt-3 text-[2rem] font-bold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
+            <h1 className="mt-3 text-[2rem] font-semibold leading-[1.1] tracking-tight text-foreground sm:text-5xl">
               Vos bandelettes et consommables diabète, livrés chez vous.
             </h1>
             <p className="mt-4 text-base text-muted-foreground sm:text-lg">
@@ -116,7 +116,7 @@ function HomePage() {
       {/* 2 · Deux offres seulement (loi de Hick) */}
       <section aria-labelledby="offres" className="container-page py-12">
         <div className="flex flex-wrap items-end justify-between gap-2">
-          <h2 id="offres" className="text-2xl font-semibold tracking-tight">
+          <h2 id="offres" className="text-2xl font-semibold">
             Deux façons de commander
           </h2>
           <Link
@@ -165,13 +165,13 @@ function HomePage() {
       {/* 3 · Comment ça marche */}
       <section aria-labelledby="etapes" className="border-y border-border bg-surface py-12">
         <div className="container-page">
-          <h2 id="etapes" className="text-2xl font-semibold tracking-tight">
+          <h2 id="etapes" className="text-2xl font-semibold">
             Comment ça marche
           </h2>
           <ol className="mt-6 grid gap-4 sm:grid-cols-3">
             {DIABETES_STEPS.map((step, i) => (
               <li key={step.title} className="flex gap-4">
-                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-bold text-primary-foreground tabular-nums">
+                <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-sm font-semibold text-primary-foreground tabular-nums">
                   {i + 1}
                 </span>
                 <div>
@@ -186,7 +186,7 @@ function HomePage() {
 
       {/* 4 · Questions fréquentes (réponses dans le HTML) */}
       <section aria-labelledby="faq" className="container-page py-12">
-        <h2 id="faq" className="text-2xl font-semibold tracking-tight">
+        <h2 id="faq" className="text-2xl font-semibold">
           Questions fréquentes
         </h2>
         <div className="mt-4 max-w-3xl divide-y divide-border border-y border-border">
@@ -204,7 +204,7 @@ function HomePage() {
       {/* 5 · Contact direct, sans formulaire */}
       <section aria-labelledby="contact" className="container-page pb-14">
         <div className="rounded-2xl bg-primary px-6 py-8 text-primary-foreground sm:px-10">
-          <h2 id="contact" className="text-2xl font-semibold tracking-tight">
+          <h2 id="contact" className="text-2xl font-semibold">
             Une question avant de commander ?
           </h2>
           <p className="mt-2 max-w-xl text-sm opacity-90">

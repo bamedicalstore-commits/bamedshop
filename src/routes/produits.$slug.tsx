@@ -106,7 +106,7 @@ function ProductPage() {
               <CategoryIcon category={product.category} className="size-16" />
               <div className="min-w-0">
                 <p className="text-sm font-medium text-primary">{category.name}</p>
-                <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
+                <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
                   {product.name}
                 </h1>
               </div>
@@ -133,9 +133,8 @@ function ProductPage() {
 
           {/* Action principale : demander le prix */}
           <aside className="h-fit rounded-2xl border border-border bg-card p-6 lg:sticky lg:top-28">
-            <p className="text-sm text-muted-foreground">Prix</p>
-            <p className="mt-1 text-lg font-semibold">Sur demande, par WhatsApp</p>
-            <div className="mt-5 grid gap-3">
+            <p className="text-lg font-semibold">Commander ce produit</p>
+            <div className="mt-4 grid gap-3">
               {whatsappHref ? (
                 <Button asChild size="lg" className="h-14 text-base">
                   <a href={whatsappHref} target="_blank" rel="noopener noreferrer">

@@ -81,7 +81,7 @@ function DiabetesPackPage() {
           </span>
           <Badge variant="soft">Diabète</Badge>
         </div>
-        <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">{TITLE}</h1>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">{TITLE}</h1>
         <p className="mt-3 text-lg text-muted-foreground">
           Un pack pour démarrer l'autosurveillance de la glycémie, puis vos consommables livrés tous
           les 3 mois. Chaque commande est confirmée par téléphone et payée à la livraison.
@@ -100,7 +100,7 @@ function DiabetesPackPage() {
       </section>
 
       <section aria-labelledby="etapes" className="mt-14">
-        <h2 id="etapes" className="text-2xl font-semibold tracking-tight">
+        <h2 id="etapes" className="text-2xl font-semibold">
           Comment ça marche
         </h2>
         <ol className="mt-6 grid gap-4 sm:grid-cols-3">
@@ -116,7 +116,7 @@ function DiabetesPackPage() {
 
       {products.length > 0 && (
         <section aria-labelledby="produits" className="mt-14">
-          <h2 id="produits" className="text-2xl font-semibold tracking-tight">
+          <h2 id="produits" className="text-2xl font-semibold">
             Les produits des packs
           </h2>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -130,7 +130,7 @@ function DiabetesPackPage() {
       )}
 
       <section aria-labelledby="faq" className="mt-14 max-w-3xl">
-        <h2 id="faq" className="text-2xl font-semibold tracking-tight">
+        <h2 id="faq" className="text-2xl font-semibold">
           Questions fréquentes
         </h2>
         {/* Native <details>: answers stay in the server-rendered HTML (crawlers, AI search). */}

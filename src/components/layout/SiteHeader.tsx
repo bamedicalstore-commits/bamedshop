@@ -79,15 +79,12 @@ export function SiteHeader() {
           className="flex min-h-11 shrink-0 items-center gap-2"
           aria-label="BA Medical Store, accueil"
         >
-          <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground shadow-[var(--shadow-brand)]">
+          <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <HeartPulse className="size-5" aria-hidden="true" />
           </div>
-          <div className="flex flex-col leading-tight">
-            <span className="text-sm font-bold tracking-tight text-foreground">BA Medical</span>
-            <span className="text-[10px] font-medium uppercase tracking-widest text-muted-foreground">
-              Store
-            </span>
-          </div>
+          <span className="text-sm font-semibold leading-tight text-foreground">
+            BA Medical Store
+          </span>
         </Link>
 
         {/* Navigation bureau */}
