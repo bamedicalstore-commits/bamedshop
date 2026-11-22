@@ -1,50 +1,46 @@
 import { Link } from "@tanstack/react-router";
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, HeartPulse } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { CATEGORIES, FOOTER_LINKS } from "@/constants/navigation";
-import { BUSINESS_EMAIL, BUSINESS_PHONE_DISPLAY } from "@/lib/site";
+import { HeartPulse, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { FOOTER_LINKS } from "@/constants/navigation";
+import {
+  BUSINESS_EMAIL,
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_E164,
+  whatsappLink,
+} from "@/lib/site";
+
+/*
+ * Pied de page — refonte UX « fiable puis clair ».
+ * Retirés : formulaire newsletter (n'envoyait rien), liens sociaux vides,
+ * catégories fictives, pages légales qui pointaient vers /contact.
+ * Cibles tactiles ≥ 44 px.
+ */
 
 const SOLD_BRANDS = ["Bionime", "Sterilance", "Clickfine", "Rossmax"];
 
+const DIABETES_LINKS = [
+  { label: "Pack Diabète Démarrage", to: "/packs/diabete" as const },
+  { label: "Abonnement Diabète Insuline", to: "/packs/diabete" as const },
+];
+
+const linkClass =
+  "inline-flex min-h-11 items-center text-sm text-muted-foreground hover:text-foreground";
+
 export function SiteFooter() {
+  const whatsappHref = whatsappLink("Bonjour BA Medical Store, j'ai une question.");
+
   return (
     <footer className="mt-16 border-t border-border bg-surface" aria-labelledby="footer-heading">
       <h2 id="footer-heading" className="sr-only">
         Pied de page
       </h2>
 
-      {/* Newsletter */}
-      <div className="border-b border-border">
-        <div className="container-page grid gap-6 py-10 md:grid-cols-2 md:items-center">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground">Recevez nos offres pros</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Nouveautés, promotions et guides d'achat pour professionnels de santé.
-            </p>
-          </div>
-          <form className="flex flex-col gap-2 sm:flex-row" onSubmit={(e) => e.preventDefault()}>
-            <label htmlFor="newsletter-email" className="sr-only">
-              Adresse email
-            </label>
-            <Input
-              id="newsletter-email"
-              type="email"
-              required
-              placeholder="votre@email.com"
-              className="h-11"
-            />
-            <Button type="submit" size="lg">
-              S'inscrire
-            </Button>
-          </form>
-        </div>
-      </div>
-
-      {/* Links */}
       <div className="container-page grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-5">
         <div className="lg:col-span-2">
-          <Link to="/" className="flex items-center gap-2" aria-label="BA Medical Store, accueil">
+          <Link
+            to="/"
+            className="inline-flex min-h-11 items-center gap-2"
+            aria-label="BA Medical Store, accueil"
+          >
             <div className="flex size-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <HeartPulse className="size-5" aria-hidden="true" />
             </div>
@@ -52,52 +48,48 @@ export function SiteFooter() {
               BA Medical Store
             </span>
           </Link>
-          <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-            Plateforme e-commerce tunisienne de matériel médical certifié. Nous livrons
-            particuliers, cabinets, cliniques et entreprises sur tout le territoire.
+          <p className="mt-3 max-w-sm text-sm text-muted-foreground">
+            Consommables et matériel pour le diabète, livrés partout en Tunisie. Paiement à la
+            livraison.
           </p>
-          <ul className="mt-6 space-y-2 text-sm text-muted-foreground">
-            <li className="flex items-center gap-2">
+          <ul className="mt-4 text-sm text-muted-foreground">
+            <li className="flex min-h-11 items-center gap-2">
               <MapPin className="size-4 text-primary" aria-hidden="true" />
-              Tunis, Tunisie
+              Livraison partout en Tunisie
             </li>
-            <li className="flex items-center gap-2">
-              <Phone className="size-4 text-primary" aria-hidden="true" />
-              {BUSINESS_PHONE_DISPLAY}
+            <li>
+              <a href={`tel:+${BUSINESS_PHONE_E164}`} className={`${linkClass} gap-2`}>
+                <Phone className="size-4 text-primary" aria-hidden="true" />
+                {BUSINESS_PHONE_DISPLAY}
+              </a>
             </li>
-            <li className="flex items-center gap-2">
-              <Mail className="size-4 text-primary" aria-hidden="true" />
-              {BUSINESS_EMAIL}
+            {whatsappHref ? (
+              <li>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${linkClass} gap-2`}
+                >
+                  <MessageCircle className="size-4 text-primary" aria-hidden="true" />
+                  WhatsApp
+                </a>
+              </li>
+            ) : null}
+            <li>
+              <a href={`mailto:${BUSINESS_EMAIL}`} className={`${linkClass} gap-2`}>
+                <Mail className="size-4 text-primary" aria-hidden="true" />
+                {BUSINESS_EMAIL}
+              </a>
             </li>
           </ul>
-          <div className="mt-6 flex gap-2">
-            <Button variant="outline" size="icon-sm" aria-label="Facebook" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Facebook />
-              </a>
-            </Button>
-            <Button variant="outline" size="icon-sm" aria-label="Instagram" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Instagram />
-              </a>
-            </Button>
-            <Button variant="outline" size="icon-sm" aria-label="LinkedIn" asChild>
-              <a href="#" rel="noreferrer noopener">
-                <Linkedin />
-              </a>
-            </Button>
-          </div>
         </div>
 
-        <FooterColumn title="Catégories">
-          {CATEGORIES.slice(0, 6).map((c) => (
-            <li key={c.slug}>
-              <Link
-                to="/categories/$slug"
-                params={{ slug: c.slug }}
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                {c.name}
+        <FooterColumn title="Diabète">
+          {DIABETES_LINKS.map((l) => (
+            <li key={l.label}>
+              <Link to={l.to} className={linkClass}>
+                {l.label}
               </Link>
             </li>
           ))}
@@ -106,16 +98,16 @@ export function SiteFooter() {
         <FooterColumn title="Marques">
           {/* Marques réellement distribuées (via Pharmatec), sans page dédiée pour l'instant. */}
           {SOLD_BRANDS.map((name) => (
-            <li key={name} className="text-sm text-muted-foreground">
+            <li key={name} className="flex min-h-11 items-center text-sm text-muted-foreground">
               {name}
             </li>
           ))}
         </FooterColumn>
 
-        <FooterColumn title="Service client">
+        <FooterColumn title="Aide">
           {FOOTER_LINKS.service.map((l) => (
             <li key={l.label}>
-              <Link to={l.to} className="text-sm text-muted-foreground hover:text-foreground">
+              <Link to={l.to} className={linkClass}>
                 {l.label}
               </Link>
             </li>
@@ -124,17 +116,8 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-border">
-        <div className="container-page flex flex-col items-start justify-between gap-3 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center">
-          <span>© {new Date().getFullYear()} BA Medical Store. Tous droits réservés.</span>
-          <ul className="flex flex-wrap gap-4">
-            {FOOTER_LINKS.legal.map((l) => (
-              <li key={l.label}>
-                <Link to={l.to} className="hover:text-foreground">
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <div className="container-page py-6 text-xs text-muted-foreground">
+          © {new Date().getFullYear()} BA Medical Store. Tous droits réservés.
         </div>
       </div>
     </footer>
@@ -144,8 +127,8 @@ export function SiteFooter() {
 function FooterColumn({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h3 className="mb-4 text-sm font-semibold text-foreground">{title}</h3>
-      <ul className="space-y-2">{children}</ul>
+      <h3 className="mb-2 text-sm font-semibold text-foreground">{title}</h3>
+      <ul>{children}</ul>
     </div>
   );
 }

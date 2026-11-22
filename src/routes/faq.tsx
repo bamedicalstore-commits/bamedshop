@@ -1,54 +1,45 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/layout/SiteLayout";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { DIABETES_FAQ } from "@/constants/diabetes-offer";
+import { absoluteUrl, faqJsonLd, jsonLdScript, SITE_NAME, type FaqEntry } from "@/lib/site";
 
-const FAQS = [
+/*
+ * FAQ — seulement des réponses vérifiables.
+ * Retirés : paiement par carte (Konnect/Flouci), « compte pro », programme
+ * « BA Medical+ », retours sous 14 jours, délais 24-48 h : aucun n'est en place.
+ * Frais de livraison : règle de la base (8 DT sous 200 DT, offerte au-delà).
+ */
+
+const DELIVERY_FAQ: FaqEntry[] = [
   {
-    q: "Quels sont les délais de livraison ?",
-    a: "Nous livrons partout en Tunisie sous 24 à 48h ouvrées. La livraison est offerte dès 200 DT d'achat.",
+    question: "Où livrez-vous et combien coûte la livraison ?",
+    answer:
+      "Nous livrons partout en Tunisie. La livraison coûte 8 DT pour une commande de moins de 200 DT, et elle est offerte à partir de 200 DT.",
   },
   {
-    q: "Puis-je bénéficier de tarifs professionnels ?",
-    a: "Oui, créez un compte pro (cabinet, clinique, entreprise) pour accéder à des tarifs négociés et à un interlocuteur dédié.",
-  },
-  {
-    q: "Vos produits sont-ils certifiés ?",
-    a: "Tous nos produits sont marqués CE et respectent les normes internationales applicables au matériel médical.",
-  },
-  {
-    q: "Comment retourner un produit ?",
-    a: "Vous disposez de 14 jours après réception pour retourner un produit non ouvert et non utilisé. Contactez notre support pour initier le retour.",
-  },
-  {
-    q: "Proposez-vous des abonnements ?",
-    a: "Oui, notre programme BA Medical+ permet aux professionnels de recevoir automatiquement leurs consommables à intervalle défini, avec remises exclusives.",
-  },
-  {
-    q: "Quels moyens de paiement acceptez-vous ?",
-    a: "Carte bancaire via Konnect ou Flouci, paiement à la livraison, virement bancaire pour les comptes pros.",
+    question: "Comment commander ?",
+    answer:
+      "Envoyez-nous un message sur WhatsApp ou appelez-nous. Nous confirmons avec vous les produits, les quantités, le prix et l'adresse avant chaque expédition.",
   },
 ];
+
+const FAQS: FaqEntry[] = [...DELIVERY_FAQ, ...DIABETES_FAQ];
+
+const TITLE = "Questions fréquentes";
+const DESCRIPTION =
+  "Livraison, paiement à la livraison, bandelettes compatibles Bionime GM550, abonnement trimestriel : les réponses de BA Medical Store.";
 
 export const Route = createFileRoute("/faq")({
   head: () => ({
     meta: [
-      { title: "FAQ — BA Medical Store" },
-      {
-        name: "description",
-        content:
-          "Réponses aux questions fréquentes : livraison, retours, comptes pros, paiements, certifications.",
-      },
-      { property: "og:title", content: "FAQ — BA Medical Store" },
-      {
-        property: "og:description",
-        content: "Toutes les réponses à vos questions sur BA Medical Store.",
-      },
+      { title: `${TITLE} — ${SITE_NAME}` },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: `${TITLE} — ${SITE_NAME}` },
+      { property: "og:description", content: DESCRIPTION },
+      { property: "og:url", content: absoluteUrl("/faq") },
     ],
+    links: [{ rel: "canonical", href: absoluteUrl("/faq") }],
+    scripts: [jsonLdScript(faqJsonLd(FAQS))],
   }),
   component: FaqPage,
 });
@@ -56,24 +47,23 @@ export const Route = createFileRoute("/faq")({
 function FaqPage() {
   return (
     <SiteLayout>
-      <div className="container-page py-14">
-        <header className="mx-auto max-w-2xl text-center">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Questions fréquentes</h1>
+      <div className="container-page py-12">
+        <header className="max-w-2xl">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{TITLE}</h1>
           <p className="mt-3 text-muted-foreground">
-            Vous ne trouvez pas votre réponse ? Notre équipe est là pour vous aider.
+            Une autre question ? Écrivez-nous sur WhatsApp ou appelez-nous.
           </p>
         </header>
-        <div className="mx-auto mt-10 max-w-3xl">
-          <Accordion type="single" collapsible className="w-full">
-            {FAQS.map((f, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left text-base font-medium">
-                  {f.q}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+        {/* Native <details> : les réponses restent dans le HTML (Google, IA). */}
+        <div className="mt-8 max-w-3xl divide-y divide-border border-y border-border">
+          {FAQS.map((entry) => (
+            <details key={entry.question} className="py-4">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center text-base font-medium marker:hidden">
+                {entry.question}
+              </summary>
+              <p className="mt-2 text-muted-foreground">{entry.answer}</p>
+            </details>
+          ))}
         </div>
       </div>
     </SiteLayout>

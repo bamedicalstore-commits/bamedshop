@@ -68,7 +68,7 @@ function DiabetesPackPage() {
     <div className="container-page py-10">
       <Link
         to="/packs"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary"
+        className="mb-4 inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-primary"
       >
         <ArrowLeft className="size-4" aria-hidden="true" /> Tous les packs
       </Link>
@@ -136,7 +136,7 @@ function DiabetesPackPage() {
         <div className="mt-4 divide-y divide-border border-y border-border">
           {DIABETES_FAQ.map((entry) => (
             <details key={entry.question} className="group py-4">
-              <summary className="cursor-pointer list-none font-medium marker:hidden">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center font-medium marker:hidden">
                 {entry.question}
               </summary>
               <p className="mt-2 text-sm text-muted-foreground">{entry.answer}</p>
